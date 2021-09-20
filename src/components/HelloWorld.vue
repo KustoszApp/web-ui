@@ -4,7 +4,7 @@
     <ul>
       <li v-for="feed in feeds" :key="feed.id">
         {{ feed.id }}. <a :href="feed.url">{{ feed.url }}</a> dodano:
-        {{ formatDate(feed.added) }}
+        {{ formatDate(feed.added_time) }}
       </li>
     </ul>
   </div>
@@ -28,12 +28,12 @@ export default {
     },
   },
   created() {
-    fetch("http://127.0.0.1:8000/api/v1/feeds/")
+    fetch("http://127.0.0.1:8000/api/v1/channels")
       .then((response) => {
         return response.json();
       })
       .then((data) => {
-        this.feeds = data;
+        this.feeds = data.results;
       });
   },
 };
