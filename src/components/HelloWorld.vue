@@ -1,10 +1,10 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
+  <div class="list">
+    <h2 class="list__title">{{ msg }}</h2>
     <ul>
       <li v-for="feed in feeds" :key="feed.id">
-        {{ feed.id }}. <a :href="feed.url">{{ feed.url }}</a> dodano:
-        {{ formatDate(feed.added_time) }}
+        {{ feed.id }}.
+        <a :href="feed.url"> {{ feed.displayed_title }}</a>
       </li>
     </ul>
   </div>
@@ -41,8 +41,14 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-h3 {
-  margin: 40px 0 0;
+.list {
+  font-size: 0.875rem;
+}
+
+.list__title {
+  font-size: inherit;
+  font-weight: 300;
+  text-transform: uppercase;
 }
 ul {
   list-style-type: none;
