@@ -41,7 +41,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .entry {
   border: 1px solid bisque;
 }
