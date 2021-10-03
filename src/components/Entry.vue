@@ -1,11 +1,15 @@
 <template>
-  <div class="entry" :class="{ 'entry--open': isOpen }">
+  <div
+    class="entry"
+    :class="{ 'entry--open': isOpen, 'entry--focused': isFocused }"
+  >
     <div
       class="entry-header"
       @click="handleClick"
       @click.middle="handleMiddleClick"
     >
-      <a :href="link">{{ title }}</a> dodano: {{ formatDate(addedTime) }}
+      <a ref="entryLink" :href="link">{{ title }}</a> dodano:
+      {{ formatDate(addedTime) }}
     </div>
     <div class="entry-content" v-show="isOpen" v-html="entryContent" />
   </div>
@@ -15,20 +19,27 @@
 export default {
   name: "Entry",
   props: {
+    index: Number,
     title: String,
     link: String,
     addedTime: String,
     entryContent: String,
+    isFocused: Boolean,
+    isOpen: Boolean,
   },
-  data() {
-    return {
-      isOpen: false,
-    };
+  watch: {
+    isOpen(value) {
+      this.$nextTick(() => {
+        if (value) {
+          this.$refs.entryLink.scrollIntoView(true);
+        }
+      });
+    },
   },
   methods: {
     handleClick(e) {
       e.preventDefault();
-      this.isOpen = !this.isOpen;
+      this.$emit("entryClick", this.index);
     },
     handleMiddleClick() {
       window.open(this.link, "_blank");
@@ -46,15 +57,17 @@ export default {
   border: 1px solid bisque;
 }
 
+.entry--focused {
+  outline: 2px dotted brown;
+}
+
 .entry-header {
   padding: 0.5rem 0;
   cursor: pointer;
 }
-
 .entry--open .entry-header {
   border-bottom-color: transparent;
 }
-
 .entry-content {
   max-width: 50rem;
 }
