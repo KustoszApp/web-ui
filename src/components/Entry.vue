@@ -54,15 +54,16 @@ export default {
 
 <style lang="scss">
 .entry {
-  border: 1px solid bisque;
+  border-top: 1px solid #7e7e7e;
 }
 
 .entry--focused {
-  outline: 2px dotted brown;
+  outline: 3px solid #00fec5;
+  border-top-color: transparent;
 }
 
 .entry-header {
-  padding: 0.5rem 0;
+  padding: 0.5rem 1rem;
   cursor: pointer;
 }
 .entry--open .entry-header {
@@ -70,5 +71,6 @@ export default {
 }
 .entry-content {
   max-width: 50rem;
+  padding: 0.5rem 1rem;
 }
 </style>

@@ -11,7 +11,7 @@
       <router-link to="/about">About</router-link>
     </div>
   </div>
-  <router-view />
+  <router-view class="view" />
 </template>
 
 <script>
@@ -30,19 +30,22 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
+  color: #2d2d2d;
   display: grid;
   grid-template-columns: 200px auto;
+  line-height: 1.5;
   height: 100vh;
 }
 
 .btn {
+  color: #fff;
+  background-color: #2d2d2d;
   display: inline-block;
   padding: 0.5rem 0.75rem;
 }
 
 .nav {
-  background-color: #f1f4f6;
+  background-color: #f0f0f0;
   padding: 1rem;
 
   a {
@@ -50,7 +53,7 @@ export default {
     color: #2c3e50;
 
     &.router-link-exact-active {
-      color: #42b983;
+      color: #1d9bf3;
     }
   }
 }
@@ -66,5 +69,9 @@ export default {
 .nav__menu {
   display: flex;
   flex-direction: column;
+}
+
+.view {
+  background-color: #ebebeb;
 }
 </style>
