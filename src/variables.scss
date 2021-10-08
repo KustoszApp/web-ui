@@ -1,0 +1,30 @@
+$mine-shaft: #2d2d2d;
+$mine-shaft-light: #323232;
+$emperor: #505050;
+$gray: #7e7e7e;
+$gallery: #ebebeb;
+$gallery-light: #f0f0f0;
+$alto: #dfdfdf;
+$outrageous-orange: #ff5130;
+$yellow-sea: #ffae00;
+$dodger-blue: #1d9bf3;
+$bright-turquoise:#00fec5;
+$white: #ffffff;
+
+$lightTheme: (
+    "primary": $mine-shaft,
+    "secondary": $emperor, 
+    "nav-bg": $gallery-light,
+    "content-bg": $gallery,
+    "focus": $bright-turquoise,
+    "link": $dodger-blue,
+);
+
+$darkTheme: (
+    "primary": $alto,
+    "secondary": $emperor,
+    "nav-bg": $mine-shaft-light,
+    "content-bg": $mine-shaft,
+    "focus": $bright-turquoise,
+    "link": $bright-turquoise,
+);

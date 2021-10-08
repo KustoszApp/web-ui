@@ -58,7 +58,7 @@ export default {
 }
 
 .entry--focused {
-  outline: 3px solid #00fec5;
+  outline: 3px solid var(--focus);
   border-top-color: transparent;
 }
 

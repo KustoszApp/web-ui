@@ -50,6 +50,13 @@
     "not dead"
   ],
   "vue": {
-    "filenameHashing": false
+    "filenameHashing": false,
+    "css": {
+      "loaderOptions": {
+        "scss": {
+          "prependData": "@import '~@/variables.scss';"
+        }
+      }
+    }
   }
 }

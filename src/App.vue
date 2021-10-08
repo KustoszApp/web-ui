@@ -1,14 +1,34 @@
 <template>
   <div id="nav" class="nav">
     <div class="nav__add">
-      <button class="btn btn--primary btn--big">Dodaj kanał</button>
+      <button type="button" class="btn btn--primary btn--big">
+        Dodaj kanał
+      </button>
     </div>
     <div class="nav__sources">
       <HelloWorld msg="Lista Źródeł" />
     </div>
     <div class="nav__menu">
+      <h2 class="list__title">Menu</h2>
       <router-link to="/">Home</router-link>
       <router-link to="/about">About</router-link>
+    </div>
+    <div class="nav__themes">
+      <h2 class="list__title">Motywy</h2>
+      <button
+        type="button"
+        class="btn btn--secondary"
+        @click="switchTheme('light')"
+      >
+        Light Theme
+      </button>
+      <button
+        type="button"
+        class="btn btn--secondary"
+        @click="switchTheme('dark')"
+      >
+        Dark Theme
+      </button>
     </div>
   </div>
   <router-view class="view" />
@@ -22,15 +42,55 @@ export default {
   components: {
     HelloWorld,
   },
+  data() {
+    return {
+      themes: {
+        light: "Jasny Motyw",
+        dark: "Ciemy Motyw",
+      },
+    };
+  },
+  methods: {
+    switchTheme(value) {
+      if (value in this.themes)
+        document.documentElement.setAttribute("theme", value);
+    },
+  },
 };
 </script>
 
 <style lang="scss">
+@mixin makeTheme($theme) {
+  --primary: #{map-get($map: $theme, $key: "primary")};
+  --secondary: #{map-get($map: $theme, $key: "secondary")};
+  --nav-bg: #{map-get($map: $theme, $key: "nav-bg")};
+  --content-bg: #{map-get($map: $theme, $key: "content-bg")};
+  --focus: #{map-get($map: $theme, $key: "focus")};
+  --link: #{map-get($map: $theme, $key: "link")};
+}
+
+:root {
+  @include makeTheme($lightTheme);
+}
+
+[theme="light"] {
+  @include makeTheme($lightTheme);
+}
+
+[theme="dark"] {
+  @include makeTheme($darkTheme);
+}
+
+html,
+body {
+  height: 100%;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2d2d2d;
+  color: var(--primary);
   display: grid;
   grid-template-columns: 200px auto;
   line-height: 1.5;
@@ -38,22 +98,30 @@ export default {
 }
 
 .btn {
-  color: #fff;
-  background-color: #2d2d2d;
   display: inline-block;
   padding: 0.5rem 0.75rem;
+  border: 1px solid transparent;
+}
+
+.btn--primary {
+  color: var(--primary);
+  background-color: $yellow-sea;
+}
+
+.btn--secondary {
+  color: var(--secondary);
+  background-color: $alto;
 }
 
 .nav {
-  background-color: #f0f0f0;
+  background-color: var(--nav-bg);
   padding: 1rem;
 
   a {
-    font-weight: bold;
-    color: #2c3e50;
+    color: var(--primary);
 
     &.router-link-exact-active {
-      color: #1d9bf3;
+      color: var(--link);
     }
   }
 }
@@ -72,6 +140,6 @@ export default {
 }
 
 .view {
-  background-color: #ebebeb;
+  background-color: var(--content-bg);
 }
 </style>
