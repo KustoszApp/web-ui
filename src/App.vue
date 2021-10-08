@@ -6,7 +6,7 @@
       </button>
     </div>
     <div class="nav__sources">
-      <HelloWorld msg="Lista Źródeł" />
+      <NavList title="Lista Źródeł" />
     </div>
     <div class="nav__menu">
       <h2 class="list__title">Menu</h2>
@@ -35,12 +35,12 @@
 </template>
 
 <script>
-import HelloWorld from "@/components/HelloWorld.vue";
+import NavList from "@/components/NavList.vue";
 
 export default {
   name: "App",
   components: {
-    HelloWorld,
+    NavList,
   },
   data() {
     return {
