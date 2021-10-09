@@ -54,7 +54,7 @@
     "css": {
       "loaderOptions": {
         "scss": {
-          "prependData": "@import '~@/variables.scss';"
+          "prependData": "@import '~@/scss/variables.scss';"
         }
       }
     }

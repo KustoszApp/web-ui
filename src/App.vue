@@ -45,7 +45,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "./mixins";
+@import "./scss/mixins";
 
 :root {
   @include makeTheme($lightTheme);
