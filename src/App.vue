@@ -11,25 +11,8 @@
     <div class="nav__menu">
       <h2 class="list__title">Menu</h2>
       <router-link to="/">Home</router-link>
-      <router-link to="/about">O projekcie</router-link>
       <router-link to="/settings">Opcje</router-link>
-    </div>
-    <div class="nav__themes">
-      <h2 class="list__title">Motywy</h2>
-      <button
-        type="button"
-        class="btn btn--secondary"
-        @click="switchTheme('light')"
-      >
-        Light Theme
-      </button>
-      <button
-        type="button"
-        class="btn btn--secondary"
-        @click="switchTheme('dark')"
-      >
-        Dark Theme
-      </button>
+      <router-link to="/about">O projekcie</router-link>
     </div>
   </div>
   <router-view class="view" />
@@ -42,14 +25,6 @@ export default {
   name: "App",
   components: {
     NavList,
-  },
-  data() {
-    return {
-      themes: {
-        light: "Jasny Motyw",
-        dark: "Ciemy Motyw",
-      },
-    };
   },
   methods: {
     switchTheme(value) {
@@ -85,6 +60,15 @@ export default {
 html,
 body {
   height: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: normal;
 }
 
 #app {
