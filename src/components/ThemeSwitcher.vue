@@ -1,6 +1,5 @@
 <template>
   <div class="nav__themes">
-    <h2 class="list__title">Motywy</h2>
     <button
       type="button"
       class="btn btn--secondary"

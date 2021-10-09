@@ -1,6 +1,5 @@
 <template>
   <div class="list">
-    <h2 class="list__title">{{ title }}</h2>
     <ul class="list__content">
       <li class="list__item" v-for="feed in feeds" :key="feed.id">
         <svg
@@ -50,26 +49,17 @@ export default {
   font-size: 0.875rem;
 }
 
-.list__title {
-  font-size: inherit;
-  font-weight: 300;
-  text-transform: uppercase;
-  margin: 0 0 0.5rem;
-}
-
 .list__content {
   list-style-type: none;
   padding: 0;
   margin: 0 0 1rem;
-  max-height: 200px;
-  scrollbar-width: thin;
-  overflow-y: scroll;
 }
 
 .list__item {
   color: var(--secondary);
   margin: 0;
   overflow: hidden;
+  padding: 0.25rem 0.5rem;
   text-overflow: ellipsis;
   white-space: nowrap;
 }

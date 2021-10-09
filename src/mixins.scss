@@ -1,0 +1,11 @@
+@mixin makeTheme($theme) {
+    --primary: #{map-get($map: $theme, $key: "primary")};
+    --secondary: #{map-get($map: $theme, $key: "secondary")};
+    --nav-bg: #{map-get($map: $theme, $key: "nav-bg")};
+    --content-bg: #{map-get($map: $theme, $key: "content-bg")};
+    --focus: #{map-get($map: $theme, $key: "focus")};
+    --link: #{map-get($map: $theme, $key: "link")};
+    --btn-primary-color: #{map-get($map: $theme, $key: "btn-primary-color")};
+    --btn-primary-active-color: #{map-get($map: $theme, $key: "btn-primary-active-color")};
+    --btn-primary-active-bg: #{map-get($map: $theme, $key: "btn-primary-active-bg")};
+  }
