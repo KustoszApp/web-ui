@@ -11,7 +11,8 @@
     <div class="nav__menu">
       <h2 class="list__title">Menu</h2>
       <router-link to="/">Home</router-link>
-      <router-link to="/about">About</router-link>
+      <router-link to="/about">O projekcie</router-link>
+      <router-link to="/settings">Opcje</router-link>
     </div>
     <div class="nav__themes">
       <h2 class="list__title">Motywy</h2>

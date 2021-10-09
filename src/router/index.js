@@ -17,6 +17,15 @@ const routes = [
             return import(/* webpackChunkName: "about" */ "../views/About.vue");
         },
     },
+    {
+        path: "/settings",
+        name: "Settings",
+        component: function () {
+            return import(
+                /* webpackChunkName: "settings" */ "../views/Settings.vue"
+            );
+        },
+    },
 ];
 
 const router = createRouter({

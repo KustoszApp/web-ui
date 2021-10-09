@@ -1,17 +1,17 @@
 <template>
-  <div class="settings">
-    <Entries />
+  <div class="home">
+    <NavList msg="Wszystkie Źródła" />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import Entries from "@/components/Entries.vue";
+import NavList from "@/components/NavList.vue";
 
 export default {
   name: "Home",
   components: {
-    Entries,
+    NavList,
   },
 };
 </script>
