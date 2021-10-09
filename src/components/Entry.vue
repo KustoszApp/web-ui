@@ -4,14 +4,14 @@
     :class="{ 'entry--open': isOpen, 'entry--focused': isFocused }"
   >
     <div
-      class="entry-header"
+      class="entry__header"
       @click="handleClick"
       @click.middle="handleMiddleClick"
     >
       <a ref="entryLink" :href="link">{{ title }}</a> dodano:
       {{ formatDate(addedTime) }}
     </div>
-    <div class="entry-content" v-show="isOpen" v-html="entryContent" />
+    <div class="entry__content" v-show="isOpen" v-html="entryContent" />
   </div>
 </template>
 
@@ -62,15 +62,21 @@ export default {
   border-top-color: transparent;
 }
 
-.entry-header {
+.entry__header {
   padding: 0.5rem 1rem;
   cursor: pointer;
 }
-.entry--open .entry-header {
+
+.entry--open .entry__header {
   border-bottom-color: transparent;
 }
-.entry-content {
+
+.entry__content {
   max-width: 50rem;
   padding: 0.5rem 1rem;
+}
+
+.entry__content p {
+  margin: 0 0 1rem;
 }
 </style>

@@ -1,12 +1,16 @@
 <template>
-  <div class="entries-list">
-    <ul>
-      <li v-for="(entry, index) in entries" :key="entry.id">
+  <div class="entries">
+    <ul class="entries__list">
+      <li
+        class="entries__list-item"
+        v-for="(entry, index) in entries"
+        :key="entry.id"
+      >
         <Entry
           :index="index"
           :title="entry.title"
           :link="entry.link"
-          :addedTime="entry.added_time"
+          :addedTime="entry.published_time"
           :entryContent="entry.preferred_content.content"
           :isFocused="entry.isFocused"
           :isOpen="entry.isOpened"
@@ -120,17 +124,12 @@ export default {
 </script>
 
 <style lang="scss">
-h3 {
-  margin: 40px 0 0;
-}
-ul {
+.entries__list {
   list-style-type: none;
   padding: 0;
 }
-li {
-  margin: 0 10px;
-}
-a {
-  color: #1d9bf3;
+
+.entries__list-item {
+  margin: 0;
 }
 </style>
