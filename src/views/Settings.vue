@@ -1,10 +1,10 @@
 <template>
   <div class="settings">
-    <h2 class="view__title">Ustawienia</h2>
-    <h3 class="section-title">Motywy</h3>
+    <h2 class="view__title">Settings</h2>
+    <h3 class="section-title">Theme</h3>
     <ThemeSwitcher />
-    <h3 class="section-title">Żródła</h3>
-    <NavList title="Wszystkie Źródła" />
+    <h3 class="section-title">Sources</h3>
+    <NavList />
   </div>
 </template>
 

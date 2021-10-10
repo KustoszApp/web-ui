@@ -2,10 +2,10 @@
   <div id="nav" class="nav">
     <div class="nav__add">
       <button type="button" class="btn btn--primary btn--big">
-        Dodaj kanał
+        Add source
       </button>
     </div>
-    <h2 class="nav__title">Lista Źródeł</h2>
+    <h2 class="nav__title">Feeds</h2>
     <div class="nav__sources">
       <NavList />
     </div>
@@ -16,10 +16,10 @@
           <router-link to="/">Home</router-link>
         </li>
         <li class="menu__item">
-          <router-link to="/settings">Opcje</router-link>
+          <router-link to="/settings">Options</router-link>
         </li>
         <li class="menu__item">
-          <router-link to="/about">O projekcie</router-link>
+          <router-link to="/about">About Us</router-link>
         </li>
       </ul>
     </div>
