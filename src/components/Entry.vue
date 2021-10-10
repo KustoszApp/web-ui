@@ -8,8 +8,9 @@
       @click="handleClick"
       @click.middle="handleMiddleClick"
     >
-      <a ref="entryLink" :href="link">{{ title }}</a> dodano:
-      {{ formatDate(addedTime) }}
+      <a ref="entryLink" :href="link">{{ title }}</a> •
+      <span class="entry__author">{{ author }}</span> • dodano:
+      <span class="entry__published">{{ formatDate(publishedTime) }}</span>
     </div>
     <div class="entry__content" v-show="isOpen" v-html="entryContent" />
   </div>
@@ -22,7 +23,8 @@ export default {
     index: Number,
     title: String,
     link: String,
-    addedTime: String,
+    publishedTime: String,
+    author: String,
     entryContent: String,
     isFocused: Boolean,
     isOpen: Boolean,
@@ -65,6 +67,11 @@ export default {
 .entry__header {
   padding: 0.5rem 1rem;
   cursor: pointer;
+}
+
+.entry__author,
+.entry__published {
+  color: var(--secondary);
 }
 
 .entry--open .entry__header {
