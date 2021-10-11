@@ -13,24 +13,22 @@ $white: #ffffff;
 
 $lightTheme: (
     "primary": $mine-shaft,
-    "secondary": $emperor, 
-    "nav-bg": $gallery-light,
-    "content-bg": $gallery,
+    "secondary": $emperor,
+    "warning": $yellow-sea,
+    "danger": $outrageous-orange,
+    "lighter": $gallery-light,
+    "darker": $gallery,
     "focus": $bright-turquoise,
     "link": $dodger-blue,
-    "btn-primary-color": $yellow-sea,
-    "btn-primary-active-color": $gallery-light,
-    "btn-primary-active-bg": $yellow-sea,
 );
 
 $darkTheme: (
     "primary": $alto,
     "secondary": $emperor,
-    "nav-bg": $mine-shaft-light,
-    "content-bg": $mine-shaft,
+    "warning": $yellow-sea,
+    "danger": $outrageous-orange,
+    "lighter": $mine-shaft-light,
+    "darker": $mine-shaft,
     "focus": $bright-turquoise,
     "link": $bright-turquoise,
-    "btn-primary-color": $yellow-sea,
-    "btn-primary-active-color": $gallery-light,
-    "btn-primary-active-bg": $yellow-sea,
 );

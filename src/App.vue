@@ -46,6 +46,7 @@ export default {
 
 <style lang="scss">
 @import "./scss/mixins";
+@import "./scss/elements";
 
 :root {
   @include makeTheme($lightTheme);
@@ -90,32 +91,8 @@ a {
   overflow: hidden;
 }
 
-.btn {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border: 2px solid transparent;
-}
-
-.btn--primary {
-  color: var(--btn-primary-color);
-  border-color: var(--btn-primary-color);
-  border-radius: 0.25rem;
-  transition: all 0.3s ease-out;
-}
-
-.btn--primary:hover {
-  color: var(--btn-primary-active-color);
-  border-color: (var-btn-primary-active-color);
-  background-color: var(--btn-primary-active-bg);
-}
-
-.btn--secondary {
-  color: var(--secondary);
-  background-color: $alto;
-}
-
 .nav {
-  background-color: var(--nav-bg);
+  background-color: var(--lighter);
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   display: flex;
@@ -168,7 +145,12 @@ a {
 }
 
 .view {
-  background-color: var(--content-bg);
+  background-color: var(--darker);
   overflow-y: scroll;
+}
+
+.view__title {
+  border-bottom: 1px solid var(--primary);
+  padding: 0 1.5rem;
 }
 </style>
