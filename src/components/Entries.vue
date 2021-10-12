@@ -24,25 +24,17 @@
 
 <script>
 import Entry from "./Entry.vue";
+import { mapGetters } from "vuex";
 export default {
   name: "Entries",
   data() {
     return {
       focusedPrevIndex: -1,
       focusedIndex: -1,
-      entries: [],
     };
   },
-  created() {
-    fetch("http://127.0.0.1:8000/api/v1/entries")
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        this.entries = data.results.map((item) => {
-          return { ...item, isFocused: false, isOpened: false };
-        });
-      });
+  computed: {
+    ...mapGetters(["entries"]),
   },
   methods: {
     open() {

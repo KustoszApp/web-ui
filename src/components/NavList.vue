@@ -1,7 +1,7 @@
 <template>
   <div class="list">
     <ul class="list__content">
-      <li class="list__item" v-for="feed in feeds" :key="feed.id">
+      <li class="list__item" v-for="feed in channels" :key="feed.id">
         <svg
           class="list__item-icon"
           xmlns="http://www.w3.org/2000/svg"
@@ -22,24 +22,12 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: "NavList",
-  props: {
-    title: String,
-  },
-  data() {
-    return {
-      feeds: [],
-    };
-  },
-  created() {
-    fetch("http://127.0.0.1:8000/api/v1/channels")
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        this.feeds = data.results;
-      });
+  computed: {
+    ...mapGetters(["channels"]),
   },
 };
 </script>

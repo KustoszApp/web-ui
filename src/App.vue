@@ -41,6 +41,10 @@ export default {
         document.documentElement.setAttribute("theme", value);
     },
   },
+  created() {
+    this.$store.dispatch("entries_request");
+    this.$store.dispatch("channels_request");
+  },
 };
 </script>
 
