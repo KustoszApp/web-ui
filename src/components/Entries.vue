@@ -10,6 +10,7 @@
           :index="index"
           :title="entry.title"
           :link="entry.link"
+          :source="getChannelTitle(entry.channel)"
           :author="entry.author"
           :publishedTime="entry.published_time"
           :entryContent="entry.preferred_content.content"
@@ -34,9 +35,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["entries"]),
+    ...mapGetters(["entries", "channels"]),
   },
   methods: {
+    getChannelTitle(channelId) {
+      const channel = this.channels.find((item) => item.id === channelId);
+      if (channel) return channel.title || channel.displayed_title;
+      return "";
+    },
     open() {
       this.entries[this.focusedIndex].isOpened =
         !this.entries[this.focusedIndex].isOpened;

@@ -28,7 +28,7 @@ export default createStore({
     },
     actions: {
         channels_request: ({ commit }) => {
-            fetch("http://127.0.0.1:8000/api/v1/channels/")
+            fetch("http://127.0.0.1:8000/api/v1/channels/?limit=200")
                 .then((response) => {
                     return response.json();
                 })

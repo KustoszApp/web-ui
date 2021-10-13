@@ -9,6 +9,7 @@
       @click.middle="handleMiddleClick"
     >
       <a ref="entryLink" :href="link">{{ title }}</a> •
+      <span class="entry__source">{{ source }}</span> •
       <span class="entry__author">{{ author }}</span> • added:
       <span class="entry__published">{{ formatDate(publishedTime) }}</span>
     </div>
@@ -24,6 +25,7 @@ export default {
     title: String,
     link: String,
     publishedTime: String,
+    source: String,
     author: String,
     entryContent: String,
     isFocused: Boolean,
