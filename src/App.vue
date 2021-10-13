@@ -151,6 +151,8 @@ a {
 .view {
   background-color: var(--darker);
   overflow-y: scroll;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .view__title {
