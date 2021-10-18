@@ -64,6 +64,12 @@ export default {
   @include makeTheme($darkTheme);
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html,
 body {
   height: 100%;
