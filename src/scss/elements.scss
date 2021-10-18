@@ -9,10 +9,11 @@
     padding: 0.25rem 0.75rem;
     border: 2px solid transparent;
     transition: all 0.3s ease-out;
+    line-height: 1.5;
 }
 
 .btn--primary {
-    color: var(--btn-primary-active-color);
+    color: var(--primary);
     background-color: var(--warning);
 }
 
@@ -31,6 +32,18 @@
 .btn--secondary:hover {
     background-color: var(--primary);
     color: var(--lighter);
+}
+
+.btn--warning {
+    color: var(--primary);
+    border-color: transparent;
+    background-color: var(--warning);
+}
+
+.btn--danger {
+    color: var(--lighter);
+    border-color: transparent;
+    background-color: var(--danger);
 }
 
 //
@@ -59,4 +72,5 @@
     border: 2px solid var(--primary);
     border-radius: 0.25rem;
     padding: 0.25rem 0.75rem;
+    display: inline-block;
 }

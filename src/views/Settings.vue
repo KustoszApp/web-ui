@@ -16,6 +16,8 @@
     </h2>
     <h3 class="section-title">Theme</h3>
     <ThemeSwitcher />
+    <h3 class="section-title">Filters</h3>
+    <Filters />
     <h3 class="section-title">Sources</h3>
     <NavList />
   </div>
@@ -25,12 +27,14 @@
 // @ is an alias to /src
 import NavList from "@/components/NavList.vue";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
+import Filters from "@/components/Filters";
 
 export default {
   name: "Home",
   components: {
     NavList,
     ThemeSwitcher,
+    Filters,
   },
 };
 </script>

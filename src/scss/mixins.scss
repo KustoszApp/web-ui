@@ -2,7 +2,7 @@
     --primary: #{map-get($map: $theme, $key: "primary")};
     --secondary: #{map-get($map: $theme, $key: "secondary")};
     --warning: #{map-get($map: $theme, $key: "warning")};
-    --danger: #(map-get($map: $theme, $key: "danger"));
+    --danger: #{map-get($map: $theme, $key: "danger")};
     --lighter: #{map-get($map: $theme, $key: "lighter")};
     --darker: #{map-get($map: $theme, $key: "darker")};
     --focus: #{map-get($map: $theme, $key: "focus")};
