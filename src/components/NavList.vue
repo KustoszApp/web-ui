@@ -13,9 +13,12 @@
             transform="matrix(1 0 0 -1 212.61 1346.17)"
           />
         </svg>
-        <a class="list__item-link" :href="feed.url">
-          {{ feed.displayed_title }}</a
+        <router-link
+          class="list__item-link"
+          :to="{ name: 'home', params: { entryId: feed.id } }"
         >
+          {{ feed.displayed_title }}
+        </router-link>
       </li>
     </ul>
   </div>

@@ -1,6 +1,7 @@
 <template>
   <div class="entries">
     <ul class="entries__list">
+      <div v-if="entries.length == 0">Brak wpisów</div>
       <li
         class="entries__list-item"
         v-for="(entry, index) in entries"

@@ -16,5 +16,16 @@ export default {
     Entries,
     EntriesFilter,
   },
+  created() {
+    this.$watch(
+      () => this.$route.params,
+      (toParams) => {
+        this.$store.dispatch({
+          type: "entries_request",
+          entryId: toParams.entryId,
+        });
+      }
+    );
+  },
 };
 </script>

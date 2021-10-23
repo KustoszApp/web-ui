@@ -39,8 +39,13 @@ export default createStore({
                     commit("channels_error");
                 });
         },
-        entries_request: ({ commit }) => {
-            fetch("http://127.0.0.1:8000/api/v1/entries/")
+        entries_request: ({ commit }, param) => {
+            const base = "http://127.0.0.1:8000/api/v1/entries/";
+            const url =
+                param && param.entryId
+                    ? `${base}?channel=${param.entryId}`
+                    : base;
+            fetch(url)
                 .then((response) => {
                     return response.json();
                 })
