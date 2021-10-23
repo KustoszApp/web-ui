@@ -48,47 +48,56 @@
     </div>
     <div class="panel">
       <h3 class="panel-title">New Filter</h3>
-      <div class="panel-content">
-        <label for="filterName">Name</label>
-        <div class="form-control">
-          <input id="filterName" type="text" class="input-field" />
+      <form @submit.prevent="save">
+        <div class="panel-content">
+          <label for="filterName">Name</label>
+          <div class="form-control">
+            <input
+              id="filterName"
+              type="text"
+              class="input-field"
+              v-model="filterName"
+            />
+          </div>
+          <h4 class="h4">If</h4>
+          <div>
+            <select class="select-menu">
+              <option default="">Field</option>
+              <option>Field 1</option>
+              <option>Field 2</option>
+              <option>Field 3</option>
+              <option>Field 4</option>
+            </select>
+            <select class="select-menu">
+              <option default="">Condition</option>
+              <option>Condition 1</option>
+              <option>Condition 2</option>
+              <option>Condition 3</option>
+              <option>Condition 4</option>
+            </select>
+            <input id="filterName" type="text" class="input-field" />
+          </div>
+          <h4 class="h4">Then</h4>
+          <div>
+            <select class="select-menu">
+              <option default="">Action</option>
+              <option>Action 1</option>
+              <option>Action 2</option>
+              <option>Action 3</option>
+              <option>Action 4</option>
+            </select>
+            <input id="filterName" type="text" class="input-field" />
+          </div>
         </div>
-        <h4 class="h4">If</h4>
-        <div>
-          <select class="select-menu">
-            <option default="">Field</option>
-            <option>Field 1</option>
-            <option>Field 2</option>
-            <option>Field 3</option>
-            <option>Field 4</option>
-          </select>
-          <select class="select-menu">
-            <option default="">Condition</option>
-            <option>Condition 1</option>
-            <option>Condition 2</option>
-            <option>Condition 3</option>
-            <option>Condition 4</option>
-          </select>
-          <input id="filterName" type="text" class="input-field" />
+        <div class="panel-footer">
+          <button type="button" class="btn btn--primary">Try</button>
+          <button type="submit" name="run" class="btn btn--primary">Run</button>
+          <button type="submit" name="save" class="btn btn--primary">
+            Save
+          </button>
+          <button type="button" class="btn btn--primary">Cancel</button>
         </div>
-        <h4 class="h4">Then</h4>
-        <div>
-          <select class="select-menu">
-            <option default="">Action</option>
-            <option>Action 1</option>
-            <option>Action 2</option>
-            <option>Action 3</option>
-            <option>Action 4</option>
-          </select>
-          <input id="filterName" type="text" class="input-field" />
-        </div>
-      </div>
-      <div class="panel-footer">
-        <div class="btn btn--primary">Try</div>
-        <div class="btn btn--primary">Run</div>
-        <div class="btn btn--primary">Save</div>
-        <div class="btn btn--primary">Cancel</div>
-      </div>
+      </form>
     </div>
   </div>
 </template>
@@ -104,7 +113,18 @@ export default {
         { id: 3, isActive: true, name: "Filter 3" },
         { id: 4, isActive: false, name: "Filter 4" },
       ],
+      filterName: "",
     };
+  },
+  methods: {
+    save(e) {
+      console.log(e.submitter);
+      const item = {
+        isActive: e.submitter.name === "run",
+        name: this.filterName,
+      };
+      this.filters.push(item);
+    },
   },
 };
 </script>
