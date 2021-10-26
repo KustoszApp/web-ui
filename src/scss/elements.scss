@@ -12,6 +12,10 @@
     line-height: 1.5;
 }
 
+.btn--active {
+    box-shadow: 0 0 0 4px var(--focus);   
+}
+
 .btn--primary {
     color: var(--primary);
     background-color: var(--warning);
@@ -29,6 +33,7 @@
     background-color: transparent;
 }
 
+.btn--secondary.btn--active,
 .btn--secondary:hover {
     background-color: var(--primary);
     color: var(--lighter);

@@ -41,10 +41,7 @@ export default createStore({
         },
         entries_request: ({ commit }, param) => {
             const base = "http://127.0.0.1:8000/api/v1/entries/";
-            const url =
-                param && param.entryId
-                    ? `${base}?channel=${param.entryId}`
-                    : base;
+            const url = param && param.query ? `${base}?${param.query}` : base;
             fetch(url)
                 .then((response) => {
                     return response.json();

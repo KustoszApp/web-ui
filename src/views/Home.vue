@@ -22,7 +22,7 @@ export default {
       (toParams) => {
         this.$store.dispatch({
           type: "entries_request",
-          entryId: toParams.entryId,
+          query: `channel=${toParams.entryId}`,
         });
       }
     );
