@@ -70,17 +70,19 @@ export default {
       selected: false,
       tags: "",
       times: [
-        { label: "1 day", timeAgo: -1 },
-        { label: "2 days", timeAgo: -2 },
-        { label: "1 week", timeAgo: -7 },
-        { label: "2 weeks", timeAgo: -14 },
+        { label: "1 day", timeAgo: 1 },
+        { label: "2 days", timeAgo: 2 },
+        { label: "1 week", timeAgo: 7 },
+        { label: "2 weeks", timeAgo: 14 },
       ],
     };
   },
   methods: {
     setFilter() {
       const filters = [];
-      filters.push(`archived=${this.showArchived}`);
+      if (!this.showArchived) {
+        filters.push(`archived=${this.showArchived}`);
+      }
       if (this.published && this.selected) {
         filters.push(
           `${this.published}=${this.calculateDateFilter(this.selected)}`
