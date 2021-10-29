@@ -9,12 +9,14 @@
       >
         <Entry
           :index="index"
+          :entryId="entry.id"
           :title="entry.title"
           :link="entry.link"
           :source="getChannelTitle(entry.channel)"
           :author="entry.author"
           :publishedTime="entry.published_time"
-          :entryContent="entry.preferred_content.content"
+          :entryDefaultContent="entry.preferred_content"
+          :entryAvailableContents="entry.available_contents"
           :isFocused="entry.isFocused"
           :isOpen="entry.isOpened"
           @entryClick="handleEntryClick"

@@ -5,10 +5,12 @@ export default createStore({
         status: "",
         channels: [],
         entries: [],
+        entry: {},
     },
     getters: {
         entries: (state) => state.entries,
         channels: (state) => state.channels,
+        entry: (state) => state.entry,
     },
     mutations: {
         channels_request: (state) => (state.status = "loading"),
@@ -25,6 +27,12 @@ export default createStore({
             });
         },
         entries_error: (state) => (state.status = "error"),
+        entry_request: (state) => (state.status = "loading"),
+        entry_success: (state, data) => {
+            state.status = "success";
+            state.entry = data;
+        },
+        entry_error: (state) => (state.status = "error"),
     },
     actions: {
         channels_request: ({ commit }) => {
@@ -51,6 +59,19 @@ export default createStore({
                 })
                 .catch(() => {
                     commit("entries_error");
+                });
+        },
+        entry_request: ({ commit }, param) => {
+            const url = `http://127.0.0.1:8000/api/v1/entries/${param.id}/`;
+            fetch(url)
+                .then((response) => {
+                    return response.json();
+                })
+                .then((data) => {
+                    commit("entry_success", data);
+                })
+                .catch(() => {
+                    commit("entry_error");
                 });
         },
     },
