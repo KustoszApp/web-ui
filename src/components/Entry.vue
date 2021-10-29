@@ -8,6 +8,12 @@
       @click="handleClick"
       @click.middle="handleMiddleClick"
     >
+      <a ref="entryLink" :href="link">{{ title }}</a> •
+      <span class="entry__source">{{ source }}</span> •
+      <span class="entry__author">{{ author }}</span> • added:
+      <span class="entry__published">{{ formatDate(publishedTime) }}</span>
+    </div>
+    <div class="entry__footer" v-show="isOpen">
       <button
         type="button"
         class="btn btn--secondary"
@@ -15,12 +21,6 @@
       >
         Mark as {{ isArchivedString() }}
       </button>
-      <a ref="entryLink" :href="link">{{ title }}</a> •
-      <span class="entry__source">{{ source }}</span> •
-      <span class="entry__author">{{ author }}</span> • added:
-      <span class="entry__published">{{ formatDate(publishedTime) }}</span>
-    </div>
-    <div class="entry__content__selector" v-show="isOpen">
       <select
         v-model="selected_content_index"
         @change="newContentSelected"
@@ -63,8 +63,8 @@ export default {
     publishedTime: String,
     source: String,
     author: String,
-    entryDefaultContent: {},
-    entryAvailableContents: [],
+    entryDefaultContent: Object,
+    entryAvailableContents: Array,
     isArchived: Boolean,
     isFocused: Boolean,
     isOpen: Boolean,
@@ -157,6 +157,10 @@ export default {
   cursor: pointer;
 }
 
+.entry__footer {
+  padding: 0.5rem 1rem;
+}
+
 .entry__author,
 .entry__published {
   color: var(--secondary);
@@ -166,13 +170,13 @@ export default {
   border-bottom-color: transparent;
 }
 
-.entry__content__selector {
-  text-align: right;
-}
-
 .entry__content {
   max-width: 50rem;
   padding: 0.5rem 1rem;
+}
+
+.entry__content .entry__content {
+  padding: 0;
 }
 
 .entry__content p {
