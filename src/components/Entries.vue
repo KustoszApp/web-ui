@@ -17,6 +17,7 @@
           :publishedTime="entry.published_time"
           :entryDefaultContent="entry.preferred_content"
           :entryAvailableContents="entry.available_contents"
+          :isArchived="entry.archived"
           :isFocused="entry.isFocused"
           :isOpen="entry.isOpened"
           @entryClick="handleEntryClick"

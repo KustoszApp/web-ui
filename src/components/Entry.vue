@@ -8,6 +8,13 @@
       @click="handleClick"
       @click.middle="handleMiddleClick"
     >
+      <button
+        type="button"
+        class="btn btn--secondary"
+        @click="toggleArchivedState"
+      >
+        Mark as {{ isArchivedString() }}
+      </button>
       <a ref="entryLink" :href="link">{{ title }}</a> •
       <span class="entry__source">{{ source }}</span> •
       <span class="entry__author">{{ author }}</span> • added:
@@ -45,6 +52,7 @@ export default {
     return {
       selected_content_index: this.getDefaultContentIndex(),
       entryContent: this.entryDefaultContent.content,
+      entryArchived: this.isArchived,
     };
   },
   props: {
@@ -57,6 +65,7 @@ export default {
     author: String,
     entryDefaultContent: {},
     entryAvailableContents: [],
+    isArchived: Boolean,
     isFocused: Boolean,
     isOpen: Boolean,
   },
@@ -77,6 +86,20 @@ export default {
     },
   },
   methods: {
+    toggleArchivedState() {
+      this.entryArchived = !this.entryArchived;
+      this.$store.dispatch({
+        type: "entry_archived_request",
+        id: this.entryId,
+        archived: this.entryArchived,
+      });
+    },
+    isArchivedString() {
+      if (this.entryArchived) {
+        return "unread";
+      }
+      return "read";
+    },
     handleClick(e) {
       e.preventDefault();
       this.$emit("entryClick", this.index);

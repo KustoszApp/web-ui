@@ -74,5 +74,26 @@ export default createStore({
                     commit("entry_error");
                 });
         },
+        entry_archived_request: ({ commit }, param) => {
+            const url = `http://127.0.0.1:8000/api/v1/entries/${param.id}/`;
+            const data = { archived: param.archived };
+            fetch(url, {
+                method: "PATCH",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            })
+                .then((response) => {
+                    return response.json();
+                })
+                .then((data) => {
+                    commit("entry_success", data);
+                })
+                .catch(() => {
+                    commit("entry_error");
+                });
+        },
     },
 });
