@@ -12,6 +12,33 @@ const routes = [
         component: Home,
     },
     {
+        path: "/maintenance/stale_channels",
+        name: "maintenance_stale_channels",
+        component: function () {
+            return import(
+                /* webpackChunkName: "maintenance_stale_channels" */ "../views/Maintenance.vue"
+            );
+        },
+    },
+    {
+        path: "/maintenance/not_updated_channels",
+        name: "maintenance_not_updated_channels",
+        component: function () {
+            return import(
+                /* webpackChunkName: "maintenance_not_updated_channels" */ "../views/Maintenance.vue"
+            );
+        },
+    },
+    {
+        path: "/maintenance/inactive_channels",
+        name: "maintenance_inactive_channels",
+        component: function () {
+            return import(
+                /* webpackChunkName: "maintenance_inactive_channels" */ "../views/Maintenance.vue"
+            );
+        },
+    },
+    {
         path: "/about",
         name: "about",
         // route level code-splitting

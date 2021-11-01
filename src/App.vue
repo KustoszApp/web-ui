@@ -9,6 +9,26 @@
     <div class="nav__sources">
       <NavList />
     </div>
+    <h2 class="nav__title">Maintenance</h2>
+    <div class="nav__menu">
+      <ul class="menu">
+        <li class="menu__item">
+          <router-link to="/maintenance/stale_channels"
+            >Stale channels</router-link
+          >
+        </li>
+        <li class="menu__item">
+          <router-link to="/maintenance/not_updated_channels"
+            >Channels without new entries</router-link
+          >
+        </li>
+        <li class="menu__item">
+          <router-link to="/maintenance/inactive_channels"
+            >Inactive channels</router-link
+          >
+        </li>
+      </ul>
+    </div>
     <h2 class="nav__title">Menu</h2>
     <div class="nav__menu">
       <ul class="menu">
