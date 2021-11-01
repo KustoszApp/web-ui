@@ -19,9 +19,114 @@
         >
           {{ feed.displayed_title }}
         </router-link>
+        <svg
+          class="list__item-edit-icon"
+          @click="showChannelEditModal(feed)"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 50 50"
+          enable-background="new 0 0 50 50"
+        >
+          <path
+            d="M9.6 40.4l2.5-9.9L27 15.6l7.4 7.4-14.9 14.9-9.9 2.5zm4.3-8.9l-1.5 6.1 6.1-1.5L31.6 23 27 18.4 13.9 31.5z"
+          />
+          <path
+            d="M17.8 37.3c-.6-2.5-2.6-4.5-5.1-5.1l.5-1.9c3.2.8 5.7 3.3 6.5 6.5l-1.9.5z"
+          />
+          <path d="M29.298 19.287l1.414 1.414-13.01 13.02-1.414-1.412z" />
+          <path d="M11 39l2.9-.7c-.3-1.1-1.1-1.9-2.2-2.2L11 39z" />
+          <path
+            d="M35 22.4L27.6 15l3-3 .5.1c3.6.5 6.4 3.3 6.9 6.9l.1.5-3.1 2.9zM30.4 15l4.6 4.6.9-.9c-.5-2.3-2.3-4.1-4.6-4.6l-.9.9z"
+          />
+        </svg>
       </li>
     </ul>
   </div>
+  <transition name="modal" v-if="channelEditModalDisplayed">
+    <div class="modal-mask">
+      <div class="modal-wrapper">
+        <div class="modal-container">
+          <div class="modal-header">
+            <slot name="header">
+              Editing channel {{ editedChannelDisplayedTitle }}
+            </slot>
+          </div>
+
+          <div class="modal-body">
+            <slot name="body">
+              <p>
+                <input
+                  type="checkbox"
+                  id="editedChannelActive"
+                  v-model="editedChannelActive"
+                />
+                <label for="editedChannelActive">active</label>
+              </p>
+              <p>
+                <input
+                  type="checkbox"
+                  id="editedChannelDeduplicationEnabled"
+                  v-model="editedChannelDeduplicationEnabled"
+                />
+                <label for="editedChannelDeduplicationEnabled"
+                  >is deduplicated</label
+                >
+              </p>
+              <p>
+                Name of channel:
+                <input v-model="editedChannelTitleUser" @keypress.stop />
+                (default name provided by channel author: "{{
+                  editedChannelTitleUpstream
+                }}")
+              </p>
+              <p>
+                Update frequency (seconds):
+                <input
+                  type="number"
+                  v-model="editedChannelUpdateFrequency"
+                  min="1"
+                />
+              </p>
+              <p>
+                Tags:
+                {{ editedChannelTags }}
+              </p>
+              <p>Channel added date: {{ editedChannelAddedTime }}</p>
+              <p>
+                Date of last content check:
+                {{ editedChannelLastCheckTime }}
+              </p>
+              <p>
+                Date of last entry publication:
+                {{ editedChannelLastEntryPublishedTime }}
+              </p>
+              <p>Channel link: {{ editedChannelLink }}</p>
+              <p>
+                Channel URL:
+                <a href="{{ editedChannelUrl }}">{{ editedChannelUrl }}</a>
+              </p>
+            </slot>
+          </div>
+
+          <div class="modal-footer">
+            <slot name="footer">
+              <button
+                class="modal-default-button"
+                @click="submitNewChannelData()"
+              >
+                Save
+              </button>
+              <button
+                class="modal-default-button"
+                @click="channelEditModalDisplayed = false"
+              >
+                Close this window
+              </button>
+            </slot>
+          </div>
+        </div>
+      </div>
+    </div>
+  </transition>
 </template>
 
 <script>
@@ -29,8 +134,54 @@ import { mapGetters } from "vuex";
 
 export default {
   name: "NavList",
+  data() {
+    return {
+      channelEditModalDisplayed: false,
+      editedChannelId: 0,
+      editedChannelActive: false,
+      editedChannelDeduplicationEnabled: false,
+      editedChannelDisplayedTitle: "",
+      editedChannelTitleUpstream: "",
+      editedChannelTitleUser: "",
+      editedChannelUpdateFrequency: 0,
+      editedChannelTags: [],
+      editedChannelAddedTime: "",
+      editedChannelLastCheckTime: "",
+      editedChannelLastEntryPublishedTime: "",
+      editedChannelLink: "",
+      editedChannelUrl: "",
+    };
+  },
   computed: {
     ...mapGetters(["channels"]),
+  },
+  methods: {
+    showChannelEditModal(feed) {
+      this.editedChannelId = feed.id;
+      this.editedChannelActive = feed.active;
+      this.editedChannelDeduplicationEnabled = feed.deduplication_enabled;
+      this.editedChannelTitleUpstream = feed.title_upstream;
+      this.editedChannelTitleUser = feed.title;
+      this.editedChannelDisplayedTitle = feed.displayed_title;
+      this.editedChannelUpdateFrequency = feed.update_frequency;
+      this.editedChannelTags = feed.tags;
+      this.editedChannelAddedTime = feed.added_time;
+      this.editedChannelLastCheckTime = feed.last_check_time;
+      this.editedChannelLastEntryPublishedTime = feed.last_entry_published_time;
+      this.editedChannelLink = feed.link;
+      this.editedChannelUrl = feed.url;
+      this.channelEditModalDisplayed = true;
+    },
+    submitNewChannelData() {
+      this.$store.dispatch({
+        type: "channel_edit_request",
+        channel_id: this.editedChannelId,
+        active: this.editedChannelActive,
+        deduplication_enabled: this.editedChannelDeduplicationEnabled,
+        title: this.editedChannelTitleUser,
+        update_frequency: this.editedChannelUpdateFrequency,
+      });
+    },
   },
 };
 </script>
@@ -62,9 +213,80 @@ export default {
   width: 12px;
 }
 
+.list__item-edit-icon {
+  margin-left: 0.25rem;
+  height: 14px;
+  width: 14px;
+}
+
 .list__item-link {
   color: var(--primary);
   text-decoration: none;
   vertical-align: middle;
+}
+
+.modal-mask {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: table;
+  transition: opacity 0.3s ease;
+}
+
+.modal-wrapper {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.modal-container {
+  min-width: 300px;
+  max-width: 75%;
+  margin: 0px auto;
+  padding: 20px 30px;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  transition: all 0.3s ease;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.modal-header h3 {
+  margin-top: 0;
+  color: #42b983;
+}
+
+.modal-body {
+  margin: 20px 0;
+}
+
+.modal-default-button {
+  float: right;
+}
+
+/*
+ * The following styles are auto-applied to elements with
+ * transition="modal" when their visibility is toggled
+ * by Vue.js.
+ *
+ * You can easily play with the modal transition by editing
+ * these styles.
+ */
+
+.modal-enter {
+  opacity: 0;
+}
+
+.modal-leave-active {
+  opacity: 0;
+}
+
+.modal-enter .modal-container,
+.modal-leave-active .modal-container {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
 }
 </style>

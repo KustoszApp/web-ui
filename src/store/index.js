@@ -33,6 +33,14 @@ export default createStore({
             state.entry = data;
         },
         entry_error: (state) => (state.status = "error"),
+        channel_edit_success: (state, data) => {
+            state.status = "success";
+            state.channels.forEach((item, idx) => {
+                if (item.id === data.id) {
+                    state.channels[idx] = data;
+                }
+            });
+        },
     },
     actions: {
         channels_request: ({ commit }) => {
@@ -93,6 +101,32 @@ export default createStore({
                 })
                 .catch(() => {
                     commit("entry_error");
+                });
+        },
+        channel_edit_request: ({ commit }, param) => {
+            const url = `http://127.0.0.1:8000/api/v1/channels/${param.channel_id}/`;
+            const data = {
+                active: param.active,
+                deduplication_enabled: param.deduplication_enabled,
+                title: param.title,
+                update_frequency: param.update_frequency,
+            };
+            fetch(url, {
+                method: "PATCH",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            })
+                .then((response) => {
+                    return response.json();
+                })
+                .then((data) => {
+                    commit("channel_edit_success", data);
+                })
+                .catch(() => {
+                    commit("channel_edit_error");
                 });
         },
     },
