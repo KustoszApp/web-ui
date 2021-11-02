@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const state = {
     status: "",
     maintenance_channels: [],
@@ -19,31 +21,30 @@ const mutations = {
 
 const actions = {
     maintenance_channels_get_request: ({ commit }, param) => {
-        const base = "http://127.0.0.1:8000/api/v1/channels/?limit=200";
+        const base = "channels/?limit=200";
         const url = param && param.query ? `${base}&${param.query}` : base;
-        fetch(url)
+        axios
+            .get(url)
             .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                commit("maintenance_channels_success", data);
+                commit("maintenance_channels_success", response.data);
             })
             .catch(() => {
                 commit("maintenance_channels_error");
             });
     },
     maintenance_channels_inactivate_request: ({ commit }, param) => {
-        const base = "http://127.0.0.1:8000/api/v1/channels/inactivate";
+        const base = "channels/inactivate";
         const url = param && param.query ? `${base}?${param.query}` : base;
-        fetch(url, {
-            method: "POST",
+        const options = {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
             },
-        })
+        };
+        axios
+            .post(url, options)
             .then((response) => {
-                return response.json();
+                return response;
             })
             .then(() => {
                 commit("maintenance_channels_change_success");

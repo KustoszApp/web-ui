@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const state = {
     status: "",
     channels: [],
@@ -26,12 +28,10 @@ const mutations = {
 
 const actions = {
     channels_request: ({ commit }) => {
-        fetch("http://127.0.0.1:8000/api/v1/channels/?limit=200")
+        axios
+            .get("channels/?limit=200")
             .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                commit("channels_success", data);
+                commit("channels_success", response.data);
             })
             .catch(() => {
                 commit("channels_error");

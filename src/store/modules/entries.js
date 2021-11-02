@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const state = {
     status: "",
     entries: [],
@@ -28,74 +30,64 @@ const mutations = {
 
 const actions = {
     entries_request: ({ commit }, param) => {
-        const base = "http://127.0.0.1:8000/api/v1/entries/";
+        const base = "entries/";
         const url = param && param.query ? `${base}?${param.query}` : base;
-        fetch(url)
+        axios
+            .get(url)
             .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                commit("entries_success", data);
+                commit("entries_success", response.data);
             })
             .catch(() => {
                 commit("entries_error");
             });
     },
     entry_request: ({ commit }, param) => {
-        const url = `http://127.0.0.1:8000/api/v1/entries/${param.id}/`;
-        fetch(url)
+        const url = `entries/${param.id}/`;
+        axios
+            .get(url)
             .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                commit("entry_success", data);
+                commit("entry_success", response.data);
             })
             .catch(() => {
                 commit("entry_error");
             });
     },
     entry_archived_request: ({ commit }, param) => {
-        const url = `http://127.0.0.1:8000/api/v1/entries/${param.id}/`;
+        const url = `entries/${param.id}/`;
         const data = { archived: param.archived };
-        fetch(url, {
-            method: "PATCH",
+        const options = {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(data),
-        })
+        };
+        axios
+            .patch(url, data, options)
             .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                commit("entry_success", data);
+                commit("entry_success", response.data);
             })
             .catch(() => {
                 commit("entry_error");
             });
     },
     channel_edit_request: ({ commit }, param) => {
-        const url = `http://127.0.0.1:8000/api/v1/channels/${param.channel_id}/`;
+        const url = `channels/${param.channel_id}/`;
         const data = {
             active: param.active,
             deduplication_enabled: param.deduplication_enabled,
             title: param.title,
             update_frequency: param.update_frequency,
         };
-        fetch(url, {
-            method: "PATCH",
+        const options = {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(data),
-        })
+        };
+        axios
+            .patch(url, data, options)
             .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                commit("channel_edit_success", data);
+                commit("channel_edit_success", response.data);
             })
             .catch(() => {
                 commit("channel_edit_error");
