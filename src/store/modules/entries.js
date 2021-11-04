@@ -70,29 +70,6 @@ const actions = {
                 commit("entry_error");
             });
     },
-    channel_edit_request: ({ commit }, param) => {
-        const url = `channels/${param.channel_id}/`;
-        const data = {
-            active: param.active,
-            deduplication_enabled: param.deduplication_enabled,
-            title: param.title,
-            update_frequency: param.update_frequency,
-        };
-        const options = {
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-            },
-        };
-        axios
-            .patch(url, data, options)
-            .then((response) => {
-                commit("channel_edit_success", response.data);
-            })
-            .catch(() => {
-                commit("channel_edit_error");
-            });
-    },
 };
 
 export default {

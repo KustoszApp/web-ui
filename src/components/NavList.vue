@@ -88,7 +88,15 @@
               </p>
               <p>
                 Tags:
-                {{ editedChannelTags }}
+                <Multiselect
+                  v-model="editedChannelTags"
+                  mode="tags"
+                  :options="editedChannelTagsOptions"
+                  :closeOnSelect="false"
+                  :searchable="true"
+                  :createTag="true"
+                  @keypress.stop
+                ></Multiselect>
               </p>
               <p>Channel added date: {{ editedChannelAddedTime }}</p>
               <p>
@@ -130,10 +138,14 @@
 </template>
 
 <script>
+import Multiselect from "@vueform/multiselect";
 import { mapGetters } from "vuex";
 
 export default {
   name: "NavList",
+  components: {
+    Multiselect,
+  },
   data() {
     return {
       channelEditModalDisplayed: false,
@@ -145,6 +157,7 @@ export default {
       editedChannelTitleUser: "",
       editedChannelUpdateFrequency: 0,
       editedChannelTags: [],
+      editedChannelTagsOptions: [],
       editedChannelAddedTime: "",
       editedChannelLastCheckTime: "",
       editedChannelLastEntryPublishedTime: "",
@@ -153,7 +166,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["channels"]),
+    ...mapGetters(["channels", "channelTags"]),
   },
   methods: {
     showChannelEditModal(feed) {
@@ -165,6 +178,7 @@ export default {
       this.editedChannelDisplayedTitle = feed.displayed_title;
       this.editedChannelUpdateFrequency = feed.update_frequency;
       this.editedChannelTags = feed.tags;
+      this.editedChannelTagsOptions = this.channelTags.map((tag) => tag.name);
       this.editedChannelAddedTime = feed.added_time;
       this.editedChannelLastCheckTime = feed.last_check_time;
       this.editedChannelLastEntryPublishedTime = feed.last_entry_published_time;
@@ -173,18 +187,26 @@ export default {
       this.channelEditModalDisplayed = true;
     },
     submitNewChannelData() {
-      this.$store.dispatch({
-        type: "channel_edit_request",
-        channel_id: this.editedChannelId,
-        active: this.editedChannelActive,
-        deduplication_enabled: this.editedChannelDeduplicationEnabled,
-        title: this.editedChannelTitleUser,
-        update_frequency: this.editedChannelUpdateFrequency,
-      });
+      this.$store
+        .dispatch({
+          type: "channel_edit_request",
+          channel_id: this.editedChannelId,
+          active: this.editedChannelActive,
+          deduplication_enabled: this.editedChannelDeduplicationEnabled,
+          tags: this.editedChannelTags,
+          title: this.editedChannelTitleUser,
+          update_frequency: this.editedChannelUpdateFrequency,
+        })
+        .then(() => {
+          this.$store.dispatch({
+            type: "channel_tags_request",
+          });
+        });
     },
   },
 };
 </script>
+<style src="@vueform/multiselect/themes/default.css"></style>
 
 <style lang="scss">
 .list {
