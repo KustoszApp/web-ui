@@ -58,6 +58,7 @@ export default {
   props: {
     index: Number,
     entryId: Number,
+    channelId: Number,
     title: String,
     link: String,
     publishedTime: String,
@@ -88,11 +89,22 @@ export default {
   methods: {
     toggleArchivedState() {
       this.entryArchived = !this.entryArchived;
-      this.$store.dispatch({
-        type: "entry_archived_request",
-        id: this.entryId,
-        archived: this.entryArchived,
-      });
+      this.$store
+        .dispatch({
+          type: "entry_archived_request",
+          id: this.entryId,
+          archived: this.entryArchived,
+        })
+        .then(() => {
+          let unarchived_entries_count = this.entryArchived
+            ? "decrease"
+            : "increase";
+          this.$store.dispatch({
+            type: "channel_unarchived_entries_change",
+            channel_id: this.channelId,
+            unarchived_entries_count: unarchived_entries_count,
+          });
+        });
     },
     isArchivedString() {
       if (this.entryArchived) {

@@ -68,7 +68,7 @@ const actions = {
                 "Content-Type": "application/json",
             },
         };
-        axios
+        return axios
             .patch(url, data, options)
             .then((response) => {
                 commit("entry_success", response.data);

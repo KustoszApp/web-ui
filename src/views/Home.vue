@@ -20,9 +20,19 @@ export default {
     this.$watch(
       () => this.$route.params,
       (toParams) => {
+        let param = toParams.entryId;
+        let query = `channel=${toParams.entryId}`;
+        if (isNaN(param)) {
+          if (param.includes("=")) {
+            query = param;
+          } else {
+            query = `channel_tags=${param}`;
+          }
+        }
+        console.log(query);
         this.$store.dispatch({
           type: "entries_request",
-          query: `channel=${toParams.entryId}`,
+          query: query,
         });
       }
     );

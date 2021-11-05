@@ -10,6 +10,7 @@
         <Entry
           :index="index"
           :entryId="entry.id"
+          :channelId="entry.channel"
           :title="entry.title"
           :link="entry.link"
           :source="getChannelTitle(entry.channel)"

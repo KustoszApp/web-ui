@@ -31,6 +31,20 @@ const mutations = {
         state.status = "success";
         state.channelTags = data.results;
     },
+    channel_unarchived_entries_change: (state, data) => {
+        state.channels.forEach((item) => {
+            if (item.id === data.channel_id) {
+                if (data.unarchived_entries_count === "increase") {
+                    item.unarchived_entries += 1;
+                } else if (data.unarchived_entries_count === "decrease") {
+                    item.unarchived_entries -= 1;
+                }
+                if (item.unarchived_entries < 0) {
+                    item.unarchived_entries = 0;
+                }
+            }
+        });
+    },
 };
 
 const actions = {
@@ -77,6 +91,9 @@ const actions = {
             .catch(() => {
                 commit("channels_error");
             });
+    },
+    channel_unarchived_entries_change: ({ commit }, param) => {
+        commit("channel_unarchived_entries_change", param);
     },
 };
 
