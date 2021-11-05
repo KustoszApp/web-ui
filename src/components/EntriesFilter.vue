@@ -32,13 +32,19 @@
           </option>
         </select>
         tagged:
-        <input
+        <Multiselect
           v-model="tags"
-          class="input-field"
-          type="text"
           placeholder="start typing"
+          mode="tags"
+          :options="entryTags"
+          valueProp="slug"
+          trackBy="name"
+          label="name"
+          :closeOnSelect="true"
+          :searchable="true"
+          :createTag="false"
           @keypress.stop
-        />
+        ></Multiselect>
         <button class="btn btn--primary" type="submit">Go!</button>
       </form>
     </div>
@@ -59,8 +65,14 @@
 </template>
 
 <script>
+import Multiselect from "@vueform/multiselect";
+import { mapGetters } from "vuex";
+
 export default {
   name: "EntriesFilter",
+  components: {
+    Multiselect,
+  },
   data() {
     return {
       isAdvancedSearch: false,
@@ -68,7 +80,7 @@ export default {
       showArchived: true,
       published: "published_time__gte",
       selected: false,
-      tags: "",
+      tags: [],
       times: [
         { label: "1 day", timeAgo: 1 },
         { label: "2 days", timeAgo: 2 },
@@ -76,6 +88,9 @@ export default {
         { label: "2 weeks", timeAgo: 14 },
       ],
     };
+  },
+  computed: {
+    ...mapGetters(["entryTags"]),
   },
   methods: {
     setFilter() {
@@ -89,7 +104,7 @@ export default {
         );
       }
       if (this.tags) {
-        filters.push(`tags=${this.tags}`);
+        filters.push(`tags=${this.tags.join(",")}`);
       }
 
       let qs = "";

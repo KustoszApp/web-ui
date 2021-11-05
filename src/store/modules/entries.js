@@ -4,11 +4,13 @@ const state = {
     status: "",
     entries: [],
     entry: [],
+    entryTags: [],
 };
 
 const getters = {
     entries: (state) => state.entries,
     entry: (state) => state.entry,
+    entryTags: (state) => state.entryTags,
 };
 
 const mutations = {
@@ -26,6 +28,11 @@ const mutations = {
         state.entry = data;
     },
     entry_error: (state) => (state.status = "error"),
+    entry_tags_request: (state) => (state.status = "loading"),
+    entry_tags_success: (state, data) => {
+        state.status = "success";
+        state.entryTags = data.results;
+    },
 };
 
 const actions = {
@@ -65,6 +72,16 @@ const actions = {
             .patch(url, data, options)
             .then((response) => {
                 commit("entry_success", response.data);
+            })
+            .catch(() => {
+                commit("entry_error");
+            });
+    },
+    entry_tags_request: ({ commit }) => {
+        axios
+            .get("tags/entry")
+            .then((response) => {
+                commit("entry_tags_success", response.data);
             })
             .catch(() => {
                 commit("entry_error");
