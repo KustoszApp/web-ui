@@ -43,9 +43,7 @@ const actions = {
         };
         axios
             .post(url, options)
-            .then((response) => {
-                return response;
-            })
+            .then((response) => response)
             .then(() => {
                 commit("maintenance_channels_change_success");
             })
@@ -54,18 +52,17 @@ const actions = {
             });
     },
     maintenance_channels_activate_request: ({ commit }, param) => {
-        const base = "http://127.0.0.1:8000/api/v1/channels/activate";
+        const base = "channels/activate";
         const url = param && param.query ? `${base}?${param.query}` : base;
-        fetch(url, {
-            method: "POST",
+        const options = {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
             },
-        })
-            .then((response) => {
-                return response.json();
-            })
+        };
+        axios
+            .post(url, options)
+            .then((response) => response)
             .then(() => {
                 commit("maintenance_channels_change_success");
             })
