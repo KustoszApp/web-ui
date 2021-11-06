@@ -45,15 +45,22 @@
     </div>
   </div>
   <router-view class="view" />
+  <Spinner :isVisible="this.status === 'loading'" />
 </template>
 
 <script>
 import NavList from "@/components/NavList.vue";
+import Spinner from "@/components/Spinner.vue";
+import { mapGetters } from "vuex";
 
 export default {
   name: "App",
   components: {
     NavList,
+    Spinner,
+  },
+  computed: {
+    ...mapGetters(["status", "entry"]),
   },
   methods: {
     switchTheme(value) {

@@ -11,6 +11,7 @@ const getters = {
     entries: (state) => state.entries,
     entry: (state) => state.entry,
     entryTags: (state) => state.entryTags,
+    status: (state) => state.status,
 };
 
 const mutations = {
@@ -37,6 +38,7 @@ const mutations = {
 
 const actions = {
     entries_request: ({ commit }, param) => {
+        commit("entries_request");
         const base = "entries/";
         const url = param && param.query ? `${base}?${param.query}` : base;
         axios
