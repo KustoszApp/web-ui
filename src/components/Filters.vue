@@ -6,7 +6,7 @@
           <input
             type="checkbox"
             class="form-switch__input"
-            :checked="filter.isActive"
+            :checked="filter.enabled"
           />
           {{ filter.name }}
         </label>
@@ -20,6 +20,7 @@
             width="16"
             height="16"
             viewBox="0 0 24 24"
+            @click="fillEditFilerForm(filter)"
           >
             <path
               fill="currentColor"
@@ -37,6 +38,7 @@
             width="16"
             height="16"
             viewBox="0 0 24 24"
+            @click="deleteFilter(filter)"
           >
             <path
               fill="currentColor"
@@ -56,11 +58,12 @@
               id="filterName"
               type="text"
               class="input-field"
-              v-model="filterName"
+              v-model="editedFilterName"
             />
           </div>
           <h4 class="h4">If</h4>
           <div>
+            <!--
             <select class="select-menu">
               <option default="">Field</option>
               <option>Field 1</option>
@@ -75,18 +78,34 @@
               <option>Condition 3</option>
               <option>Condition 4</option>
             </select>
-            <input id="filterName" type="text" class="input-field" />
+            -->
+            <input
+              type="text"
+              class="input-field"
+              v-model="editedFilterCondition"
+            />
           </div>
           <h4 class="h4">Then</h4>
           <div>
-            <select class="select-menu">
-              <option default="">Action</option>
-              <option>Action 1</option>
-              <option>Action 2</option>
-              <option>Action 3</option>
-              <option>Action 4</option>
+            <select
+              v-model="editedFilterActionName"
+              class="select-menu"
+              name=""
+              id=""
+            >
+              <option
+                v-for="item in filterActions"
+                :key="item.label"
+                :value="item.value"
+              >
+                {{ item.label }}
+              </option>
             </select>
-            <input id="filterName" type="text" class="input-field" />
+            <input
+              type="text"
+              class="input-field"
+              v-model="editedFilterActionArgument"
+            />
           </div>
         </div>
         <div class="panel-footer">
@@ -95,7 +114,9 @@
           <button type="submit" name="save" class="btn btn--primary">
             Save
           </button>
-          <button type="button" class="btn btn--primary">Cancel</button>
+          <button type="button" class="btn btn--primary" @click="cancelEditing">
+            Cancel
+          </button>
         </div>
       </form>
     </div>
@@ -103,28 +124,78 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: "Filters",
   data() {
     return {
-      filters: [
-        { id: 1, isActive: false, name: "Filter 1" },
-        { id: 2, isActive: true, name: "Filter 2" },
-        { id: 3, isActive: true, name: "Filter 3" },
-        { id: 4, isActive: false, name: "Filter 4" },
+      editedFilterId: undefined,
+      editedFilterEnabled: true,
+      editedFilterName: "",
+      editedFilterCondition: "",
+      editedFilterActionName: "",
+      editedFilterActionArgument: "",
+      filterActions: [
+        { value: "mark_as_read", label: "Mark as read" },
+        { value: "assign_tag", label: "Assign tag" },
+        { value: "run_script", label: "Run external application" },
       ],
-      filterName: "",
     };
+  },
+  computed: {
+    ...mapGetters(["filters"]),
   },
   methods: {
     save(e) {
-      console.log(e.submitter);
-      const item = {
-        isActive: e.submitter.name === "run",
-        name: this.filterName,
-      };
-      this.filters.push(item);
+      if (e.submitter.name === "run") {
+        return this.runFilter();
+      } else if (e.submitter.name === "save") {
+        return this.saveFilter();
+      }
     },
+    runFilter() {},
+    saveFilter() {
+      this.$store
+        .dispatch({
+          type:
+            this.editedFilterId === undefined
+              ? "filter_create_request"
+              : "filter_edit_request",
+          id: this.editedFilterId,
+          enabled: this.editedFilterEnabled,
+          name: this.editedFilterName,
+          condition: this.editedFilterCondition,
+          action_name: this.editedFilterActionName,
+          action_argument: this.editedFilterActionArgument,
+        })
+        .then(() => this.cancelEditing());
+    },
+    fillEditFilerForm(filter) {
+      this.editedFilterId = filter.id;
+      this.editedFilterEnabled = filter.enabled;
+      this.editedFilterName = filter.name;
+      this.editedFilterCondition = filter.condition;
+      this.editedFilterActionName = filter.action_name;
+      this.editedFilterActionArgument = filter.action_argument;
+    },
+    deleteFilter(filter) {
+      this.$store.dispatch({
+        type: "filter_delete_request",
+        id: filter.id,
+      });
+    },
+    cancelEditing() {
+      this.editedFilterId = undefined;
+      this.editedFilterEnabled = true;
+      this.editedFilterName = "";
+      this.editedFilterCondition = "";
+      this.editedFilterActionName = "";
+      this.editedFilterActionArgument = "";
+    },
+  },
+  created() {
+    this.$store.dispatch("filters_request");
   },
 };
 </script>
