@@ -20,6 +20,9 @@ export default {
     this.$watch(
       () => this.$route.params,
       (toParams) => {
+        if (!("entryId" in toParams)) {
+          return;
+        }
         let param = toParams.entryId;
         let query = `channel=${toParams.entryId}`;
         if (isNaN(param)) {
@@ -29,7 +32,6 @@ export default {
             query = `channel_tags=${param}`;
           }
         }
-        console.log(query);
         this.$store.dispatch({
           type: "entries_request",
           query: query,
