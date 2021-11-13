@@ -52,7 +52,7 @@ const actions = {
     },
     entry_request: ({ commit }, param) => {
         const url = `entries/${param.id}/`;
-        axios
+        return axios
             .get(url)
             .then((response) => {
                 commit("entry_success", response.data);
@@ -61,9 +61,12 @@ const actions = {
                 commit("entry_error");
             });
     },
-    entry_archived_request: ({ commit }, param) => {
+    entry_edit_request: ({ commit }, param) => {
         const url = `entries/${param.id}/`;
-        const data = { archived: param.archived };
+        let data = Object.entries(param).filter(
+            ([key]) => !["id", "type"].includes(key)
+        );
+        data = Object.fromEntries(data);
         const options = {
             headers: {
                 Accept: "application/json",

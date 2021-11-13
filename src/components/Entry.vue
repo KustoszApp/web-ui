@@ -39,20 +39,40 @@
           min)
         </option>
       </select>
+      Tags:
+      <Multiselect
+        v-model="editedEntryTags"
+        mode="tags"
+        :options="editedEntryTagsOptions"
+        valueProp="name"
+        trackBy="name"
+        label="name"
+        :closeOnSelect="false"
+        :searchable="true"
+        :createTag="true"
+        @change="editedEntryTagsChanged"
+        @keypress.stop
+      ></Multiselect>
     </div>
     <div class="entry__content" v-show="isOpen" v-html="entryContent" />
   </div>
 </template>
 
 <script>
+import Multiselect from "@vueform/multiselect";
 import { mapGetters } from "vuex";
 export default {
   name: "Entry",
+  components: {
+    Multiselect,
+  },
   data() {
     return {
       selected_content_index: this.getDefaultContentIndex(),
       entryContent: this.entryDefaultContent.content,
       entryArchived: this.isArchived,
+      editedEntryTags: [],
+      editedEntryTagsOptions: [],
     };
   },
   props: {
@@ -71,17 +91,22 @@ export default {
     isOpen: Boolean,
   },
   computed: {
-    ...mapGetters(["entry"]),
+    ...mapGetters(["entry", "entryTags"]),
   },
   watch: {
     isOpen(value) {
       this.$nextTick(() => {
         if (value) {
           this.$refs.entryLink.scrollIntoView(true);
-          this.$store.dispatch({
-            type: "entry_request",
-            id: this.entryId,
-          });
+          this.editedEntryTagsOptions = this.entryTags;
+          this.$store
+            .dispatch({
+              type: "entry_request",
+              id: this.entryId,
+            })
+            .then(() => {
+              this.editedEntryTags = this.entry.tags;
+            });
         }
       });
     },
@@ -91,7 +116,7 @@ export default {
       this.entryArchived = !this.entryArchived;
       this.$store
         .dispatch({
-          type: "entry_archived_request",
+          type: "entry_edit_request",
           id: this.entryId,
           archived: this.entryArchived,
         })
@@ -149,6 +174,17 @@ export default {
         );
       });
       this.entryContent = newContent.content;
+    },
+    editedEntryTagsChanged(value) {
+      this.$store
+        .dispatch({
+          type: "entry_edit_request",
+          id: this.entryId,
+          tags: value,
+        })
+        .then(() => {
+          this.$store.dispatch("entry_tags_request");
+        });
     },
   },
 };
