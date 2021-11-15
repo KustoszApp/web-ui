@@ -110,11 +110,17 @@
         </div>
         <div class="panel-footer">
           <button type="button" class="btn btn--primary">Try</button>
-          <button type="submit" name="run" class="btn btn--primary">Run</button>
-          <button type="submit" name="save" class="btn btn--primary">
+          <button type="submit" name="run" class="btn btn--primary ml-2">
+            Run
+          </button>
+          <button type="submit" name="save" class="btn btn--primary ml-2">
             Save
           </button>
-          <button type="button" class="btn btn--primary" @click="cancelEditing">
+          <button
+            type="button"
+            class="btn btn--primary ml-2"
+            @click="cancelEditing"
+          >
             Cancel
           </button>
         </div>

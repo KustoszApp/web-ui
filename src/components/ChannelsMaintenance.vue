@@ -9,6 +9,7 @@
         <input
           :id="feed.id"
           :value="feed.id"
+          class="input-check mr-1"
           type="checkbox"
           v-model="checkedChannels"
         />
