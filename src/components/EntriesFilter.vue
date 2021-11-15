@@ -21,7 +21,7 @@
         >
           Unread only
         </button>
-        <select v-model="published" class="select-menu" name="" id="">
+        <select v-model="published" class="select-menu ml-2" name="" id="">
           <option value="published_time__gte" default>Newer</option>
           <option value="published_time__lte">Older</option>
         </select>

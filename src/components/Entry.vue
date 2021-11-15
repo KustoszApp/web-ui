@@ -24,7 +24,7 @@
       <select
         v-model="selected_content_index"
         @change="newContentSelected"
-        class="select-menu"
+        class="select-menu ml-2"
         name=""
         id=""
       >
