@@ -60,6 +60,7 @@
 
 <script>
 import Multiselect from "@vueform/multiselect";
+import { formatDate } from "../utils";
 import { mapGetters } from "vuex";
 export default {
   name: "Entry",
@@ -144,10 +145,7 @@ export default {
     handleMiddleClick() {
       window.open(this.link, "_blank");
     },
-    formatDate(value) {
-      const date = new Date(value);
-      return date.toLocaleString("pl-PL");
-    },
+    formatDate,
     formatReadingTime(value) {
       return Math.round(value);
     },

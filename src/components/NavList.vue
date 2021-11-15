@@ -130,15 +130,35 @@
               <table>
                 <tr>
                   <td class="text-right">Date of last entry publication:</td>
-                  <td>{{ editedChannelLastEntryPublishedTime }}</td>
+                  <td>
+                    {{
+                      formatDate(
+                        editedChannelLastEntryPublishedTime,
+                        undefined,
+                        dateFormat
+                      )
+                    }}
+                  </td>
                 </tr>
                 <tr>
                   <td class="text-right">Date of last content check:</td>
-                  <td>{{ editedChannelLastCheckTime }}</td>
+                  <td>
+                    {{
+                      formatDate(
+                        editedChannelLastCheckTime,
+                        undefined,
+                        dateFormat
+                      )
+                    }}
+                  </td>
                 </tr>
                 <tr>
                   <td class="text-right">Channel added date:</td>
-                  <td>{{ editedChannelAddedTime }}</td>
+                  <td>
+                    {{
+                      formatDate(editedChannelAddedTime, undefined, dateFormat)
+                    }}
+                  </td>
                 </tr>
                 <tr>
                   <td class="text-right">Channel link:</td>
@@ -178,6 +198,7 @@
 <script>
 import Multiselect from "@vueform/multiselect";
 import { mapGetters } from "vuex";
+import { formatDate } from "../utils";
 
 export default {
   name: "NavList",
@@ -201,6 +222,13 @@ export default {
       editedChannelLastEntryPublishedTime: "",
       editedChannelLink: "",
       editedChannelUrl: "",
+      dateFormat: {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+      },
     };
   },
   computed: {
@@ -284,6 +312,7 @@ export default {
           });
         });
     },
+    formatDate,
   },
 };
 </script>
