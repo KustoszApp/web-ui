@@ -71,6 +71,7 @@
             <slot name="body">
               <p>
                 <input
+                  class="input-check mr-1"
                   type="checkbox"
                   id="editedChannelActive"
                   v-model="editedChannelActive"
@@ -79,6 +80,7 @@
               </p>
               <p>
                 <input
+                  class="input-check mr-1"
                   type="checkbox"
                   id="editedChannelDeduplicationEnabled"
                   v-model="editedChannelDeduplicationEnabled"
@@ -88,15 +90,26 @@
                 >
               </p>
               <p>
-                Name of channel:
-                <input v-model="editedChannelTitleUser" @keypress.stop />
-                (default name provided by channel author: "{{
-                  editedChannelTitleUpstream
-                }}")
+                <label for="channel-title">Name of channel:</label>
+                <input
+                  id="channel-title"
+                  class="input-field"
+                  v-model="editedChannelTitleUser"
+                  @keypress.stop
+                />
+                <small class="muted"
+                  >(default name provided by channel author: "{{
+                    editedChannelTitleUpstream
+                  }}")
+                </small>
               </p>
               <p>
-                Update frequency (seconds):
+                <label for="update-frequency">
+                  Update frequency (seconds):
+                </label>
                 <input
+                  id="update-frequency"
+                  class="input-field"
                   type="number"
                   v-model="editedChannelUpdateFrequency"
                   min="1"
@@ -114,33 +127,42 @@
                   @keypress.stop
                 ></Multiselect>
               </p>
-              <p>Channel added date: {{ editedChannelAddedTime }}</p>
-              <p>
-                Date of last content check:
-                {{ editedChannelLastCheckTime }}
-              </p>
-              <p>
-                Date of last entry publication:
-                {{ editedChannelLastEntryPublishedTime }}
-              </p>
-              <p>Channel link: {{ editedChannelLink }}</p>
-              <p>
-                Channel URL:
-                <a href="{{ editedChannelUrl }}">{{ editedChannelUrl }}</a>
-              </p>
+              <table>
+                <tr>
+                  <td class="text-right">Date of last entry publication:</td>
+                  <td>{{ editedChannelLastEntryPublishedTime }}</td>
+                </tr>
+                <tr>
+                  <td class="text-right">Date of last content check:</td>
+                  <td>{{ editedChannelLastCheckTime }}</td>
+                </tr>
+                <tr>
+                  <td class="text-right">Channel added date:</td>
+                  <td>{{ editedChannelAddedTime }}</td>
+                </tr>
+                <tr>
+                  <td class="text-right">Channel link:</td>
+                  <td>
+                    <a :href="editedChannelLink">{{ editedChannelLink }}</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text-right">Channel URL:</td>
+                  <td>
+                    <a :href="editedChannelUrl">{{ editedChannelUrl }}</a>
+                  </td>
+                </tr>
+              </table>
             </slot>
           </div>
 
           <div class="modal-footer">
             <slot name="footer">
-              <button
-                class="modal-default-button"
-                @click="submitNewChannelData()"
-              >
+              <button class="btn btn--primary" @click="submitNewChannelData()">
                 Save
               </button>
               <button
-                class="modal-default-button"
+                class="btn btn--secondary ml-2"
                 @click="channelEditModalDisplayed = false"
               >
                 Close this window
@@ -327,12 +349,16 @@ export default {
   min-width: 300px;
   max-width: 75%;
   margin: 0px auto;
-  padding: 20px 30px;
+  padding: 1rem;
   background-color: #fff;
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
   font-family: Helvetica, Arial, sans-serif;
+}
+
+.modal-header {
+  font-size: 1.25rem;
 }
 
 .modal-header h3 {
@@ -341,11 +367,12 @@ export default {
 }
 
 .modal-body {
-  margin: 20px 0;
+  margin: 1rem 0;
 }
 
-.modal-default-button {
-  float: right;
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
 }
 
 /*

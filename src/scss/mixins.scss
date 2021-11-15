@@ -1,10 +1,43 @@
 @mixin makeTheme($theme) {
-    --primary: #{map-get($map: $theme, $key: "primary")};
-    --secondary: #{map-get($map: $theme, $key: "secondary")};
-    --warning: #{map-get($map: $theme, $key: "warning")};
-    --danger: #{map-get($map: $theme, $key: "danger")};
-    --lighter: #{map-get($map: $theme, $key: "lighter")};
-    --darker: #{map-get($map: $theme, $key: "darker")};
-    --focus: #{map-get($map: $theme, $key: "focus")};
-    --link: #{map-get($map: $theme, $key: "link")};
+  --primary: #{map-get($map: $theme, $key: "primary")};
+  --secondary: #{map-get($map: $theme, $key: "secondary")};
+  --warning: #{map-get($map: $theme, $key: "warning")};
+  --danger: #{map-get($map: $theme, $key: "danger")};
+  --lighter: #{map-get($map: $theme, $key: "lighter")};
+  --darker: #{map-get($map: $theme, $key: "darker")};
+  --focus: #{map-get($map: $theme, $key: "focus")};
+  --link: #{map-get($map: $theme, $key: "link")};
+}
+
+// Margin utility mixin
+@mixin margin-variant($id, $size) {
+  .m-#{$id} {
+    margin: $size !important;
   }
+
+  .mb-#{$id} {
+    margin-bottom: $size !important;
+  }
+
+  .ml-#{$id} {
+    margin-left: $size !important;
+  }
+
+  .mr-#{$id} {
+    margin-right: $size !important;
+  }
+
+  .mt-#{$id} {
+    margin-top: $size !important;
+  }
+
+  .mx-#{$id} {
+    margin-left: $size !important;
+    margin-right: $size !important;
+  }
+
+  .my-#{$id} {
+    margin-bottom: $size !important;
+    margin-top: $size !important;
+  }
+}
