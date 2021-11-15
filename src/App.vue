@@ -124,7 +124,7 @@ a {
   -moz-osx-font-smoothing: grayscale;
   color: var(--primary);
   display: grid;
-  grid-template-columns: 200px auto;
+  grid-template-columns: 280px auto;
   line-height: 1.5;
   height: 100%;
   overflow: hidden;
