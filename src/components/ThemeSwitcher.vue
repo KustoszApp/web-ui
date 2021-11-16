@@ -9,7 +9,7 @@
     </button>
     <button
       type="button"
-      class="btn btn--secondary"
+      class="btn btn--secondary ml-2"
       @click="switchTheme('dark')"
     >
       Dark Theme

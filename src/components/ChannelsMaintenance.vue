@@ -1,4 +1,5 @@
 <template>
+  <h2 class="view__title">Maintenance</h2>
   <div class="list">
     <ul class="list__content">
       <li
