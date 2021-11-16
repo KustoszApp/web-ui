@@ -10,7 +10,7 @@
           v-model="advancedQueryString"
           @keypress.stop
         />
-        <button class="btn btn--primary" type="submit">Go!</button>
+        <button class="btn btn--primary ml-2" type="submit">Go!</button>
       </form>
       <form v-else @submit.prevent="setFilter">
         <button
@@ -21,18 +21,19 @@
         >
           Unread only
         </button>
-        <select v-model="published" class="select-menu ml-2" name="" id="">
+        <select v-model="published" class="select-menu mx-2" name="" id="">
           <option value="published_time__gte" default>Newer</option>
           <option value="published_time__lte">Older</option>
         </select>
         than
-        <select v-model="selected" class="select-menu" name="" id="">
+        <select v-model="selected" class="select-menu mx-2" name="" id="">
           <option v-for="item in times" :key="item.label" :value="item.timeAgo">
             {{ item.label }}
           </option>
         </select>
         tagged:
         <Multiselect
+          class="mx-2 search-bar__multiselect"
           v-model="tags"
           placeholder="start typing"
           mode="tags"
@@ -142,6 +143,11 @@ export default {
   margin-top: 0.5rem;
   margin-bottom: 1rem;
   display: flex;
+}
+
+.search-bar__multiselect {
+  width: 300px;
+  display: inline-flex;
 }
 
 .ml-auto {
