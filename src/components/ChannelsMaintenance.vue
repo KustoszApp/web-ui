@@ -109,37 +109,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-.list {
-  font-size: 0.875rem;
-}
-
-.list__content {
-  list-style-type: none;
-  padding: 0;
-  margin: 0 0 1rem;
-}
-
-.list__item {
-  color: var(--secondary);
-  margin: 0;
-  overflow: hidden;
-  padding: 0.25rem 0.5rem;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.list__item-icon {
-  vertical-align: middle;
-  margin-right: 0.125rem;
-  height: 12px;
-  width: 12px;
-}
-
-.list__item-link {
-  color: var(--primary);
-  text-decoration: none;
-  vertical-align: middle;
-}
-</style>
