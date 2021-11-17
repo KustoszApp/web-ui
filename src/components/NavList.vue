@@ -2,9 +2,10 @@
   <div class="list">
     <ul class="list__content">
       <li
-        class="list__item"
+        class="list__item group"
         v-for="group in groupedChannels()"
         :key="group.tag.slug"
+        :class="{ 'unarchived-items': group.unarchived_entries > 0 }"
       >
         <router-link
           class="list__item-link"
@@ -14,7 +15,12 @@
         </router-link>
         <span class="unread-count">{{ group.unarchived_entries }}</span>
         <ul class="list__content">
-          <li class="list__item" v-for="feed in group.channels" :key="feed.id">
+          <li
+            class="list__item"
+            v-for="feed in group.channels"
+            :key="feed.id"
+            :class="{ 'unarchived-items': feed.unarchived_entries > 0 }"
+          >
             <FeedItem :feed="feed" @edit="showChannelEditModal(feed)" />
           </li>
         </ul>
@@ -302,6 +308,20 @@ export default {
   padding: 0.25rem 0.5rem;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-weight: normal;
+
+  &.unarchived-items {
+    font-weight: 700;
+
+    & > .unread-count,
+    & > .feed > .unread-count {
+      visibility: visible;
+    }
+  }
+
+  &.group > .unread-count {
+    margin-left: 0.75rem;
+  }
 }
 
 .list__item-link {
@@ -314,10 +334,10 @@ export default {
   border: 2px solid var(--secondary);
   border-radius: 0.25rem;
   font-size: 0.75rem;
-  font-weight: 700;
   padding: 0 0.5rem;
-  margin-left: 0.25rem;
+  margin-left: auto;
   line-height: 1;
+  visibility: hidden;
 }
 
 .modal-mask {

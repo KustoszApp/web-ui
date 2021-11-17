@@ -13,6 +13,7 @@
     </svg>
     <router-link
       class="feed__item-link"
+      :title="feed.displayed_title"
       :to="{ name: 'home', params: { entryId: feed.id } }"
     >
       {{ feed.displayed_title }}
