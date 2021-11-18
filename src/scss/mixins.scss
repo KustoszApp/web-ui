@@ -7,6 +7,7 @@
   --darker: #{map-get($map: $theme, $key: "darker")};
   --focus: #{map-get($map: $theme, $key: "focus")};
   --link: #{map-get($map: $theme, $key: "link")};
+  --unread: #{map-get($map: $theme, $key: "unread")};
 }
 
 // Margin utility mixin

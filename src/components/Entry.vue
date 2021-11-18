@@ -1,7 +1,11 @@
 <template>
   <div
     class="entry"
-    :class="{ 'entry--open': isOpen, 'entry--focused': isFocused }"
+    :class="{
+      'entry--open': isOpen,
+      'entry--focused': isFocused,
+      'entry--archived': entryArchived,
+    }"
   >
     <div
       class="entry__header"
@@ -201,10 +205,20 @@ export default {
 .entry__header {
   padding: 0.5rem 1rem;
   cursor: pointer;
+  background-color: var(--unread);
 }
 
 .entry__footer {
   padding: 0.5rem 1rem;
+}
+
+.entry--archived .entry__header {
+  background-color: var(--darker);
+
+  .entry__author,
+  .entry__published {
+    color: var(--secondary);
+  }
 }
 
 .entry__author,
