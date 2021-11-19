@@ -7,6 +7,39 @@
         :key="group.tag.slug"
         :class="{ 'unarchived-items': group.unarchived_entries > 0 }"
       >
+        <span
+          v-if="group.tag.slug"
+          class="list__item-collapse-icon"
+          :class="{ visible: isGroupVisible(group.tag.slug) }"
+          @click="toggleGroupVisibility(group.tag.slug)"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+            v-if="isGroupVisible(group.tag.slug)"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+            v-else
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+        </span>
         <router-link
           class="list__item-link"
           :to="{ name: 'home', params: { entryId: group.tag.slug } }"
@@ -14,7 +47,7 @@
           {{ group.tag.name }}
         </router-link>
         <span class="unread-count">{{ group.unarchived_entries }}</span>
-        <ul class="list__content">
+        <ul class="list__content" v-show="isGroupVisible(group.tag.slug)">
           <li
             class="list__item"
             v-for="feed in group.channels"
@@ -194,6 +227,7 @@ export default {
       editedChannelLastEntryPublishedTime: "",
       editedChannelLink: "",
       editedChannelUrl: "",
+      visibleGroups: new Set(),
       dateFormat: {
         year: "numeric",
         month: "long",
@@ -249,6 +283,16 @@ export default {
         }, []);
       groups.unshift(totalObj);
       return groups;
+    },
+    isGroupVisible(groupSlug) {
+      return this.visibleGroups.has(groupSlug);
+    },
+    toggleGroupVisibility(groupSlug) {
+      if (this.isGroupVisible(groupSlug)) {
+        this.visibleGroups.delete(groupSlug);
+      } else {
+        this.visibleGroups.add(groupSlug);
+      }
     },
     showChannelEditModal(feed) {
       this.editedChannelId = feed.id;
