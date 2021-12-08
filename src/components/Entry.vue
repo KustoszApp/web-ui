@@ -235,6 +235,12 @@ export default {
   padding: 0.5rem 1rem;
 }
 
+.entry__content::after {
+  content: "";
+  clear: both;
+  display: block;
+}
+
 .entry__content .entry__content {
   padding: 0;
 }
