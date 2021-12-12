@@ -2,7 +2,7 @@
   <div class="list">
     <ul class="list__content">
       <li
-        class="list__item group"
+        class="list__item list__item--group"
         v-for="group in groupedChannels()"
         :key="group.tag.slug"
         :class="{ 'unarchived-items': group.unarchived_entries > 0 }"
@@ -362,15 +362,22 @@ export default {
       visibility: visible;
     }
   }
-
-  &.group > .unread-count {
-    margin-left: 0.75rem;
-  }
 }
 
-.list__item .list__item {
+.list__item--group > .unread-count {
+  margin-left: 0.75rem;
+}
+
+.list__item--group .list__item {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
+}
+
+.list__item-collapse-icon {
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+  vertical-align: middle;
 }
 
 .list__item-link {
