@@ -18,6 +18,8 @@
     <ThemeSwitcher />
     <h3 class="section-title">Filters</h3>
     <Filters />
+    <h3 class="section-title">Add Source</h3>
+    <AddSource />
     <h3 class="section-title">Sources</h3>
     <NavList />
   </div>
@@ -28,6 +30,7 @@
 import NavList from "@/components/NavList.vue";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import Filters from "@/components/Filters";
+import AddSource from "@/components/AddSource";
 
 export default {
   name: "Home",
@@ -35,6 +38,7 @@ export default {
     NavList,
     ThemeSwitcher,
     Filters,
+    AddSource,
   },
 };
 </script>
