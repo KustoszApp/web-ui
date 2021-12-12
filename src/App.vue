@@ -11,7 +11,7 @@
     </div>
     <h2 class="nav__title">Maintenance</h2>
     <div class="nav__menu">
-      <ul class="menu">
+      <ul class="menu mb-0">
         <li class="menu__item">
           <router-link to="/maintenance/stale_channels"
             >Stale channels</router-link
@@ -27,19 +27,8 @@
             >Inactive channels</router-link
           >
         </li>
-      </ul>
-    </div>
-    <h2 class="nav__title">Menu</h2>
-    <div class="nav__menu">
-      <ul class="menu">
-        <li class="menu__item">
-          <router-link to="/">Home</router-link>
-        </li>
         <li class="menu__item">
           <router-link to="/settings">Options</router-link>
-        </li>
-        <li class="menu__item">
-          <router-link to="/about">About Us</router-link>
         </li>
       </ul>
     </div>
@@ -132,8 +121,7 @@ a {
 
 .nav {
   background-color: var(--lighter);
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
+  padding: 0.5rem;
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -149,7 +137,7 @@ a {
 .nav__add {
   display: grid;
   flex: 0;
-  margin: 0.5rem 0;
+  margin: 0 0 0.5rem;
 }
 
 .nav__sources {
@@ -192,6 +180,7 @@ a {
 
 .view__title {
   border-bottom: 1px solid var(--primary);
-  padding: 0 1.5rem;
+  margin: 0;
+  padding: 0.5rem 1.5rem 0;
 }
 </style>

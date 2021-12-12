@@ -112,6 +112,7 @@
 //
 // Utils
 //
+@include margin-variant($id: 0, $size: 0);
 
 @include margin-variant($id: 1, $size: 0.25rem);
 
