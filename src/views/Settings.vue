@@ -14,14 +14,26 @@
       </svg>
       Settings
     </h2>
-    <h3 class="section-title">Theme</h3>
-    <ThemeSwitcher />
-    <h3 class="section-title">Filters</h3>
-    <Filters />
-    <h3 class="section-title">Add Source</h3>
-    <AddSource />
-    <h3 class="section-title">Sources</h3>
-    <NavList />
+    <div class="section">
+      <h3 class="section-title">Theme</h3>
+      <ThemeSwitcher />
+    </div>
+    <div class="section">
+      <h3 class="section-title">Filters</h3>
+      <Filters />
+    </div>
+    <div class="section">
+      <h3 class="section-title">Add Source</h3>
+      <AddSource />
+    </div>
+    <div class="section">
+      <h3 class="section-title">Sources</h3>
+      <NavList />
+    </div>
+    <div class="section">
+      <h3 class="section-title">About Us</h3>
+      <p>Self-hosted RSS Reader</p>
+    </div>
   </div>
 </template>
 
@@ -48,5 +60,9 @@ export default {
   height: 20px;
   width: 20px;
   color: var(--primary);
+}
+
+.section {
+  padding: 0.5rem 2rem;
 }
 </style>

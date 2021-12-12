@@ -342,14 +342,14 @@ export default {
 .list__content {
   list-style-type: none;
   padding: 0;
-  margin: 0 0 1rem;
+  margin: 0;
 }
 
 .list__item {
   color: var(--secondary);
   margin: 0;
   overflow: hidden;
-  padding: 0.25rem 0.5rem;
+  padding: 0.25rem 0;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-weight: normal;
@@ -366,6 +366,11 @@ export default {
   &.group > .unread-count {
     margin-left: 0.75rem;
   }
+}
+
+.list__item .list__item {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 .list__item-link {
