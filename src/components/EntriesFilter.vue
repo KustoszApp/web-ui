@@ -78,7 +78,7 @@ export default {
     return {
       isAdvancedSearch: false,
       advancedQueryString: "",
-      showArchived: true,
+      showArchived: false,
       published: "published_time__gte",
       selected: false,
       tags: [],
