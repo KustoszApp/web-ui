@@ -210,6 +210,13 @@ export default {
 
 .entry__footer {
   padding: 0.5rem 1rem;
+
+  .multiselect {
+    width: auto;
+    min-width: 30%;
+    max-width: 70%;
+    display: inline-flex;
+  }
 }
 
 .entry--archived .entry__header {
