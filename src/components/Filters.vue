@@ -86,7 +86,7 @@
             />
           </div>
           <h4 class="h4">Then</h4>
-          <div>
+          <div class="form-control if-wrapper">
             <select
               v-model="editedFilterActionName"
               class="select-menu"
@@ -246,5 +246,13 @@ export default {
 
 .h4 {
   margin-bottom: 0;
+}
+
+.if-wrapper {
+  display: flex;
+
+  input {
+    margin-left: 1rem;
+  }
 }
 </style>
