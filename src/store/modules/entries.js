@@ -6,6 +6,7 @@ const state = {
     entriesRequestParams: {
         archived: false,
     },
+    entriesNextPage: "",
     entries: [],
     entry: [],
     entryTags: [],
@@ -14,6 +15,7 @@ const state = {
 const getters = {
     entries: (state) => state.entries,
     entriesRequestParams: (state) => state.entriesRequestParams,
+    entriesNextPage: (state) => state.entriesNextPage,
     entry: (state) => state.entry,
     entryTags: (state) => state.entryTags,
     status: (state) => state.status,
@@ -48,11 +50,19 @@ const mutations = {
         state.entriesRequestParams = newRequestParams;
     },
     entries_request: (state) => (state.status = "loading"),
-    entries_success: (state, data) => {
+    entries_success: (state, payload) => {
+        const context = payload.context;
+        const data = payload.data;
         state.status = "success";
-        state.entries = data.results.map((item) => {
+        const newEntries = data.results.map((item) => {
             return { ...item, isFocused: false, isOpened: false };
         });
+        if (context === "initial_page") {
+            state.entries = newEntries;
+        } else {
+            state.entries.push(...newEntries);
+        }
+        state.entriesNextPage = data.next;
     },
     entries_error: (state) => (state.status = "error"),
     entry_request: (state) => (state.status = "loading"),
@@ -78,7 +88,27 @@ const actions = {
                 params: state.entriesRequestParams,
             })
             .then((response) => {
-                commit("entries_success", response.data);
+                commit("entries_success", {
+                    context: "initial_page",
+                    data: response.data,
+                });
+            })
+            .catch(() => {
+                commit("entries_error");
+            });
+    },
+    entries_next_page_request: ({ commit, state }) => {
+        if (state.entriesNextPage === null) {
+            return;
+        }
+        commit("entry_request");
+        axios
+            .get(state.entriesNextPage)
+            .then((response) => {
+                commit("entries_success", {
+                    context: "next_page",
+                    data: response.data,
+                });
             })
             .catch(() => {
                 commit("entries_error");

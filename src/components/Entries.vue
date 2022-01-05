@@ -40,7 +40,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["entries", "channels"]),
+    ...mapGetters(["status", "entries", "channels"]),
   },
   methods: {
     getChannelTitle(channelId) {
@@ -114,9 +114,24 @@ export default {
     handleEntryClick(index) {
       this.entries[index].isOpened = !this.entries[index].isOpened;
     },
+    onScroll(e) {
+      if (this.status === "loading") {
+        return;
+      }
+      const element = e.target;
+      const currentPos = element.scrollHeight - Math.abs(element.scrollTop);
+      const thresholdPos = 2 * element.clientHeight;
+      const bottomOfView = currentPos <= thresholdPos;
+      if (bottomOfView) {
+        this.$store.dispatch("entries_next_page_request");
+      }
+    },
   },
   mounted() {
     document.addEventListener("keypress", this.onKeypress);
+    document
+      .querySelector("#app .home")
+      .addEventListener("scroll", this.onScroll);
   },
   beforeUnmount() {
     document.removeEventListener("keypress", this.onKeypress);
