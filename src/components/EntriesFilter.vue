@@ -85,8 +85,50 @@
       <!-- <button type="button" class="btn btn--secondary">
         Set filter as default
       </button> -->
+      <button
+        type="button"
+        class="btn btn--secondary"
+        @click="showMarkAllReadModal"
+      >
+        Mark all as read
+      </button>
     </div>
   </div>
+  <transition name="modal" v-if="markAllReadModalDisplayed">
+    <div class="modal-mask">
+      <div class="modal-wrapper">
+        <div class="modal-container">
+          <div class="modal-header">
+            <slot name="header"> Mark as read ({{ entriesAllCount }}) </slot>
+          </div>
+
+          <div class="modal-body">
+            <slot name="body">
+              <p>
+                <strong>{{ entriesAllCount }}</strong> entries are about to be
+                marked as read.
+              </p>
+              <p>This can't be undone.</p>
+            </slot>
+          </div>
+
+          <div class="modal-footer">
+            <slot name="footer">
+              <button class="btn btn--primary" @click="markAllReadClicked">
+                Mark as read
+              </button>
+              <button
+                class="btn btn--secondary ml-2"
+                @click="markAllReadModalDisplayed = false"
+              >
+                Close this window
+              </button>
+            </slot>
+          </div>
+        </div>
+      </div>
+    </div>
+  </transition>
 </template>
 
 <script>
@@ -118,10 +160,11 @@ export default {
         { label: "1 week", timeAgo: 7 },
         { label: "2 weeks", timeAgo: 14 },
       ],
+      markAllReadModalDisplayed: false,
     };
   },
   computed: {
-    ...mapGetters(["entriesRequestParams", "entryTags"]),
+    ...mapGetters(["entriesRequestParams", "entriesAllCount", "entryTags"]),
     publishedOperatorChoicesValues() {
       return this.publishedOperatorChoices.map((choice) => choice.value);
     },
@@ -207,6 +250,14 @@ export default {
       } else {
         this.setSimpleFormValues();
       }
+    },
+    showMarkAllReadModal() {
+      this.markAllReadModalDisplayed = true;
+    },
+    markAllReadClicked() {
+      this.$store.dispatch("entries_mark_as_read").then(() => {
+        this.markAllReadModalDisplayed = false;
+      });
     },
   },
   created() {

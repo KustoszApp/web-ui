@@ -7,6 +7,7 @@ const state = {
         archived: false,
     },
     entriesNextPage: "",
+    entriesAllCount: 0,
     entries: [],
     entry: [],
     entryTags: [],
@@ -16,6 +17,7 @@ const getters = {
     entries: (state) => state.entries,
     entriesRequestParams: (state) => state.entriesRequestParams,
     entriesNextPage: (state) => state.entriesNextPage,
+    entriesAllCount: (state) => state.entriesAllCount,
     entry: (state) => state.entry,
     entryTags: (state) => state.entryTags,
     status: (state) => state.status,
@@ -63,8 +65,10 @@ const mutations = {
             state.entries.push(...newEntries);
         }
         state.entriesNextPage = data.next;
+        state.entriesAllCount = data.count;
     },
     entries_error: (state) => (state.status = "error"),
+    entries_mark_as_read_success: (state) => (state.status = "success"),
     entry_request: (state) => (state.status = "loading"),
     entry_success: (state, data) => {
         state.status = "success";
@@ -108,6 +112,23 @@ const actions = {
                 commit("entries_success", {
                     context: "next_page",
                     data: response.data,
+                });
+            })
+            .catch(() => {
+                commit("entries_error");
+            });
+    },
+    entries_mark_as_read: ({ dispatch, commit, state }) => {
+        commit("entries_request");
+        const url = "entries/archive";
+        return axios
+            .post(url, null, {
+                params: state.entriesRequestParams,
+            })
+            .then(() => {
+                commit("entries_mark_as_read_success");
+                return dispatch("channels_request").then(() => {
+                    return dispatch("entries_request");
                 });
             })
             .catch(() => {
