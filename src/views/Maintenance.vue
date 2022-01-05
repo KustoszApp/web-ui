@@ -6,6 +6,7 @@
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 30 30"
         xml:space="preserve"
+        style="width: 1em; height: 1em"
       >
         <path
           d="M16.758,21.401c0,0,4.496,4.496,4.819,4.819c1.04,1.04,2.725,1.04,3.764,0c1.04-1.04,1.04-2.725,0-3.765  c-0.323-0.323-4.819-4.819-4.819-4.819L16.758,21.401z"
@@ -27,7 +28,6 @@
 </template>
 
 <script>
-// @ is an alias to /src
 import ChannelsMaintenance from "@/components/ChannelsMaintenance.vue";
 
 export default {
