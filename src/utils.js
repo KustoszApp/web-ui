@@ -3,4 +3,16 @@ function formatDate(value, locale = "pl-PL", options) {
     return date.toLocaleString(locale, options);
 }
 
-export { formatDate };
+function omit(obj, omitKeys) {
+    if (obj === undefined) {
+        return {};
+    }
+    return Object.keys(obj).reduce((result, key) => {
+        if (!omitKeys.includes(key)) {
+            result[key] = obj[key];
+        }
+        return result;
+    }, {});
+}
+
+export { formatDate, omit };

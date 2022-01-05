@@ -1,7 +1,11 @@
 import axios from "axios";
+import { omit } from "../../utils";
 
 const state = {
     status: "",
+    entriesRequestParams: {
+        archived: false,
+    },
     entries: [],
     entry: [],
     entryTags: [],
@@ -9,12 +13,40 @@ const state = {
 
 const getters = {
     entries: (state) => state.entries,
+    entriesRequestParams: (state) => state.entriesRequestParams,
     entry: (state) => state.entry,
     entryTags: (state) => state.entryTags,
     status: (state) => state.status,
 };
 
 const mutations = {
+    set_entries_request_params: (state, data) => {
+        const { setParamsAsIs, ...params } = data;
+        let allRequestParams = {};
+        if (setParamsAsIs) {
+            allRequestParams = { ...params };
+        } else {
+            allRequestParams = { ...state.entriesRequestParams, ...params };
+        }
+        const newRequestParams = {};
+        Object.keys(allRequestParams)
+            .filter((key) => {
+                const val = allRequestParams[key];
+                return !(val === null || val === "");
+            })
+            .forEach((key) => {
+                let val = allRequestParams[key];
+                if (key === "archived") {
+                    if (val === "true") {
+                        val = true;
+                    } else {
+                        val = false;
+                    }
+                }
+                newRequestParams[key] = val;
+            });
+        state.entriesRequestParams = newRequestParams;
+    },
     entries_request: (state) => (state.status = "loading"),
     entries_success: (state, data) => {
         state.status = "success";
@@ -37,12 +69,14 @@ const mutations = {
 };
 
 const actions = {
-    entries_request: ({ commit }, param) => {
+    entries_request: ({ commit, state }, param) => {
         commit("entries_request");
-        const base = "entries/";
-        const url = param && param.query ? `${base}?${param.query}` : base;
+        commit("set_entries_request_params", omit(param, ["type"]));
+        const url = "entries/";
         axios
-            .get(url)
+            .get(url, {
+                params: state.entriesRequestParams,
+            })
             .then((response) => {
                 commit("entries_success", response.data);
             })

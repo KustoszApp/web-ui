@@ -1,7 +1,10 @@
 <template>
   <div class="search-bar">
     <div class="column">
-      <form v-if="isAdvancedSearch" @submit.prevent="setFilter">
+      <form
+        v-if="advancedFormDisplayed"
+        @submit.prevent="advancedQueryStringChanged"
+      >
         <input
           type="text"
           class="input-field"
@@ -12,22 +15,43 @@
         />
         <button class="btn btn--primary ml-2" type="submit">Go!</button>
       </form>
-      <form v-else @submit.prevent="setFilter">
+      <form v-else>
         <button
           type="button"
           class="btn btn--secondary"
-          :class="{ 'btn--active': !showArchived }"
-          @click="toggleShowArchived"
+          :class="{ 'btn--active': unreadOnly }"
+          @click="toggleUnreadOnly"
         >
           Unread only
         </button>
-        <select v-model="published" class="select-menu mx-2" name="" id="">
-          <option value="published_time__gte" default>Newer</option>
-          <option value="published_time__lte">Older</option>
+        <select
+          v-model="publishedOperator"
+          @change="publishedChanged()"
+          class="select-menu mx-2"
+          name=""
+          id=""
+        >
+          <option
+            v-for="item in publishedOperatorChoices"
+            :key="item.label"
+            :value="item.value"
+          >
+            {{ item.label }}
+          </option>
         </select>
         than
-        <select v-model="selected" class="select-menu mx-2" name="" id="">
-          <option v-for="item in times" :key="item.label" :value="item.timeAgo">
+        <select
+          v-model="publishedRefValue"
+          @change="publishedChanged()"
+          class="select-menu mx-2"
+          name=""
+          id=""
+        >
+          <option
+            v-for="item in publishedRefValues"
+            :key="item.label"
+            :value="item.timeAgo"
+          >
             {{ item.label }}
           </option>
         </select>
@@ -45,16 +69,16 @@
           :searchable="true"
           :createTag="false"
           @keypress.stop
+          @change="newTagsSet"
         ></Multiselect>
-        <button class="btn btn--primary" type="submit">Go!</button>
       </form>
     </div>
     <div class="column ml-auto">
       <button
         type="button"
         class="btn btn--secondary"
-        :class="{ 'btn--active': isAdvancedSearch }"
-        @click="toggleIsAdvancedSearch"
+        :class="{ 'btn--active': advancedFormDisplayed }"
+        @click="toggleAdvancedFormDisplayed"
       >
         Advanced search
       </button>
@@ -67,6 +91,7 @@
 
 <script>
 import Multiselect from "@vueform/multiselect";
+import qs from "qs";
 import { mapGetters } from "vuex";
 
 export default {
@@ -76,13 +101,18 @@ export default {
   },
   data() {
     return {
-      isAdvancedSearch: false,
+      advancedFormDisplayed: false,
       advancedQueryString: "",
-      showArchived: false,
-      published: "published_time__gte",
-      selected: false,
+      unreadOnly: false,
+      publishedOperator: "",
+      publishedRefValue: "",
       tags: [],
-      times: [
+      publishedOperatorChoices: [
+        { label: "Newer", value: "published_time__gte" },
+        { label: "Older", value: "published_time__lte" },
+      ],
+      publishedRefValues: [
+        { label: "-", timeAgo: null },
         { label: "1 day", timeAgo: 1 },
         { label: "2 days", timeAgo: 2 },
         { label: "1 week", timeAgo: 7 },
@@ -91,49 +121,96 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["entryTags"]),
+    ...mapGetters(["entriesRequestParams", "entryTags"]),
+    publishedOperatorChoicesValues() {
+      return this.publishedOperatorChoices.map((choice) => choice.value);
+    },
   },
   methods: {
-    setFilter() {
-      const filters = [];
-      if (!this.showArchived) {
-        filters.push(`archived=${this.showArchived}`);
-      }
-      if (this.published && this.selected) {
-        filters.push(
-          `${this.published}=${this.calculateDateFilter(this.selected)}`
-        );
-      }
-      if (this.tags) {
-        filters.push(`tags=${this.tags.join(",")}`);
-      }
-
-      let qs = "";
-      if (this.isAdvancedSearch) {
-        qs = this.advancedQueryString;
-      } else {
-        qs = filters.join("&");
-      }
-      if (this.$route.params.entryId) {
-        qs += `&channel=${this.$route.params.entryId}`;
-      }
-      console.log(qs);
+    dispatchFilteredEntriesRequest(params) {
       this.$store.dispatch({
         type: "entries_request",
-        query: qs,
+        ...params,
       });
     },
-    calculateDateFilter(daysAgo) {
+    toggleUnreadOnly() {
+      this.unreadOnly = !this.unreadOnly;
+      let archived = null;
+      if (this.unreadOnly === true) {
+        archived = false;
+      }
+      this.dispatchFilteredEntriesRequest({ archived: archived });
+    },
+    publishedChanged() {
+      const params = {};
+      this.publishedOperatorChoicesValues.forEach((paramName) => {
+        let paramValue = null;
+        if (
+          this.publishedRefValue !== null &&
+          paramName === this.publishedOperator
+        ) {
+          paramValue = this.calculateReferenceDate(this.publishedRefValue);
+        }
+        params[paramName] = paramValue;
+      });
+      this.dispatchFilteredEntriesRequest(params);
+    },
+    newTagsSet(newValue) {
+      let newTags = newValue.join(",");
+      this.dispatchFilteredEntriesRequest({ tags: newTags });
+    },
+    advancedQueryStringChanged() {
+      let params = qs.parse(this.advancedQueryString);
+      params["setParamsAsIs"] = true;
+      this.dispatchFilteredEntriesRequest(params);
+    },
+    calculateReferenceDate(daysAgo, sliceNum = -5) {
       const date = new Date();
       date.setDate(date.getDate() - daysAgo);
-      return date.toISOString().slice(0, -5);
+      return date.toISOString().slice(0, sliceNum);
     },
-    toggleShowArchived() {
-      this.showArchived = !this.showArchived;
+    setAdvancedFormValues() {
+      this.advancedQueryString = qs.stringify(this.entriesRequestParams);
     },
-    toggleIsAdvancedSearch() {
-      this.isAdvancedSearch = !this.isAdvancedSearch;
+    setSimpleFormValues() {
+      this.unreadOnly = this.entriesRequestParams.archived === false;
+      this.publishedOperator = this.publishedOperatorChoicesValues[0];
+      this.publishedRefValue = null;
+
+      this.publishedOperatorChoicesValues.forEach((choice) => {
+        if (choice in this.entriesRequestParams) {
+          this.publishedOperator = choice;
+        }
+      });
+      if (this.publishedOperator in this.entriesRequestParams) {
+        const dateValue = this.entriesRequestParams[
+          this.publishedOperator
+        ].slice(0, -9);
+        this.publishedRefValues
+          .filter((refValueObj) => !(refValueObj.timeAgo === null))
+          .forEach((refValueObj) => {
+            const refValue = refValueObj.timeAgo;
+            const refDateValue = this.calculateReferenceDate(refValue, -14);
+            if (refDateValue === dateValue) {
+              this.publishedRefValue = refValue;
+            }
+          });
+      }
+      if ("tags" in this.entriesRequestParams) {
+        this.tags = this.entriesRequestParams.tags.split(",");
+      }
     },
+    toggleAdvancedFormDisplayed() {
+      this.advancedFormDisplayed = !this.advancedFormDisplayed;
+      if (this.advancedFormDisplayed) {
+        this.setAdvancedFormValues();
+      } else {
+        this.setSimpleFormValues();
+      }
+    },
+  },
+  mounted() {
+    this.setSimpleFormValues();
   },
 };
 </script>

@@ -58,10 +58,7 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch({
-      type: "entries_request",
-      query: "archived=false",
-    });
+    this.$store.dispatch("entries_request");
     this.$store.dispatch("channels_request");
     this.$store.dispatch("channel_tags_request");
     this.$store.dispatch("entry_tags_request");
