@@ -94,51 +94,43 @@
       </button>
     </div>
   </div>
-  <transition name="modal" v-if="markAllReadModalDisplayed">
-    <div class="modal-mask">
-      <div class="modal-wrapper">
-        <div class="modal-container">
-          <div class="modal-header">
-            <slot name="header"> Mark as read ({{ entriesAllCount }}) </slot>
-          </div>
-
-          <div class="modal-body">
-            <slot name="body">
-              <p>
-                <strong>{{ entriesAllCount }}</strong> entries are about to be
-                marked as read.
-              </p>
-              <p>This can't be undone.</p>
-            </slot>
-          </div>
-
-          <div class="modal-footer">
-            <slot name="footer">
-              <button class="btn btn--primary" @click="markAllReadClicked">
-                Mark as read
-              </button>
-              <button
-                class="btn btn--secondary ml-2"
-                @click="markAllReadModalDisplayed = false"
-              >
-                Close this window
-              </button>
-            </slot>
-          </div>
-        </div>
-      </div>
+  <Modal
+    v-model="markAllReadModalDisplayed"
+    :title="`Mark as read (${this.entriesAllCount})`"
+  >
+    <div class="modal-body">
+      <p>
+        <strong>{{ entriesAllCount }}</strong> entries are about to be marked as
+        read.
+      </p>
+      <p>This can't be undone.</p>
     </div>
-  </transition>
+
+    <div class="modal-footer">
+      <button
+        class="btn btn--secondary"
+        @click="markAllReadModalDisplayed = false"
+      >
+        Close this window
+      </button>
+      <button class="btn btn--primary ml-2" @click="markAllReadClicked">
+        Mark as read
+      </button>
+    </div>
+  </Modal>
 </template>
 
 <script>
 import Multiselect from "@vueform/multiselect";
+import VueModal from "@kouts/vue-modal";
+import "@kouts/vue-modal/dist/vue-modal.css";
 import qs from "qs";
 import { mapGetters } from "vuex";
 
 export default {
   name: "EntriesFilter",
   components: {
+    Modal: VueModal,
     Multiselect,
   },
   data() {

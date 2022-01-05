@@ -63,146 +63,124 @@
       </li>
     </ul>
   </div>
-  <transition name="modal" v-if="channelEditModalDisplayed">
-    <div class="modal-mask">
-      <div class="modal-wrapper">
-        <div class="modal-container">
-          <div class="modal-header">
-            <slot name="header">
-              Editing channel {{ editedChannelDisplayedTitle }}
-            </slot>
-          </div>
-
-          <div class="modal-body">
-            <slot name="body">
-              <p>
-                <input
-                  class="input-check mr-1"
-                  type="checkbox"
-                  id="editedChannelActive"
-                  v-model="editedChannelActive"
-                />
-                <label for="editedChannelActive">active</label>
-              </p>
-              <p>
-                <input
-                  class="input-check mr-1"
-                  type="checkbox"
-                  id="editedChannelDeduplicationEnabled"
-                  v-model="editedChannelDeduplicationEnabled"
-                />
-                <label for="editedChannelDeduplicationEnabled"
-                  >is deduplicated</label
-                >
-              </p>
-              <p>
-                <label for="channel-title">Name of channel:</label>
-                <input
-                  id="channel-title"
-                  class="input-field"
-                  v-model="editedChannelTitleUser"
-                  @keypress.stop
-                />
-                <small class="muted"
-                  >(default name provided by channel author: "{{
-                    editedChannelTitleUpstream
-                  }}")
-                </small>
-              </p>
-              <p>
-                <label for="update-frequency">
-                  Update frequency (seconds):
-                </label>
-                <input
-                  id="update-frequency"
-                  class="input-field"
-                  type="number"
-                  v-model="editedChannelUpdateFrequency"
-                  min="1"
-                />
-              </p>
-              <p>
-                Tags:
-                <Multiselect
-                  v-model="editedChannelTags"
-                  mode="tags"
-                  :options="editedChannelTagsOptions"
-                  :closeOnSelect="false"
-                  :searchable="true"
-                  :createTag="true"
-                  @keypress.stop
-                ></Multiselect>
-              </p>
-              <table>
-                <tr>
-                  <td class="text-right">Date of last entry publication:</td>
-                  <td>
-                    {{
-                      formatDate(
-                        editedChannelLastEntryPublishedTime,
-                        undefined,
-                        dateFormat
-                      )
-                    }}
-                  </td>
-                </tr>
-                <tr>
-                  <td class="text-right">Date of last content check:</td>
-                  <td>
-                    {{
-                      formatDate(
-                        editedChannelLastCheckTime,
-                        undefined,
-                        dateFormat
-                      )
-                    }}
-                  </td>
-                </tr>
-                <tr>
-                  <td class="text-right">Channel added date:</td>
-                  <td>
-                    {{
-                      formatDate(editedChannelAddedTime, undefined, dateFormat)
-                    }}
-                  </td>
-                </tr>
-                <tr>
-                  <td class="text-right">Channel link:</td>
-                  <td>
-                    <a :href="editedChannelLink">{{ editedChannelLink }}</a>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="text-right">Channel URL:</td>
-                  <td>
-                    <a :href="editedChannelUrl">{{ editedChannelUrl }}</a>
-                  </td>
-                </tr>
-              </table>
-            </slot>
-          </div>
-
-          <div class="modal-footer">
-            <slot name="footer">
-              <button class="btn btn--primary" @click="submitNewChannelData()">
-                Save
-              </button>
-              <button
-                class="btn btn--secondary ml-2"
-                @click="channelEditModalDisplayed = false"
-              >
-                Close this window
-              </button>
-            </slot>
-          </div>
-        </div>
-      </div>
+  <Modal
+    v-model="channelEditModalDisplayed"
+    :title="`Editing channel ${this.editedChannelDisplayedTitle}`"
+    modal-class="modal modal-lg"
+  >
+    <div class="modal-body">
+      <p>
+        <input
+          class="input-check mr-1"
+          type="checkbox"
+          id="editedChannelActive"
+          v-model="editedChannelActive"
+        />
+        <label for="editedChannelActive">active</label>
+      </p>
+      <p>
+        <input
+          class="input-check mr-1"
+          type="checkbox"
+          id="editedChannelDeduplicationEnabled"
+          v-model="editedChannelDeduplicationEnabled"
+        />
+        <label for="editedChannelDeduplicationEnabled">is deduplicated</label>
+      </p>
+      <p>
+        <label for="channel-title">Name of channel:</label>
+        <input
+          id="channel-title"
+          class="input-field"
+          v-model="editedChannelTitleUser"
+          @keypress.stop
+        />
+        <small class="muted"
+          >(default name provided by channel author: "{{
+            editedChannelTitleUpstream
+          }}")
+        </small>
+      </p>
+      <p>
+        <label for="update-frequency"> Update frequency (seconds): </label>
+        <input
+          id="update-frequency"
+          class="input-field"
+          type="number"
+          v-model="editedChannelUpdateFrequency"
+          min="1"
+        />
+      </p>
+      <p>
+        Tags:
+        <Multiselect
+          v-model="editedChannelTags"
+          mode="tags"
+          :options="editedChannelTagsOptions"
+          :closeOnSelect="false"
+          :searchable="true"
+          :createTag="true"
+          @keypress.stop
+        ></Multiselect>
+      </p>
+      <table>
+        <tr>
+          <td class="text-right">Date of last entry publication:</td>
+          <td>
+            {{
+              formatDate(
+                editedChannelLastEntryPublishedTime,
+                undefined,
+                dateFormat
+              )
+            }}
+          </td>
+        </tr>
+        <tr>
+          <td class="text-right">Date of last content check:</td>
+          <td>
+            {{ formatDate(editedChannelLastCheckTime, undefined, dateFormat) }}
+          </td>
+        </tr>
+        <tr>
+          <td class="text-right">Channel added date:</td>
+          <td>
+            {{ formatDate(editedChannelAddedTime, undefined, dateFormat) }}
+          </td>
+        </tr>
+        <tr>
+          <td class="text-right">Channel link:</td>
+          <td>
+            <a :href="editedChannelLink">{{ editedChannelLink }}</a>
+          </td>
+        </tr>
+        <tr>
+          <td class="text-right">Channel URL:</td>
+          <td>
+            <a :href="editedChannelUrl">{{ editedChannelUrl }}</a>
+          </td>
+        </tr>
+      </table>
     </div>
-  </transition>
+
+    <div class="modal-footer">
+      <button
+        class="btn btn--secondary"
+        @click="channelEditModalDisplayed = false"
+      >
+        Close this window
+      </button>
+      <button class="btn btn--primary ml-2" @click="submitNewChannelData()">
+        Save
+      </button>
+    </div>
+  </Modal>
 </template>
 
 <script>
 import Multiselect from "@vueform/multiselect";
+import VueModal from "@kouts/vue-modal";
+import "@kouts/vue-modal/dist/vue-modal.css";
 import { mapGetters } from "vuex";
 import { formatDate } from "../utils";
 import FeedItem from "./FeedItem.vue";
@@ -210,6 +188,7 @@ import FeedItem from "./FeedItem.vue";
 export default {
   name: "NavList",
   components: {
+    Modal: VueModal,
     Multiselect,
     FeedItem,
   },
@@ -399,33 +378,10 @@ export default {
   visibility: hidden;
 }
 
-.modal-mask {
-  position: fixed;
-  z-index: 9998;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: table;
-  transition: opacity 0.3s ease;
-}
-
-.modal-wrapper {
-  display: table-cell;
-  vertical-align: middle;
-}
-
-.modal-container {
-  min-width: 300px;
-  max-width: 75%;
-  margin: 0px auto;
-  padding: 1rem;
-  background-color: #fff;
-  border-radius: 2px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
-  transition: all 0.3s ease;
-  font-family: Helvetica, Arial, sans-serif;
+@media (min-width: 992px) {
+  .modal.modal-lg {
+    max-width: 800px;
+  }
 }
 
 .modal-header {
@@ -444,28 +400,5 @@ export default {
 .modal-footer {
   display: flex;
   justify-content: flex-end;
-}
-
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
-
-.modal-enter {
-  opacity: 0;
-}
-
-.modal-leave-active {
-  opacity: 0;
-}
-
-.modal-enter .modal-container,
-.modal-leave-active .modal-container {
-  -webkit-transform: scale(1.1);
-  transform: scale(1.1);
 }
 </style>
