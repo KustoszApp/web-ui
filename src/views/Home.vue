@@ -6,7 +6,6 @@
 </template>
 
 <script>
-// @ is an alias to /src
 import Entries from "@/components/Entries.vue";
 import EntriesFilter from "@/components/EntriesFilter.vue";
 
@@ -16,28 +15,32 @@ export default {
     Entries,
     EntriesFilter,
   },
+  methods: {
+    queryParamsChanged() {
+      const newQuery = {};
+      const $route = this.$route;
+      for (const key in $route.query) {
+        const value = $route.query[key];
+        if (value !== null && value !== "") {
+          newQuery[key] = value;
+        }
+      }
+      this.$router.replace({ path: $route.path, query: newQuery });
+      this.$store.dispatch({
+        type: "entries_request",
+        ...$route.query,
+      });
+    },
+  },
   created() {
     this.$watch(
-      () => this.$route.params,
-      (toParams) => {
-        if (!("entryId" in toParams)) {
-          return;
-        }
-        let param = toParams.entryId;
-        let query = `channel=${toParams.entryId}`;
-        if (isNaN(param)) {
-          if (param.includes("=")) {
-            query = param;
-          } else {
-            query = `channel_tags=${param}`;
-          }
-        }
-        this.$store.dispatch({
-          type: "entries_request",
-          query: query,
-        });
-      }
+      () => this.$route,
+      ($route /* eslint-disable-line no-unused-vars*/) =>
+        this.queryParamsChanged()
     );
+  },
+  mounted() {
+    this.queryParamsChanged();
   },
 };
 </script>

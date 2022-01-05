@@ -4,10 +4,10 @@ import Home from "../views/Home.vue";
 const routes = [
     {
         path: "/",
-        redirect: "/feeds",
+        redirect: "/entries",
     },
     {
-        path: "/feeds/:entryId?",
+        path: "/entries/",
         name: "home",
         component: Home,
     },

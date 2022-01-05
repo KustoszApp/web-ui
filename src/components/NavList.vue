@@ -42,7 +42,10 @@
         </span>
         <router-link
           class="list__item-link"
-          :to="{ name: 'home', params: { entryId: group.tag.slug } }"
+          :to="{
+            name: 'home',
+            query: { channel_tags: group.tag.slug, channel: null },
+          }"
         >
           {{ group.tag.name }}
         </router-link>

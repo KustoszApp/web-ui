@@ -209,6 +209,18 @@ export default {
       }
     },
   },
+  created() {
+    this.$watch(
+      () => this.$route,
+      ($route /* eslint-disable-line no-unused-vars*/) => {
+        if (this.advancedFormDisplayed) {
+          this.setAdvancedFormValues();
+        } else {
+          this.setSimpleFormValues();
+        }
+      }
+    );
+  },
   mounted() {
     this.setSimpleFormValues();
   },
