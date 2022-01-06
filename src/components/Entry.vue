@@ -23,19 +23,17 @@
         class="btn btn--secondary"
         @click="toggleArchivedState"
       >
-        Mark as {{ isArchivedString() }}
+        Mark as {{ isArchivedString }}
       </button>
       <select
-        v-model="selected_content_index"
+        v-model="entrySelectedContent"
         @change="newContentSelected"
         class="select-menu ml-2"
-        name=""
-        id=""
       >
         <option
-          v-for="(content, index) in entryAvailableContents"
-          :key="index"
-          :value="index"
+          v-for="content in entryAvailableContents"
+          :key="content.id"
+          :value="content.id"
         >
           {{ content.source }} {{ content.language }} {{ content.mimetype }} ({{
             formatReadingTime(content.estimated_reading_time)
@@ -73,7 +71,7 @@ export default {
   },
   data() {
     return {
-      selected_content_index: this.getDefaultContentIndex(),
+      entrySelectedContent: this.entryDefaultContent.id,
       entryContent: this.entryDefaultContent.content,
       entryArchived: this.isArchived,
       editedEntryTags: [],
@@ -97,6 +95,12 @@ export default {
   },
   computed: {
     ...mapGetters(["entry", "entryTags"]),
+    isArchivedString() {
+      if (this.entryArchived) {
+        return "unread";
+      }
+      return "read";
+    },
   },
   watch: {
     isOpen(value) {
@@ -136,12 +140,6 @@ export default {
           });
         });
     },
-    isArchivedString() {
-      if (this.entryArchived) {
-        return "unread";
-      }
-      return "read";
-    },
     handleClick(e) {
       e.preventDefault();
       this.$emit("entryClick", this.index);
@@ -153,28 +151,10 @@ export default {
     formatReadingTime(value) {
       return Math.round(value);
     },
-    getDefaultContentIndex() {
-      return this.entryAvailableContents.findIndex((content) => {
-        return (
-          content.source === this.entryDefaultContent.source &&
-          content.language === this.entryDefaultContent.language &&
-          content.mimetype === this.entryDefaultContent.mimetype
-        );
-      });
-    },
     newContentSelected() {
-      if (this.selected_content_index < 0) {
-        return;
-      }
-      let newContentMetadata =
-        this.entryAvailableContents[this.selected_content_index];
-      let newContent = this.entry.contents.find((content) => {
-        return (
-          content.source === newContentMetadata.source &&
-          content.language === newContentMetadata.language &&
-          content.mimetype === newContentMetadata.mimetype
-        );
-      });
+      const newContent = this.entry.contents.find(
+        (x) => x.id === this.entrySelectedContent
+      );
       this.entryContent = newContent.content;
     },
     editedEntryTagsChanged(value) {
