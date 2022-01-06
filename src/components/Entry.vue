@@ -72,7 +72,7 @@ export default {
   data() {
     return {
       entrySelectedContent: this.entryDefaultContent.id,
-      entryContent: this.entryDefaultContent.content,
+      entryContent: "",
       entryArchived: this.isArchived,
       editedEntryTags: [],
       editedEntryTagsOptions: [],
@@ -106,6 +106,7 @@ export default {
     isOpen(value) {
       this.$nextTick(() => {
         if (value) {
+          this.entryContent = this.entryDefaultContent.content;
           this.$refs.entryLink.scrollIntoView(true);
           this.editedEntryTagsOptions = this.entryTags;
           this.$store
@@ -116,6 +117,8 @@ export default {
             .then(() => {
               this.editedEntryTags = this.entry.tags;
             });
+        } else {
+          this.entryContent = "";
         }
       });
     },
