@@ -47,6 +47,15 @@ const routes = [
             );
         },
     },
+    {
+        path: "/filters",
+        name: "filters",
+        component: function () {
+            return import(
+                /* webpackChunkName: "filters" */ "../views/Filters.vue"
+            );
+        },
+    },
 ];
 
 const router = createRouter({

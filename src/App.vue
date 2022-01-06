@@ -27,6 +27,13 @@
             >Inactive channels</router-link
           >
         </li>
+      </ul>
+    </div>
+    <div class="nav__menu">
+      <ul class="menu mb-0">
+        <li class="menu__item">
+          <router-link to="/filters">Filters</router-link>
+        </li>
         <li class="menu__item">
           <router-link to="/settings">Options</router-link>
         </li>

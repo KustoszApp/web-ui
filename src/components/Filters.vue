@@ -1,5 +1,12 @@
 <template>
   <div class="filters">
+    <button
+      type="button"
+      class="btn btn--primary btn--big"
+      @click="newFilter()"
+    >
+      Add filter
+    </button>
     <div class="row" v-for="filter in filters" :key="filter.id">
       <div class="col">
         <label class="form-switch">
@@ -12,7 +19,7 @@
         </label>
       </div>
       <div class="col">
-        <button class="btn btn--warning">
+        <button class="btn btn--warning" @click="editFilter(filter)">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             x="0px"
@@ -20,7 +27,6 @@
             width="16"
             height="16"
             viewBox="0 0 24 24"
-            @click="fillEditFilerForm(filter)"
           >
             <path
               fill="currentColor"
@@ -48,8 +54,14 @@
         </div>
       </div>
     </div>
-    <div class="panel">
-      <h3 class="panel-title">New Filter</h3>
+  </div>
+  <Modal
+    v-model="editFilterModalDisplayed"
+    :title="editFilterModalTitle"
+    modal-class="modal modal-lg"
+    @after-close="afterModalClose"
+  >
+    <div class="modal-body">
       <form @submit.prevent="save">
         <div class="panel-content">
           <label for="filterName">Name</label>
@@ -63,22 +75,6 @@
           </div>
           <h4 class="h4">If</h4>
           <div>
-            <!--
-            <select class="select-menu">
-              <option default="">Field</option>
-              <option>Field 1</option>
-              <option>Field 2</option>
-              <option>Field 3</option>
-              <option>Field 4</option>
-            </select>
-            <select class="select-menu">
-              <option default="">Condition</option>
-              <option>Condition 1</option>
-              <option>Condition 2</option>
-              <option>Condition 3</option>
-              <option>Condition 4</option>
-            </select>
-            -->
             <input
               type="text"
               class="input-field"
@@ -126,16 +122,22 @@
         </div>
       </form>
     </div>
-  </div>
+  </Modal>
 </template>
 
 <script>
+import VueModal from "@kouts/vue-modal";
+import "@kouts/vue-modal/dist/vue-modal.css";
 import { mapGetters } from "vuex";
 
 export default {
   name: "Filters",
+  components: {
+    Modal: VueModal,
+  },
   data() {
     return {
+      editFilterModalDisplayed: false,
       editedFilterId: undefined,
       editedFilterEnabled: true,
       editedFilterName: "",
@@ -151,8 +153,43 @@ export default {
   },
   computed: {
     ...mapGetters(["filters"]),
+    editFilterModalTitle() {
+      if (this.isNewFilter) {
+        return "New filter";
+      }
+      return `Edit filter ${this.editedFilterName}`;
+    },
+    isNewFilter() {
+      return this.editedFilterId === undefined;
+    },
   },
   methods: {
+    afterModalClose() {
+      if (this.isNewFilter) {
+        return;
+      }
+      this.clearForm();
+    },
+    clearForm() {
+      this.editedFilterId = undefined;
+      this.editedFilterEnabled = true;
+      this.editedFilterName = "";
+      this.editedFilterCondition = "";
+      this.editedFilterActionName = "";
+      this.editedFilterActionArgument = "";
+    },
+    newFilter() {
+      this.editFilterModalDisplayed = true;
+    },
+    editFilter(filter) {
+      this.editedFilterId = filter.id;
+      this.editedFilterEnabled = filter.enabled;
+      this.editedFilterName = filter.name;
+      this.editedFilterCondition = filter.condition;
+      this.editedFilterActionName = filter.action_name;
+      this.editedFilterActionArgument = filter.action_argument;
+      this.editFilterModalDisplayed = true;
+    },
     save(e) {
       if (e.submitter.name === "run") {
         return this.runFilter();
@@ -162,12 +199,13 @@ export default {
     },
     runFilter() {},
     saveFilter() {
+      let dispatch_type = "filter_edit_request";
+      if (this.isNewFilter) {
+        dispatch_type = "filter_create_request";
+      }
       this.$store
         .dispatch({
-          type:
-            this.editedFilterId === undefined
-              ? "filter_create_request"
-              : "filter_edit_request",
+          type: dispatch_type,
           id: this.editedFilterId,
           enabled: this.editedFilterEnabled,
           name: this.editedFilterName,
@@ -177,14 +215,6 @@ export default {
         })
         .then(() => this.cancelEditing());
     },
-    fillEditFilerForm(filter) {
-      this.editedFilterId = filter.id;
-      this.editedFilterEnabled = filter.enabled;
-      this.editedFilterName = filter.name;
-      this.editedFilterCondition = filter.condition;
-      this.editedFilterActionName = filter.action_name;
-      this.editedFilterActionArgument = filter.action_argument;
-    },
     deleteFilter(filter) {
       this.$store.dispatch({
         type: "filter_delete_request",
@@ -192,12 +222,8 @@ export default {
       });
     },
     cancelEditing() {
-      this.editedFilterId = undefined;
-      this.editedFilterEnabled = true;
-      this.editedFilterName = "";
-      this.editedFilterCondition = "";
-      this.editedFilterActionName = "";
-      this.editedFilterActionArgument = "";
+      this.editFilterModalDisplayed = false;
+      this.clearForm();
     },
   },
   created() {

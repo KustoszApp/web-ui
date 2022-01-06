@@ -19,16 +19,8 @@
       <ThemeSwitcher />
     </div>
     <div class="section">
-      <h3 class="section-title">Filters</h3>
-      <Filters />
-    </div>
-    <div class="section">
       <h3 class="section-title">Add Source</h3>
       <AddSource />
-    </div>
-    <div class="section">
-      <h3 class="section-title">Sources</h3>
-      <NavList />
     </div>
     <div class="section">
       <h3 class="section-title">About Us</h3>
@@ -39,17 +31,13 @@
 
 <script>
 // @ is an alias to /src
-import NavList from "@/components/NavList.vue";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
-import Filters from "@/components/Filters";
 import AddSource from "@/components/AddSource";
 
 export default {
   name: "Home",
   components: {
-    NavList,
     ThemeSwitcher,
-    Filters,
     AddSource,
   },
 };
