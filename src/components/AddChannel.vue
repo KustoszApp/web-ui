@@ -2,9 +2,9 @@
   <button
     type="button"
     class="btn btn--primary btn--big"
-    @click="addChannelModalDisplayed = true"
+    @click="openAddChannelModal"
   >
-    Add source
+    Add channel
   </button>
   <Modal
     v-model="addChannelModalDisplayed"
@@ -14,32 +14,27 @@
     <div class="modal-body">
       <form>
         <div class="panel-content">
-          <label for="sourceURL">URL</label>
+          <label for="url">URL</label>
           <div class="form-control">
-            <input
-              id="sourceURL"
-              class="input-field"
-              type="url"
-              v-model="sourceURL"
-            />
+            <input id="url" class="input-field" type="url" v-model="url" />
           </div>
-          <label for="sourceName">Name of channel</label>
+          <label for="title">Name of channel</label>
           <div class="form-control">
             <input
-              id="sourceName"
+              id="title"
               class="input-field"
               type="text"
               v-model="title"
               placeholder="Leave empty to fetch title"
             />
           </div>
-          <label for="sourceTags">Tags</label>
+          <label for="tags">Tags</label>
           <div class="form-control">
             <Multiselect
-              id="sourceTags"
-              v-model="sourceTags"
+              id="tags"
+              v-model="tags"
               mode="tags"
-              :options="sourceTagsOptions"
+              :options="tagsOptions"
               :closeOnSelect="false"
               :searchable="true"
               :createTag="true"
@@ -57,7 +52,7 @@
       >
         Close this window
       </button>
-      <button class="btn btn--primary ml-2" @click="markAllReadClicked">
+      <button class="btn btn--primary ml-2" @click="createChannelClicked">
         Save
       </button>
     </div>
@@ -82,14 +77,29 @@ export default {
   data() {
     return {
       addChannelModalDisplayed: false,
+      url: "",
       title: "",
-      sourceTags: [],
-      sourceTagsOptions: [],
-      sourceURL: "",
+      tags: [],
+      tagsOptions: [],
     };
   },
-  created() {
-    this.sourceTagsOptions = this.channelTags.map((tag) => tag.name);
+  methods: {
+    openAddChannelModal() {
+      this.addChannelModalDisplayed = true;
+      this.tagsOptions = this.channelTags.map((tag) => tag.name);
+    },
+    createChannelClicked() {
+      this.$store
+        .dispatch({
+          type: "channel_create_request",
+          url: this.url,
+          title: this.title,
+          tags: this.tags,
+        })
+        .then(() => {
+          this.addChannelModalDisplayed = false;
+        });
+    },
   },
 };
 </script>

@@ -18,6 +18,9 @@ const mutations = {
         state.channels = data.results;
     },
     channels_error: (state) => (state.status = "error"),
+    channel_create_request: (state) => (state.status = "loading"),
+    channel_create_success: (state) => (state.status = "success"),
+    channel_create_error: (state) => (state.status = "error"),
     channel_edit_success: (state, data) => {
         state.status = "success";
         state.channels.forEach((item, idx) => {
@@ -56,6 +59,32 @@ const actions = {
             })
             .catch(() => {
                 commit("channels_error");
+            });
+    },
+    channel_create_request: ({ dispatch, commit }, param) => {
+        const url = "channels/";
+        const data = {
+            url: param.url,
+            title: param.title,
+            tags: param.tags,
+        };
+        const options = {
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+        };
+        return axios
+            .post(url, data, options)
+            .then((response) => {
+                commit("channel_create_success", response.data);
+            })
+            .then(() => {
+                dispatch("channel_tags_request");
+                setTimeout(() => dispatch("channels_request"), 1000);
+            })
+            .catch(() => {
+                commit("channel_create_error");
             });
     },
     channel_edit_request: ({ commit }, param) => {
