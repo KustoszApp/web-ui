@@ -19,10 +19,6 @@
       <ThemeSwitcher />
     </div>
     <div class="section">
-      <h3 class="section-title">Add Source</h3>
-      <AddSource />
-    </div>
-    <div class="section">
       <h3 class="section-title">About Us</h3>
       <p>Self-hosted RSS Reader</p>
     </div>
@@ -30,15 +26,12 @@
 </template>
 
 <script>
-// @ is an alias to /src
 import ThemeSwitcher from "@/components/ThemeSwitcher";
-import AddSource from "@/components/AddSource";
 
 export default {
   name: "Home",
   components: {
     ThemeSwitcher,
-    AddSource,
   },
 };
 </script>

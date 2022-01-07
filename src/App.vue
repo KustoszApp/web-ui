@@ -1,9 +1,7 @@
 <template>
   <div id="nav" class="nav">
     <div class="nav__add">
-      <button type="button" class="btn btn--primary btn--big">
-        Add source
-      </button>
+      <AddChannel />
     </div>
     <h2 class="nav__title">Feeds</h2>
     <div class="nav__sources">
@@ -45,6 +43,7 @@
 </template>
 
 <script>
+import AddChannel from "@/components/AddChannel";
 import NavList from "@/components/NavList.vue";
 import Spinner from "@/components/Spinner.vue";
 import { mapGetters } from "vuex";
@@ -52,6 +51,7 @@ import { mapGetters } from "vuex";
 export default {
   name: "App",
   components: {
+    AddChannel,
     NavList,
     Spinner,
   },
