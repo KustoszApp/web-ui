@@ -83,12 +83,7 @@
           </div>
           <h4 class="h4">Then</h4>
           <div class="form-control if-wrapper">
-            <select
-              v-model="editedFilterActionName"
-              class="select-menu"
-              name=""
-              id=""
-            >
+            <select v-model="editedFilterActionName" class="select-menu">
               <option
                 v-for="item in filterActions"
                 :key="item.label"
@@ -101,6 +96,8 @@
               type="text"
               class="input-field"
               v-model="editedFilterActionArgument"
+              :required="editedFilterActionArgumentRequired"
+              :disabled="!editedFilterActionArgumentRequired"
             />
           </div>
         </div>
@@ -145,9 +142,13 @@ export default {
       editedFilterActionName: "",
       editedFilterActionArgument: "",
       filterActions: [
-        { value: "mark_as_read", label: "Mark as read" },
-        { value: "assign_tag", label: "Assign tag" },
-        { value: "run_script", label: "Run external application" },
+        { value: "mark_as_read", label: "Mark as read", has_argument: false },
+        { value: "assign_tag", label: "Assign tag", has_argument: true },
+        {
+          value: "run_script",
+          label: "Run external application",
+          has_argument: true,
+        },
       ],
     };
   },
@@ -158,6 +159,15 @@ export default {
         return "New filter";
       }
       return `Edit filter ${this.editedFilterName}`;
+    },
+    editedFilterActionArgumentRequired() {
+      const selectedAction = this.filterActions.find(
+        (action) => action.value === this.editedFilterActionName
+      );
+      if (selectedAction === undefined) {
+        return false;
+      }
+      return selectedAction.has_argument;
     },
     isNewFilter() {
       return this.editedFilterId === undefined;
@@ -203,15 +213,20 @@ export default {
       if (this.isNewFilter) {
         dispatch_type = "filter_create_request";
       }
+      const params = {
+        id: this.editedFilterId,
+        enabled: this.editedFilterEnabled,
+        name: this.editedFilterName,
+        condition: this.editedFilterCondition,
+        action_name: this.editedFilterActionName,
+      };
+      if (this.editedFilterActionArgumentRequired) {
+        params.action_argument = this.editedFilterActionArgument;
+      }
       this.$store
         .dispatch({
           type: dispatch_type,
-          id: this.editedFilterId,
-          enabled: this.editedFilterEnabled,
-          name: this.editedFilterName,
-          condition: this.editedFilterCondition,
-          action_name: this.editedFilterActionName,
-          action_argument: this.editedFilterActionArgument,
+          ...params,
         })
         .then(() => this.cancelEditing());
     },
