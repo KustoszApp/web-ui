@@ -11,6 +11,7 @@
     "@kouts/vue-modal": "^3.0.1",
     "@vueform/multiselect": "^2.2.0",
     "axios": "^0.24.0",
+    "bootstrap-icons-vue": "^0.8.0",
     "normalize.css": "^8.0.1",
     "register-service-worker": "^1.7.1",
     "vue": "^3.0.0",

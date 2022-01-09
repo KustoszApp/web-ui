@@ -13,32 +13,8 @@
           :class="{ visible: isGroupVisible(group.tag.slug) }"
           @click="toggleGroupVisibility(group.tag.slug)"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            viewBox="0 0 16 16"
-            v-if="isGroupVisible(group.tag.slug)"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
-            />
-          </svg>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            viewBox="0 0 16 16"
-            v-else
-          >
-            <path
-              fill-rule="evenodd"
-              d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
-            />
-          </svg>
+          <BIconChevronDown v-if="isGroupVisible(group.tag.slug)" />
+          <BIconChevronRight v-else />
         </span>
         <router-link
           class="list__item-link"
@@ -178,6 +154,7 @@
 </template>
 
 <script>
+import { BIconChevronDown, BIconChevronRight } from "bootstrap-icons-vue";
 import Multiselect from "@vueform/multiselect";
 import VueModal from "@kouts/vue-modal";
 import { mapGetters } from "vuex";
@@ -187,6 +164,8 @@ import FeedItem from "./FeedItem.vue";
 export default {
   name: "NavList",
   components: {
+    BIconChevronDown,
+    BIconChevronRight,
     Modal: VueModal,
     Multiselect,
     FeedItem,
