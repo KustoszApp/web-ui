@@ -14,17 +14,17 @@
       </svg>
       Filters
     </h2>
-    <Filters />
+    <FiltersComponent />
   </div>
 </template>
 
 <script>
-import Filters from "@/components/Filters";
+import FiltersComponent from "@/components/Filters";
 
 export default {
   name: "Filters",
   components: {
-    Filters,
+    FiltersComponent,
   },
 };
 </script>
