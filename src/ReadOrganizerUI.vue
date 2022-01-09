@@ -5,6 +5,10 @@
 </template>
 
 <script>
+import "normalize.css";
+import "@kouts/vue-modal/dist/vue-modal.css";
+import "@vueform/multiselect/themes/default.css";
+
 import Sidebar from "@/components/Sidebar.vue";
 import Spinner from "@/components/Spinner.vue";
 import { mapGetters } from "vuex";

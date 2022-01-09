@@ -1,6 +1,5 @@
 import { createApp } from "vue";
 import axios from "axios";
-import "normalize.css";
 import ReadOrganizerUI from "./ReadOrganizerUI.vue";
 import router from "./router";
 import store from "./store";

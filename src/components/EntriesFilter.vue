@@ -123,7 +123,6 @@
 <script>
 import Multiselect from "@vueform/multiselect";
 import VueModal from "@kouts/vue-modal";
-import "@kouts/vue-modal/dist/vue-modal.css";
 import qs from "qs";
 import { mapGetters } from "vuex";
 

@@ -180,7 +180,6 @@
 <script>
 import Multiselect from "@vueform/multiselect";
 import VueModal from "@kouts/vue-modal";
-import "@kouts/vue-modal/dist/vue-modal.css";
 import { mapGetters } from "vuex";
 import { formatDate } from "../utils";
 import FeedItem from "./FeedItem.vue";
@@ -314,7 +313,6 @@ export default {
   },
 };
 </script>
-<style src="@vueform/multiselect/themes/default.css"></style>
 
 <style lang="scss">
 .list {

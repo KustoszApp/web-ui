@@ -62,7 +62,6 @@
 <script>
 import Multiselect from "@vueform/multiselect";
 import VueModal from "@kouts/vue-modal";
-import "@kouts/vue-modal/dist/vue-modal.css";
 import { mapGetters } from "vuex";
 
 export default {
@@ -103,5 +102,3 @@ export default {
   },
 };
 </script>
-
-<style src="@vueform/multiselect/themes/default.css"></style>

@@ -157,7 +157,6 @@
 
 <script>
 import VueModal from "@kouts/vue-modal";
-import "@kouts/vue-modal/dist/vue-modal.css";
 import { mapGetters } from "vuex";
 import { formatDate } from "../utils";
 
