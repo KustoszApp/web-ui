@@ -1,12 +1,19 @@
 import axios from "axios";
+import qs from "qs";
 
 const state = {
     status: "",
+    tryFilterStatus: "",
+    tryFilterEntriesAllCount: 0,
+    tryFilterEntries: [],
     filters: [],
     currentFilter: {},
 };
 
 const getters = {
+    tryFilterStatus: (state) => state.tryFilterStatus,
+    tryFilterEntriesAllCount: (state) => state.tryFilterEntriesAllCount,
+    tryFilterEntries: (state) => state.tryFilterEntries,
     filters: (state) => state.filters,
     currentFilter: (state) => state.currentFilter,
 };
@@ -43,6 +50,22 @@ const mutations = {
         state.filters = state.filters.filter((filter) => filter.id !== data.id);
     },
     filter_delete_error: (state) => (state.status = "error"),
+
+    filter_try_data_reset: (state) => {
+        state.tryFilterStatus = "";
+        state.tryFilterEntriesAllCount = 0;
+        state.tryFilterEntries = [];
+    },
+    filter_try_request: (state) => (state.tryFilterStatus = "loading"),
+    filter_try_success: (state, data) => {
+        state.tryFilterStatus = "success";
+        state.tryFilterEntries = data.results.map((item) => {
+            item.preferred_content = undefined;
+            return item;
+        });
+        state.tryFilterEntriesAllCount = data.count;
+    },
+    filter_try_error: (state) => (state.tryFilterStatus = "error"),
 };
 
 const actions = {
@@ -120,6 +143,25 @@ const actions = {
             })
             .catch(() => {
                 commit("filter_delete_error");
+            });
+    },
+    filter_try_data_reset: ({ commit }) => {
+        commit("filter_try_data_reset");
+    },
+    filter_try_request: ({ commit }, param) => {
+        commit("filter_try_request");
+        const url = `entries/`;
+        let params = qs.parse(param.condition);
+        params["limit"] = 10;
+        axios
+            .get(url, {
+                params: params,
+            })
+            .then((response) => {
+                commit("filter_try_success", response.data);
+            })
+            .catch(() => {
+                commit("filter_try_error");
             });
     },
 };

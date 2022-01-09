@@ -62,7 +62,7 @@
     @after-close="afterModalClose"
   >
     <div class="modal-body">
-      <form @submit.prevent="save">
+      <form>
         <div class="panel-content">
           <label for="filterName">Name</label>
           <div class="form-control">
@@ -102,11 +102,22 @@
           </div>
         </div>
         <div class="panel-footer">
-          <button type="button" class="btn btn--primary">Try</button>
-          <button type="submit" name="run" class="btn btn--primary ml-2">
-            Run
+          <button
+            type="button"
+            class="btn btn--primary"
+            @click="tryFilter"
+            :disabled="tryFilterStatus === 'loading'"
+          >
+            Try
           </button>
-          <button type="submit" name="save" class="btn btn--primary ml-2">
+          <!--<button type="button" class="btn btn--primary ml-2">
+            Run
+          </button>-->
+          <button
+            type="button"
+            class="btn btn--primary ml-2"
+            @click="saveFilter"
+          >
             Save
           </button>
           <button
@@ -118,6 +129,28 @@
           </button>
         </div>
       </form>
+      <div class="try-results" v-if="tryFilterStatus === 'success'">
+        <p>
+          Entries found by this filter:
+          <strong>{{ tryFilterEntriesAllCount }}</strong>
+        </p>
+        <ul class="list__content">
+          <li
+            class="list__item"
+            v-for="entry in tryFilterEntries"
+            :key="entry.id"
+          >
+            <a :href="entry.link" :title="entry.title">{{ entry.title }}</a> •
+            <span class="entry__source">{{
+              getChannelTitle(entry.channel)
+            }}</span>
+            • <span class="entry__author">{{ entry.author }}</span> • added:
+            <span class="entry__published">{{
+              formatDate(entry.published_time)
+            }}</span>
+          </li>
+        </ul>
+      </div>
     </div>
   </Modal>
 </template>
@@ -126,6 +159,7 @@
 import VueModal from "@kouts/vue-modal";
 import "@kouts/vue-modal/dist/vue-modal.css";
 import { mapGetters } from "vuex";
+import { formatDate } from "../utils";
 
 export default {
   name: "Filters",
@@ -153,7 +187,13 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["filters"]),
+    ...mapGetters([
+      "tryFilterStatus",
+      "tryFilterEntriesAllCount",
+      "tryFilterEntries",
+      "filters",
+      "channels",
+    ]),
     editFilterModalTitle() {
       if (this.isNewFilter) {
         return "New filter";
@@ -174,6 +214,14 @@ export default {
     },
   },
   methods: {
+    getChannelTitle(channelId) {
+      const channel = this.channels.find((item) => item.id === channelId);
+      if (!channel) {
+        return "";
+      }
+      return channel.displayed_title;
+    },
+    formatDate,
     afterModalClose() {
       if (this.isNewFilter) {
         return;
@@ -187,6 +235,7 @@ export default {
       this.editedFilterCondition = "";
       this.editedFilterActionName = "";
       this.editedFilterActionArgument = "";
+      this.$store.dispatch("filter_try_data_reset");
     },
     newFilter() {
       this.editFilterModalDisplayed = true;
@@ -200,14 +249,12 @@ export default {
       this.editedFilterActionArgument = filter.action_argument;
       this.editFilterModalDisplayed = true;
     },
-    save(e) {
-      if (e.submitter.name === "run") {
-        return this.runFilter();
-      } else if (e.submitter.name === "save") {
-        return this.saveFilter();
-      }
+    tryFilter() {
+      this.$store.dispatch({
+        type: "filter_try_request",
+        condition: this.editedFilterCondition,
+      });
     },
-    runFilter() {},
     saveFilter() {
       let dispatch_type = "filter_edit_request";
       if (this.isNewFilter) {
@@ -294,6 +341,15 @@ export default {
 
   input {
     margin-left: 1rem;
+  }
+}
+
+.try-results .list__item {
+  display: flex;
+  a {
+    max-width: 50%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 </style>
