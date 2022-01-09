@@ -22,7 +22,7 @@
 import Filters from "@/components/Filters";
 
 export default {
-  name: "Home",
+  name: "Filters",
   components: {
     Filters,
   },

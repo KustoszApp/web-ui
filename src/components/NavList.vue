@@ -43,7 +43,7 @@
         <router-link
           class="list__item-link"
           :to="{
-            name: 'home',
+            name: 'entries',
             query: { channel_tags: group.tag.slug, channel: null },
           }"
         >

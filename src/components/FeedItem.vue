@@ -14,7 +14,7 @@
     <router-link
       class="feed__item-link"
       :title="feed.displayed_title"
-      :to="{ name: 'home', query: { channel: feed.id, channel_tags: null } }"
+      :to="{ name: 'entries', query: { channel: feed.id, channel_tags: null } }"
     >
       {{ feed.displayed_title }}
     </router-link>

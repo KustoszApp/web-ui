@@ -1,19 +1,19 @@
 <template>
-  <div class="home">
+  <div class="entries">
     <EntriesFilter />
-    <Entries />
+    <EntriesList />
   </div>
 </template>
 
 <script>
-import Entries from "@/components/Entries.vue";
 import EntriesFilter from "@/components/EntriesFilter.vue";
+import EntriesList from "@/components/EntriesList.vue";
 
 export default {
-  name: "Home",
+  name: "Entries",
   components: {
-    Entries,
     EntriesFilter,
+    EntriesList,
   },
   methods: {
     queryParamsChanged() {

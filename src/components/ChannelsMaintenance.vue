@@ -16,7 +16,7 @@
         <label :for="feed.id">{{ feed.displayed_title }}</label>
         (<router-link
           class="list__item-link"
-          :to="{ name: 'home', params: { entryId: feed.id } }"
+          :to="{ name: 'entries', params: { entryId: feed.id } }"
         >
           see content </router-link
         >)

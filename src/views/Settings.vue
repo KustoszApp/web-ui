@@ -29,7 +29,7 @@
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 
 export default {
-  name: "Home",
+  name: "Settings",
   components: {
     ThemeSwitcher,
   },

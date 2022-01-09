@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import Home from "../views/Home.vue";
+import Entries from "../views/Entries.vue";
 
 const routes = [
     {
@@ -8,8 +8,8 @@ const routes = [
     },
     {
         path: "/entries/",
-        name: "home",
-        component: Home,
+        name: "entries",
+        component: Entries,
     },
     {
         path: "/maintenance/stale_channels",

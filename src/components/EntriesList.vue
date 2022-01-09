@@ -32,7 +32,7 @@
 import Entry from "./Entry.vue";
 import { mapGetters } from "vuex";
 export default {
-  name: "Entries",
+  name: "EntriesList",
   data() {
     return {
       focusedPrevIndex: -1,
@@ -130,7 +130,7 @@ export default {
   mounted() {
     document.addEventListener("keypress", this.onKeypress);
     document
-      .querySelector("#app .home")
+      .querySelector("#router-view")
       .addEventListener("scroll", this.onScroll);
   },
   beforeUnmount() {
