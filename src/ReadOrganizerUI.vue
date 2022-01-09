@@ -55,6 +55,10 @@ export default {
 html,
 body {
   height: 100%;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--primary);
 }
 
 h1,
@@ -72,10 +76,6 @@ a {
 }
 
 #readorganizer {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: var(--primary);
   display: grid;
   grid-template-columns: 280px auto;
   line-height: 1.5;
