@@ -10,7 +10,10 @@
 </template>
 
 <script>
-import "normalize.css";
+import "sanitize.css";
+import "sanitize.css/forms.css";
+import "sanitize.css/assets.css";
+import "sanitize.css/typography.css";
 import "@kouts/vue-modal/dist/vue-modal.css";
 import "@vueform/multiselect/themes/default.css";
 
