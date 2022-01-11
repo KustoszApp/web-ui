@@ -38,15 +38,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-.view__title-icon {
-  height: 20px;
-  width: 20px;
-  color: var(--primary);
-}
-
-.section {
-  padding: 0.5rem 2rem;
-}
-</style>

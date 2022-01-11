@@ -280,8 +280,4 @@ export default {
   width: 300px;
   display: inline-flex;
 }
-
-.ml-auto {
-  margin-left: auto;
-}
 </style>

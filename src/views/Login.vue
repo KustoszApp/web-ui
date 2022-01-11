@@ -63,8 +63,4 @@ export default {
     width: 65%;
   }
 }
-
-.btn--block {
-  width: 100%;
-}
 </style>

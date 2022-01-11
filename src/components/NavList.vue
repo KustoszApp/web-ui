@@ -354,28 +354,4 @@ export default {
   line-height: 1;
   visibility: hidden;
 }
-
-@media (min-width: 992px) {
-  .modal.modal-lg {
-    max-width: 800px;
-  }
-}
-
-.modal-header {
-  font-size: 1.25rem;
-}
-
-.modal-header h3 {
-  margin-top: 0;
-  color: #42b983;
-}
-
-.modal-body {
-  margin: 1rem 0;
-}
-
-.modal-footer {
-  display: flex;
-  justify-content: flex-end;
-}
 </style>
