@@ -1,6 +1,11 @@
 <template>
-  <Sidebar />
-  <router-view id="router-view" class="view" />
+  <div class="login-wrapper" v-if="!isAuthenticated">
+    <router-view class="view" />
+  </div>
+  <div class="reader-wrapper" v-else>
+    <Sidebar />
+    <router-view id="router-view" class="view" />
+  </div>
   <Spinner :isVisible="this.status === 'loading'" />
 </template>
 
@@ -20,12 +25,10 @@ export default {
     Spinner,
   },
   computed: {
-    ...mapGetters(["status"]),
-  },
-  created() {
-    this.$store.dispatch("channels_request");
-    this.$store.dispatch("channel_tags_request");
-    this.$store.dispatch("entry_tags_request");
+    ...mapGetters(["status", "hasToken", "user"]),
+    isAuthenticated() {
+      return this.hasToken && this.user.is_active;
+    },
   },
 };
 </script>
@@ -76,6 +79,19 @@ a {
 }
 
 #readorganizer {
+  height: 100%;
+  overflow: hidden;
+}
+
+.login-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: var(--darker);
+}
+
+.reader-wrapper {
   display: grid;
   grid-template-columns: 280px auto;
   line-height: 1.5;
@@ -85,7 +101,7 @@ a {
 
 .view {
   background-color: var(--darker);
-  overflow-y: scroll;
+  overflow-y: auto;
   padding-left: 1rem;
   padding-right: 1rem;
 }

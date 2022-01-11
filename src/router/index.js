@@ -1,5 +1,28 @@
 import { createRouter, createWebHashHistory } from "vue-router";
+import store from "../store";
 import Entries from "../views/Entries.vue";
+
+/* eslint-disable no-unused-vars */
+const hasToken = (to, from) => {
+    return store.dispatch("check_token").then((hasToken) => {
+        if (!hasToken) return "/login";
+    });
+};
+const tokenIsValid = (to, from) => {
+    return store.dispatch("user_data_request").catch(() => "/login");
+};
+
+const notHasTokenOrNotValidToken = (to, from) => {
+    return store
+        .dispatch("check_token")
+        .then((hasToken) => {
+            if (hasToken) {
+                return store.dispatch("user_data_request").then(() => from);
+            }
+        })
+        .catch(() => true);
+};
+/* eslint-enable no-unused-vars */
 
 const routes = [
     {
@@ -7,9 +30,18 @@ const routes = [
         redirect: "/entries",
     },
     {
+        path: "/login",
+        name: "login",
+        component: function () {
+            return import(/* webpackChunkName: "login" */ "../views/Login.vue");
+        },
+        beforeEnter: notHasTokenOrNotValidToken,
+    },
+    {
         path: "/entries/",
         name: "entries",
         component: Entries,
+        beforeEnter: [hasToken, tokenIsValid],
     },
     {
         path: "/maintenance/stale_channels",
@@ -19,6 +51,7 @@ const routes = [
                 /* webpackChunkName: "maintenance_stale_channels" */ "../views/Maintenance.vue"
             );
         },
+        beforeEnter: [hasToken, tokenIsValid],
     },
     {
         path: "/maintenance/not_updated_channels",
@@ -28,6 +61,7 @@ const routes = [
                 /* webpackChunkName: "maintenance_not_updated_channels" */ "../views/Maintenance.vue"
             );
         },
+        beforeEnter: [hasToken, tokenIsValid],
     },
     {
         path: "/maintenance/inactive_channels",
@@ -37,6 +71,7 @@ const routes = [
                 /* webpackChunkName: "maintenance_inactive_channels" */ "../views/Maintenance.vue"
             );
         },
+        beforeEnter: [hasToken, tokenIsValid],
     },
     {
         path: "/settings",
@@ -46,6 +81,7 @@ const routes = [
                 /* webpackChunkName: "settings" */ "../views/Settings.vue"
             );
         },
+        beforeEnter: [hasToken, tokenIsValid],
     },
     {
         path: "/filters",
@@ -55,6 +91,7 @@ const routes = [
                 /* webpackChunkName: "filters" */ "../views/Filters.vue"
             );
         },
+        beforeEnter: [hasToken, tokenIsValid],
     },
 ];
 

@@ -9,6 +9,12 @@
       <ThemeSwitcher />
     </div>
     <div class="section">
+      <h3 class="section-title">Account</h3>
+      <button type="button" class="btn btn--primary btn--big" @click="logout">
+        Logout
+      </button>
+    </div>
+    <div class="section">
       <h3 class="section-title">About Us</h3>
       <p>Self-hosted RSS Reader</p>
     </div>
@@ -24,6 +30,11 @@ export default {
   components: {
     BIconGearFill,
     ThemeSwitcher,
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch("auth_logout");
+    },
   },
 };
 </script>

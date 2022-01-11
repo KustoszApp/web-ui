@@ -40,6 +40,7 @@ export default {
     );
   },
   mounted() {
+    this.$store.dispatch("entry_tags_request");
     this.queryParamsChanged();
   },
 };

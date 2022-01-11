@@ -50,6 +50,10 @@ export default {
     AddChannel,
     NavList,
   },
+  mounted() {
+    this.$store.dispatch("channels_request");
+    this.$store.dispatch("channel_tags_request");
+  },
 };
 </script>
 
