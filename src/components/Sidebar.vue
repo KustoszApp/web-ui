@@ -44,6 +44,8 @@
 import AddChannel from "@/components/AddChannel";
 import NavList from "@/components/NavList.vue";
 
+import { ACTION_CHANNEL_TAGS_REQUEST, ACTION_CHANNELS_REQUEST } from "../types";
+
 export default {
   name: "Sidebar",
   components: {
@@ -51,8 +53,8 @@ export default {
     NavList,
   },
   mounted() {
-    this.$store.dispatch("channels_request");
-    this.$store.dispatch("channel_tags_request");
+    this.$store.dispatch(ACTION_CHANNELS_REQUEST);
+    this.$store.dispatch(ACTION_CHANNEL_TAGS_REQUEST);
   },
 };
 </script>

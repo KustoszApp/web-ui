@@ -45,6 +45,13 @@
 <script>
 import { mapGetters } from "vuex";
 
+import {
+  ACTION_MAINTENANCE_CHANNELS_ACTIVATE_REQUEST,
+  ACTION_MAINTENANCE_CHANNELS_GET_REQUEST,
+  ACTION_MAINTENANCE_CHANNELS_INACTIVATE_REQUEST,
+  GET_MAINTENANCE_CHANNELS,
+} from "../types";
+
 export default {
   name: "NavList",
   data() {
@@ -57,18 +64,20 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["maintenance_channels"]),
+    ...mapGetters({
+      maintenance_channels: GET_MAINTENANCE_CHANNELS,
+    }),
   },
   methods: {
     inactivateChannels() {
       this.$store.dispatch({
-        type: "maintenance_channels_inactivate_request",
+        type: ACTION_MAINTENANCE_CHANNELS_INACTIVATE_REQUEST,
         query: `id=${this.checkedChannels.join(",")}`,
       });
     },
     activateChannels() {
       this.$store.dispatch({
-        type: "maintenance_channels_activate_request",
+        type: ACTION_MAINTENANCE_CHANNELS_ACTIVATE_REQUEST,
         query: `id=${this.checkedChannels.join(",")}`,
       });
     },
@@ -102,7 +111,7 @@ export default {
         this.displayRemoveButton = false; // FIXME: should be true
       }
       this.$store.dispatch({
-        type: "maintenance_channels_get_request",
+        type: ACTION_MAINTENANCE_CHANNELS_GET_REQUEST,
         query: this.query,
       });
     },

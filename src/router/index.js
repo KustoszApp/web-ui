@@ -2,22 +2,26 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import store from "../store";
 import Entries from "../views/Entries.vue";
 
+import { ACTION_CHECK_TOKEN, ACTION_USER_DATA_REQUEST } from "../types";
+
 /* eslint-disable no-unused-vars */
 const hasToken = (to, from) => {
-    return store.dispatch("check_token").then((hasToken) => {
+    return store.dispatch(ACTION_CHECK_TOKEN).then((hasToken) => {
         if (!hasToken) return "/login";
     });
 };
 const tokenIsValid = (to, from) => {
-    return store.dispatch("user_data_request").catch(() => "/login");
+    return store.dispatch(ACTION_USER_DATA_REQUEST).catch(() => "/login");
 };
 
 const notHasTokenOrNotValidToken = (to, from) => {
     return store
-        .dispatch("check_token")
+        .dispatch(ACTION_CHECK_TOKEN)
         .then((hasToken) => {
             if (hasToken) {
-                return store.dispatch("user_data_request").then(() => from);
+                return store
+                    .dispatch(ACTION_USER_DATA_REQUEST)
+                    .then(() => from);
             }
         })
         .catch(() => true);

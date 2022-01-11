@@ -21,6 +21,8 @@ import Sidebar from "@/components/Sidebar.vue";
 import Spinner from "@/components/Spinner.vue";
 import { mapGetters } from "vuex";
 
+import { GET_HAS_TOKEN, GET_STATUS, GET_USER } from "./types";
+
 export default {
   name: "ReadOrganizerUI",
   components: {
@@ -28,7 +30,11 @@ export default {
     Spinner,
   },
   computed: {
-    ...mapGetters(["status", "hasToken", "user"]),
+    ...mapGetters({
+      status: GET_STATUS,
+      hasToken: GET_HAS_TOKEN,
+      user: GET_USER,
+    }),
     isAuthenticated() {
       return this.hasToken && this.user.is_active;
     },

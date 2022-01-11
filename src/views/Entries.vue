@@ -9,6 +9,8 @@
 import EntriesFilter from "@/components/EntriesFilter.vue";
 import EntriesList from "@/components/EntriesList.vue";
 
+import { ACTION_ENTRIES_REQUEST, ACTION_ENTRY_TAGS_REQUEST } from "../types";
+
 export default {
   name: "Entries",
   components: {
@@ -27,7 +29,7 @@ export default {
       }
       this.$router.replace({ path: $route.path, query: newQuery });
       this.$store.dispatch({
-        type: "entries_request",
+        type: ACTION_ENTRIES_REQUEST,
         ...$route.query,
       });
     },
@@ -40,7 +42,7 @@ export default {
     );
   },
   mounted() {
-    this.$store.dispatch("entry_tags_request");
+    this.$store.dispatch(ACTION_ENTRY_TAGS_REQUEST);
     this.queryParamsChanged();
   },
 };

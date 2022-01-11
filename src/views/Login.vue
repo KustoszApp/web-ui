@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import { ACTION_AUTH_LOGIN } from "../types";
+
 export default {
   name: "Login",
   data() {
@@ -41,7 +43,7 @@ export default {
     tryLogin() {
       this.$store
         .dispatch({
-          type: "auth_login",
+          type: ACTION_AUTH_LOGIN,
           username: this.username,
           password: this.password,
         })
@@ -61,6 +63,7 @@ export default {
 
   input {
     width: 65%;
+    background-color: white;
   }
 }
 </style>

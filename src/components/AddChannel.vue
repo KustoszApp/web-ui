@@ -64,6 +64,8 @@ import Multiselect from "@vueform/multiselect";
 import VueModal from "@kouts/vue-modal";
 import { mapGetters } from "vuex";
 
+import { ACTION_CHANNEL_CREATE_REQUEST, GET_CHANNEL_TAGS } from "../types";
+
 export default {
   name: "AddChannel",
   components: {
@@ -71,7 +73,9 @@ export default {
     Multiselect,
   },
   computed: {
-    ...mapGetters(["channelTags"]),
+    ...mapGetters({
+      channelTags: GET_CHANNEL_TAGS,
+    }),
   },
   data() {
     return {
@@ -90,7 +94,7 @@ export default {
     createChannelClicked() {
       this.$store
         .dispatch({
-          type: "channel_create_request",
+          type: ACTION_CHANNEL_CREATE_REQUEST,
           url: this.url,
           title: this.title,
           tags: this.tags,

@@ -126,6 +126,14 @@ import VueModal from "@kouts/vue-modal";
 import qs from "qs";
 import { mapGetters } from "vuex";
 
+import {
+  ACTION_ENTRIES_MARK_AS_READ,
+  ACTION_ENTRIES_REQUEST,
+  GET_ENTRIES_ALL_COUNT,
+  GET_ENTRIES_REQUEST_PARAMS,
+  GET_ENTRY_TAGS,
+} from "../types";
+
 export default {
   name: "EntriesFilter",
   components: {
@@ -155,7 +163,11 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["entriesRequestParams", "entriesAllCount", "entryTags"]),
+    ...mapGetters({
+      entriesRequestParams: GET_ENTRIES_REQUEST_PARAMS,
+      entriesAllCount: GET_ENTRIES_ALL_COUNT,
+      entryTags: GET_ENTRY_TAGS,
+    }),
     publishedOperatorChoicesValues() {
       return this.publishedOperatorChoices.map((choice) => choice.value);
     },
@@ -163,7 +175,7 @@ export default {
   methods: {
     dispatchFilteredEntriesRequest(params) {
       this.$store.dispatch({
-        type: "entries_request",
+        type: ACTION_ENTRIES_REQUEST,
         ...params,
       });
     },
@@ -246,7 +258,7 @@ export default {
       this.markAllReadModalDisplayed = true;
     },
     markAllReadClicked() {
-      this.$store.dispatch("entries_mark_as_read").then(() => {
+      this.$store.dispatch(ACTION_ENTRIES_MARK_AS_READ).then(() => {
         this.markAllReadModalDisplayed = false;
       });
     },

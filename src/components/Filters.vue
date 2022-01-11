@@ -136,6 +136,20 @@ import VueModal from "@kouts/vue-modal";
 import { mapGetters } from "vuex";
 import { formatDate } from "../utils";
 
+import {
+  ACTION_FILTER_CREATE_REQUEST,
+  ACTION_FILTER_DELETE_REQUEST,
+  ACTION_FILTER_EDIT_REQUEST,
+  ACTION_FILTER_TRY_DATA_RESET,
+  ACTION_FILTER_TRY_REQUEST,
+  ACTION_FILTERS_REQUEST,
+  GET_CHANNELS,
+  GET_FILTERS,
+  GET_TRY_FILTER_ENTRIES,
+  GET_TRY_FILTER_ENTRIES_ALL_COUNT,
+  GET_TRY_FILTER_STATUS,
+} from "../types";
+
 export default {
   name: "Filters",
   components: {
@@ -164,13 +178,13 @@ export default {
     };
   },
   computed: {
-    ...mapGetters([
-      "tryFilterStatus",
-      "tryFilterEntriesAllCount",
-      "tryFilterEntries",
-      "filters",
-      "channels",
-    ]),
+    ...mapGetters({
+      tryFilterStatus: GET_TRY_FILTER_STATUS,
+      tryFilterEntriesAllCount: GET_TRY_FILTER_ENTRIES_ALL_COUNT,
+      tryFilterEntries: GET_TRY_FILTER_ENTRIES,
+      filters: GET_FILTERS,
+      channels: GET_CHANNELS,
+    }),
     editFilterModalTitle() {
       if (this.isNewFilter) {
         return "New filter";
@@ -212,7 +226,7 @@ export default {
       this.editedFilterCondition = "";
       this.editedFilterActionName = "";
       this.editedFilterActionArgument = "";
-      this.$store.dispatch("filter_try_data_reset");
+      this.$store.dispatch(ACTION_FILTER_TRY_DATA_RESET);
     },
     newFilter() {
       this.editFilterModalDisplayed = true;
@@ -228,14 +242,14 @@ export default {
     },
     tryFilter() {
       this.$store.dispatch({
-        type: "filter_try_request",
+        type: ACTION_FILTER_TRY_REQUEST,
         condition: this.editedFilterCondition,
       });
     },
     saveFilter() {
-      let dispatch_type = "filter_edit_request";
+      let dispatch_type = ACTION_FILTER_EDIT_REQUEST;
       if (this.isNewFilter) {
-        dispatch_type = "filter_create_request";
+        dispatch_type = ACTION_FILTER_CREATE_REQUEST;
       }
       const params = {
         id: this.editedFilterId,
@@ -256,7 +270,7 @@ export default {
     },
     deleteFilter(filter) {
       this.$store.dispatch({
-        type: "filter_delete_request",
+        type: ACTION_FILTER_DELETE_REQUEST,
         id: filter.id,
       });
     },
@@ -266,7 +280,7 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch("filters_request");
+    this.$store.dispatch(ACTION_FILTERS_REQUEST);
   },
 };
 </script>

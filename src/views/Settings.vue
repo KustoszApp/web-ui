@@ -25,6 +25,8 @@
 import { BIconGearFill } from "bootstrap-icons-vue";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 
+import { ACTION_AUTH_LOGOUT } from "../types";
+
 export default {
   name: "Settings",
   components: {
@@ -33,7 +35,7 @@ export default {
   },
   methods: {
     logout() {
-      this.$store.dispatch("auth_logout");
+      this.$store.dispatch(ACTION_AUTH_LOGOUT);
     },
   },
 };

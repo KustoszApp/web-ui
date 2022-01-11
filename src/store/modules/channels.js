@@ -1,5 +1,26 @@
 import axios from "axios";
 
+import {
+    GET_CHANNELS,
+    GET_CHANNEL_TAGS,
+    MUTATION_CHANNELS_REQUEST,
+    MUTATION_CHANNELS_SUCCESS,
+    MUTATION_CHANNELS_ERROR,
+    MUTATION_CHANNEL_CREATE_REQUEST,
+    MUTATION_CHANNEL_CREATE_SUCCESS,
+    MUTATION_CHANNEL_CREATE_ERROR,
+    MUTATION_CHANNEL_EDIT_SUCCESS,
+    MUTATION_CHANNEL_EDIT_ERROR,
+    MUTATION_CHANNEL_TAGS_REQUEST,
+    MUTATION_CHANNEL_TAGS_SUCCESS,
+    MUTATION_CHANNEL_UNARCHIVED_ENTRIES_CHANGE,
+    ACTION_CHANNELS_REQUEST,
+    ACTION_CHANNEL_CREATE_REQUEST,
+    ACTION_CHANNEL_EDIT_REQUEST,
+    ACTION_CHANNEL_TAGS_REQUEST,
+    ACTION_CHANNEL_UNARCHIVED_ENTRIES_CHANGE,
+} from "../../types";
+
 const state = {
     status: "",
     channels: [],
@@ -7,21 +28,21 @@ const state = {
 };
 
 const getters = {
-    channels: (state) => state.channels,
-    channelTags: (state) => state.channelTags,
+    [GET_CHANNELS]: (state) => state.channels,
+    [GET_CHANNEL_TAGS]: (state) => state.channelTags,
 };
 
 const mutations = {
-    channels_request: (state) => (state.status = "loading"),
-    channels_success: (state, data) => {
+    [MUTATION_CHANNELS_REQUEST]: (state) => (state.status = "loading"),
+    [MUTATION_CHANNELS_SUCCESS]: (state, data) => {
         state.status = "success";
         state.channels = data.results;
     },
-    channels_error: (state) => (state.status = "error"),
-    channel_create_request: (state) => (state.status = "loading"),
-    channel_create_success: (state) => (state.status = "success"),
-    channel_create_error: (state) => (state.status = "error"),
-    channel_edit_success: (state, data) => {
+    [MUTATION_CHANNELS_ERROR]: (state) => (state.status = "error"),
+    [MUTATION_CHANNEL_CREATE_REQUEST]: (state) => (state.status = "loading"),
+    [MUTATION_CHANNEL_CREATE_SUCCESS]: (state) => (state.status = "success"),
+    [MUTATION_CHANNEL_CREATE_ERROR]: (state) => (state.status = "error"),
+    [MUTATION_CHANNEL_EDIT_SUCCESS]: (state, data) => {
         state.status = "success";
         state.channels.forEach((item, idx) => {
             if (item.id === data.id) {
@@ -29,12 +50,12 @@ const mutations = {
             }
         });
     },
-    channel_tags_request: (state) => (state.status = "loading"),
-    channel_tags_success: (state, data) => {
+    [MUTATION_CHANNEL_TAGS_REQUEST]: (state) => (state.status = "loading"),
+    [MUTATION_CHANNEL_TAGS_SUCCESS]: (state, data) => {
         state.status = "success";
         state.channelTags = data.results;
     },
-    channel_unarchived_entries_change: (state, data) => {
+    [MUTATION_CHANNEL_UNARCHIVED_ENTRIES_CHANGE]: (state, data) => {
         state.channels.forEach((item) => {
             if (item.id === data.channel_id) {
                 if (data.unarchived_entries_count === "increase") {
@@ -51,17 +72,17 @@ const mutations = {
 };
 
 const actions = {
-    channels_request: ({ commit }) => {
+    [ACTION_CHANNELS_REQUEST]: ({ commit }) => {
         axios
             .get("channels/?limit=200")
             .then((response) => {
-                commit("channels_success", response.data);
+                commit(MUTATION_CHANNELS_SUCCESS, response.data);
             })
             .catch(() => {
-                commit("channels_error");
+                commit(MUTATION_CHANNELS_ERROR);
             });
     },
-    channel_create_request: ({ dispatch, commit }, param) => {
+    [ACTION_CHANNEL_CREATE_REQUEST]: ({ dispatch, commit }, param) => {
         const url = "channels/";
         const data = {
             url: param.url,
@@ -77,17 +98,17 @@ const actions = {
         return axios
             .post(url, data, options)
             .then((response) => {
-                commit("channel_create_success", response.data);
+                commit(MUTATION_CHANNEL_CREATE_SUCCESS, response.data);
             })
             .then(() => {
-                dispatch("channel_tags_request");
-                setTimeout(() => dispatch("channels_request"), 1000);
+                dispatch(ACTION_CHANNEL_TAGS_REQUEST);
+                setTimeout(() => dispatch(ACTION_CHANNELS_REQUEST), 1000);
             })
             .catch(() => {
-                commit("channel_create_error");
+                commit(MUTATION_CHANNEL_CREATE_ERROR);
             });
     },
-    channel_edit_request: ({ commit }, param) => {
+    [ACTION_CHANNEL_EDIT_REQUEST]: ({ commit }, param) => {
         const url = `channels/${param.channel_id}/`;
         const data = {
             active: param.active,
@@ -105,24 +126,24 @@ const actions = {
         return axios
             .patch(url, data, options)
             .then((response) => {
-                commit("channel_edit_success", response.data);
+                commit(MUTATION_CHANNEL_EDIT_SUCCESS, response.data);
             })
             .catch(() => {
-                commit("channel_edit_error");
+                commit(MUTATION_CHANNEL_EDIT_ERROR);
             });
     },
-    channel_tags_request: ({ commit }) => {
+    [ACTION_CHANNEL_TAGS_REQUEST]: ({ commit }) => {
         axios
             .get("tags/channel")
             .then((response) => {
-                commit("channel_tags_success", response.data);
+                commit(MUTATION_CHANNEL_TAGS_SUCCESS, response.data);
             })
             .catch(() => {
-                commit("channels_error");
+                commit(MUTATION_CHANNELS_ERROR);
             });
     },
-    channel_unarchived_entries_change: ({ commit }, param) => {
-        commit("channel_unarchived_entries_change", param);
+    [ACTION_CHANNEL_UNARCHIVED_ENTRIES_CHANGE]: ({ commit }, param) => {
+        commit(MUTATION_CHANNEL_UNARCHIVED_ENTRIES_CHANGE, param);
     },
 };
 

@@ -64,6 +64,15 @@
 import Multiselect from "@vueform/multiselect";
 import { formatDate } from "../utils";
 import { mapGetters } from "vuex";
+import {
+  ACTION_CHANNEL_UNARCHIVED_ENTRIES_CHANGE,
+  ACTION_ENTRY_EDIT_REQUEST,
+  ACTION_ENTRY_REQUEST,
+  ACTION_ENTRY_TAGS_REQUEST,
+  GET_ENTRY,
+  GET_ENTRY_TAGS,
+} from "../types";
+
 export default {
   name: "Entry",
   components: {
@@ -94,7 +103,10 @@ export default {
     isOpen: Boolean,
   },
   computed: {
-    ...mapGetters(["entry", "entryTags"]),
+    ...mapGetters({
+      entry: GET_ENTRY,
+      entryTags: GET_ENTRY_TAGS,
+    }),
     isArchivedString() {
       if (this.entryArchived) {
         return "unread";
@@ -111,7 +123,7 @@ export default {
           this.editedEntryTagsOptions = this.entryTags;
           this.$store
             .dispatch({
-              type: "entry_request",
+              type: ACTION_ENTRY_REQUEST,
               id: this.entryId,
             })
             .then(() => {
@@ -128,7 +140,7 @@ export default {
       this.entryArchived = !this.entryArchived;
       this.$store
         .dispatch({
-          type: "entry_edit_request",
+          type: ACTION_ENTRY_EDIT_REQUEST,
           id: this.entryId,
           archived: this.entryArchived,
         })
@@ -137,7 +149,7 @@ export default {
             ? "decrease"
             : "increase";
           this.$store.dispatch({
-            type: "channel_unarchived_entries_change",
+            type: ACTION_CHANNEL_UNARCHIVED_ENTRIES_CHANGE,
             channel_id: this.channelId,
             unarchived_entries_count: unarchived_entries_count,
           });
@@ -163,12 +175,12 @@ export default {
     editedEntryTagsChanged(value) {
       this.$store
         .dispatch({
-          type: "entry_edit_request",
+          type: ACTION_ENTRY_EDIT_REQUEST,
           id: this.entryId,
           tags: value,
         })
         .then(() => {
-          this.$store.dispatch("entry_tags_request");
+          this.$store.dispatch(ACTION_ENTRY_TAGS_REQUEST);
         });
     },
   },

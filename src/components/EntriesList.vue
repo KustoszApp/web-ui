@@ -31,6 +31,14 @@
 <script>
 import Entry from "./Entry.vue";
 import { mapGetters } from "vuex";
+
+import {
+  ACTION_ENTRIES_NEXT_PAGE_REQUEST,
+  GET_CHANNELS,
+  GET_ENTRIES,
+  GET_STATUS,
+} from "../types";
+
 export default {
   name: "EntriesList",
   data() {
@@ -40,7 +48,11 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["status", "entries", "channels"]),
+    ...mapGetters({
+      status: GET_STATUS,
+      entries: GET_ENTRIES,
+      channels: GET_CHANNELS,
+    }),
   },
   methods: {
     getChannelTitle(channelId) {
@@ -123,7 +135,7 @@ export default {
       const thresholdPos = 2 * element.clientHeight;
       const bottomOfView = currentPos <= thresholdPos;
       if (bottomOfView) {
-        this.$store.dispatch("entries_next_page_request");
+        this.$store.dispatch(ACTION_ENTRIES_NEXT_PAGE_REQUEST);
       }
     },
   },

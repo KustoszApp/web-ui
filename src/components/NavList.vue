@@ -161,6 +161,13 @@ import { mapGetters } from "vuex";
 import { formatDate } from "../utils";
 import FeedItem from "./FeedItem.vue";
 
+import {
+  ACTION_CHANNEL_EDIT_REQUEST,
+  ACTION_CHANNEL_TAGS_REQUEST,
+  GET_CHANNELS,
+  GET_CHANNEL_TAGS,
+} from "../types";
+
 export default {
   name: "NavList",
   components: {
@@ -198,7 +205,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["channels", "channelTags"]),
+    ...mapGetters({
+      channels: GET_CHANNELS,
+      channelTags: GET_CHANNEL_TAGS,
+    }),
   },
   methods: {
     groupedChannels() {
@@ -274,7 +284,7 @@ export default {
     submitNewChannelData() {
       this.$store
         .dispatch({
-          type: "channel_edit_request",
+          type: ACTION_CHANNEL_EDIT_REQUEST,
           channel_id: this.editedChannelId,
           active: this.editedChannelActive,
           deduplication_enabled: this.editedChannelDeduplicationEnabled,
@@ -284,7 +294,7 @@ export default {
         })
         .then(() => {
           this.$store.dispatch({
-            type: "channel_tags_request",
+            type: ACTION_CHANNEL_TAGS_REQUEST,
           });
         });
     },

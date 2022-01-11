@@ -1,6 +1,18 @@
 import axios from "axios";
 import router from "../../router";
 
+import {
+    GET_HAS_TOKEN,
+    MUTATION_SET_TOKEN,
+    MUTATION_REMOVE_TOKEN,
+    MUTATION_AUTH_LOGIN_REQUEST,
+    MUTATION_AUTH_LOGIN_SUCCESS,
+    MUTATION_AUTH_LOGIN_ERROR,
+    ACTION_AUTH_LOGIN,
+    ACTION_AUTH_LOGOUT,
+    ACTION_CHECK_TOKEN,
+} from "../../types";
+
 const TOKEN_STORAGE_KEY = "token";
 
 const state = {
@@ -9,38 +21,38 @@ const state = {
 };
 
 const getters = {
-    hasToken: (state) => !!state.token,
+    [GET_HAS_TOKEN]: (state) => !!state.token,
 };
 
 const mutations = {
-    set_token: (state, token) => {
+    [MUTATION_SET_TOKEN]: (state, token) => {
         localStorage.setItem(TOKEN_STORAGE_KEY, token);
         axios.defaults.headers.common["Authorization"] = `Token ${token}`;
         state.token = token;
     },
-    remove_token: (state) => {
+    [MUTATION_REMOVE_TOKEN]: (state) => {
         localStorage.removeItem(TOKEN_STORAGE_KEY);
         delete axios.defaults.headers.common["Authorization"];
         state.token = null;
     },
-    auth_login_request: (state) => (state.status = "loading"),
-    auth_login_success: (state) => {
+    [MUTATION_AUTH_LOGIN_REQUEST]: (state) => (state.status = "loading"),
+    [MUTATION_AUTH_LOGIN_SUCCESS]: (state) => {
         state.status = "success";
     },
-    auth_login_error: (state) => (state.status = "error"),
+    [MUTATION_AUTH_LOGIN_ERROR]: (state) => (state.status = "error"),
 };
 
 const actions = {
-    check_token: ({ commit }) => {
+    [ACTION_CHECK_TOKEN]: ({ commit }) => {
         const token = localStorage.getItem(TOKEN_STORAGE_KEY);
         if (token) {
-            commit("set_token", token);
+            commit(MUTATION_SET_TOKEN, token);
         }
         return !!token;
     },
-    auth_login: ({ commit }, param) => {
-        commit("remove_token");
-        commit("auth_login_request");
+    [ACTION_AUTH_LOGIN]: ({ commit }, param) => {
+        commit(MUTATION_REMOVE_TOKEN);
+        commit(MUTATION_AUTH_LOGIN_REQUEST);
         const url = "/users/login";
         const data = {
             username: param.username,
@@ -56,18 +68,18 @@ const actions = {
         return axios
             .post(url, data, options)
             .then((response) => {
-                commit("set_token", response.data.token);
-                commit("auth_login_success");
+                commit(MUTATION_SET_TOKEN, response.data.token);
+                commit(MUTATION_AUTH_LOGIN_SUCCESS);
             })
             .then(() => {
                 router.push({ path: "/" });
             })
             .catch(() => {
-                commit("auth_login_error");
+                commit(MUTATION_AUTH_LOGIN_ERROR);
             });
     },
-    auth_logout: ({ commit }) => {
-        commit("remove_token");
+    [ACTION_AUTH_LOGOUT]: ({ commit }) => {
+        commit(MUTATION_REMOVE_TOKEN);
         router.push({ path: "/" });
     },
 };

@@ -1,38 +1,51 @@
 import axios from "axios";
 
+import {
+    GET_MAINTENANCE_CHANNELS,
+    MUTATION_MAINTENANCE_CHANNELS_REQUEST,
+    MUTATION_MAINTENANCE_CHANNELS_SUCCESS,
+    MUTATION_MAINTENANCE_CHANNELS_ERROR,
+    MUTATION_MAINTENANCE_CHANNELS_CHANGE_SUCCESS,
+    ACTION_MAINTENANCE_CHANNELS_GET_REQUEST,
+    ACTION_MAINTENANCE_CHANNELS_INACTIVATE_REQUEST,
+    ACTION_MAINTENANCE_CHANNELS_ACTIVATE_REQUEST,
+} from "../../types";
+
 const state = {
     status: "",
     maintenance_channels: [],
 };
 
 const getters = {
-    maintenance_channels: (state) => state.maintenance_channels,
+    [GET_MAINTENANCE_CHANNELS]: (state) => state.maintenance_channels,
 };
 
 const mutations = {
-    maintenance_channels_request: (state) => (state.status = "loading"),
-    maintenance_channels_success: (state, data) => {
+    [MUTATION_MAINTENANCE_CHANNELS_REQUEST]: (state) =>
+        (state.status = "loading"),
+    [MUTATION_MAINTENANCE_CHANNELS_SUCCESS]: (state, data) => {
         state.status = "success";
         state.maintenance_channels = data.results;
     },
-    maintenance_channels_error: (state) => (state.status = "error"),
-    maintenance_channels_change_success: (state) => (state.status = "success"),
+    [MUTATION_MAINTENANCE_CHANNELS_ERROR]: (state) => (state.status = "error"),
+    [MUTATION_MAINTENANCE_CHANNELS_CHANGE_SUCCESS]: (state) =>
+        (state.status = "success"),
 };
 
 const actions = {
-    maintenance_channels_get_request: ({ commit }, param) => {
+    [ACTION_MAINTENANCE_CHANNELS_GET_REQUEST]: ({ commit }, param) => {
         const base = "channels/?limit=200";
         const url = param && param.query ? `${base}&${param.query}` : base;
         axios
             .get(url)
             .then((response) => {
-                commit("maintenance_channels_success", response.data);
+                commit(MUTATION_MAINTENANCE_CHANNELS_SUCCESS, response.data);
             })
             .catch(() => {
-                commit("maintenance_channels_error");
+                commit(MUTATION_MAINTENANCE_CHANNELS_ERROR);
             });
     },
-    maintenance_channels_inactivate_request: ({ commit }, param) => {
+    [ACTION_MAINTENANCE_CHANNELS_INACTIVATE_REQUEST]: ({ commit }, param) => {
         const base = "channels/inactivate";
         const url = param && param.query ? `${base}?${param.query}` : base;
         const options = {
@@ -45,13 +58,13 @@ const actions = {
             .post(url, options)
             .then((response) => response)
             .then(() => {
-                commit("maintenance_channels_change_success");
+                commit(MUTATION_MAINTENANCE_CHANNELS_CHANGE_SUCCESS);
             })
             .catch(() => {
-                commit("maintenance_channels_error");
+                commit(MUTATION_MAINTENANCE_CHANNELS_ERROR);
             });
     },
-    maintenance_channels_activate_request: ({ commit }, param) => {
+    [ACTION_MAINTENANCE_CHANNELS_ACTIVATE_REQUEST]: ({ commit }, param) => {
         const base = "channels/activate";
         const url = param && param.query ? `${base}?${param.query}` : base;
         const options = {
@@ -64,10 +77,10 @@ const actions = {
             .post(url, options)
             .then((response) => response)
             .then(() => {
-                commit("maintenance_channels_change_success");
+                commit(MUTATION_MAINTENANCE_CHANNELS_CHANGE_SUCCESS);
             })
             .catch(() => {
-                commit("maintenance_channels_error");
+                commit(MUTATION_MAINTENANCE_CHANNELS_ERROR);
             });
     },
 };

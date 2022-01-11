@@ -1,32 +1,40 @@
 import axios from "axios";
 
+import {
+    GET_USER,
+    MUTATION_USER_DATA_REQUEST,
+    MUTATION_USER_DATA_SUCCESS,
+    MUTATION_USER_DATA_ERROR,
+    ACTION_USER_DATA_REQUEST,
+} from "../../types";
+
 const state = {
     status: "",
     user: {},
 };
 
 const getters = {
-    user: (state) => state.user,
+    [GET_USER]: (state) => state.user,
 };
 
 const mutations = {
-    user_data_request: (state) => (state.status = "loading"),
-    user_data_success: (state, data) => {
+    [MUTATION_USER_DATA_REQUEST]: (state) => (state.status = "loading"),
+    [MUTATION_USER_DATA_SUCCESS]: (state, data) => {
         state.status = "success";
         state.user = data;
     },
-    user_data_error: (state) => (state.status = "error"),
+    [MUTATION_USER_DATA_ERROR]: (state) => (state.status = "error"),
 };
 
 const actions = {
-    user_data_request: ({ commit }) => {
+    [ACTION_USER_DATA_REQUEST]: ({ commit }) => {
         return axios
             .get("/users/me")
             .then((response) => {
-                commit("user_data_success", response.data);
+                commit(MUTATION_USER_DATA_SUCCESS, response.data);
             })
             .catch(() => {
-                commit("user_data_error");
+                commit(MUTATION_USER_DATA_ERROR);
                 return Promise.reject();
             });
     },

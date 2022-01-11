@@ -1,6 +1,36 @@
 import axios from "axios";
 import qs from "qs";
 
+import {
+    GET_TRY_FILTER_STATUS,
+    GET_TRY_FILTER_ENTRIES_ALL_COUNT,
+    GET_TRY_FILTER_ENTRIES,
+    GET_FILTERS,
+    GET_CURRENT_FILTER,
+    MUTATION_FILTERS_REQUEST,
+    MUTATION_FILTERS_SUCCESS,
+    MUTATION_FILTERS_ERROR,
+    MUTATION_FILTER_CREATE_REQUEST,
+    MUTATION_FILTER_CREATE_SUCCESS,
+    MUTATION_FILTER_CREATE_ERROR,
+    MUTATION_FILTER_EDIT_REQUEST,
+    MUTATION_FILTER_EDIT_SUCCESS,
+    MUTATION_FILTER_EDIT_ERROR,
+    MUTATION_FILTER_DELETE_REQUEST,
+    MUTATION_FILTER_DELETE_SUCCESS,
+    MUTATION_FILTER_DELETE_ERROR,
+    MUTATION_FILTER_TRY_DATA_RESET,
+    MUTATION_FILTER_TRY_REQUEST,
+    MUTATION_FILTER_TRY_SUCCESS,
+    MUTATION_FILTER_TRY_ERROR,
+    ACTION_FILTERS_REQUEST,
+    ACTION_FILTER_CREATE_REQUEST,
+    ACTION_FILTER_EDIT_REQUEST,
+    ACTION_FILTER_DELETE_REQUEST,
+    ACTION_FILTER_TRY_DATA_RESET,
+    ACTION_FILTER_TRY_REQUEST,
+} from "../../types";
+
 const state = {
     status: "",
     tryFilterStatus: "",
@@ -11,30 +41,31 @@ const state = {
 };
 
 const getters = {
-    tryFilterStatus: (state) => state.tryFilterStatus,
-    tryFilterEntriesAllCount: (state) => state.tryFilterEntriesAllCount,
-    tryFilterEntries: (state) => state.tryFilterEntries,
-    filters: (state) => state.filters,
-    currentFilter: (state) => state.currentFilter,
+    [GET_TRY_FILTER_STATUS]: (state) => state.tryFilterStatus,
+    [GET_TRY_FILTER_ENTRIES_ALL_COUNT]: (state) =>
+        state.tryFilterEntriesAllCount,
+    [GET_TRY_FILTER_ENTRIES]: (state) => state.tryFilterEntries,
+    [GET_FILTERS]: (state) => state.filters,
+    [GET_CURRENT_FILTER]: (state) => state.currentFilter,
 };
 
 const mutations = {
-    filters_request: (state) => (state.status = "loading"),
-    filters_success: (state, data) => {
+    [MUTATION_FILTERS_REQUEST]: (state) => (state.status = "loading"),
+    [MUTATION_FILTERS_SUCCESS]: (state, data) => {
         state.status = "success";
         state.filters = data.results;
     },
-    filters_error: (state) => (state.status = "error"),
+    [MUTATION_FILTERS_ERROR]: (state) => (state.status = "error"),
 
-    filter_create_request: (state) => (state.status = "loading"),
-    filter_create_success: (state, data) => {
+    [MUTATION_FILTER_CREATE_REQUEST]: (state) => (state.status = "loading"),
+    [MUTATION_FILTER_CREATE_SUCCESS]: (state, data) => {
         state.status = "success";
         state.filters.push(data);
     },
-    filter_create_error: (state) => (state.status = "error"),
+    [MUTATION_FILTER_CREATE_ERROR]: (state) => (state.status = "error"),
 
-    filter_edit_request: (state) => (state.status = "loading"),
-    filter_edit_success: (state, data) => {
+    [MUTATION_FILTER_EDIT_REQUEST]: (state) => (state.status = "loading"),
+    [MUTATION_FILTER_EDIT_SUCCESS]: (state, data) => {
         state.status = "success";
         state.filters.forEach((item, idx) => {
             if (item.id === data.id) {
@@ -42,22 +73,23 @@ const mutations = {
             }
         });
     },
-    filter_edit_error: (state) => (state.status = "error"),
+    [MUTATION_FILTER_EDIT_ERROR]: (state) => (state.status = "error"),
 
-    filter_delete_request: (state) => (state.status = "loading"),
-    filter_delete_success: (state, data) => {
+    [MUTATION_FILTER_DELETE_REQUEST]: (state) => (state.status = "loading"),
+    [MUTATION_FILTER_DELETE_SUCCESS]: (state, data) => {
         state.status = "success";
         state.filters = state.filters.filter((filter) => filter.id !== data.id);
     },
-    filter_delete_error: (state) => (state.status = "error"),
+    [MUTATION_FILTER_DELETE_ERROR]: (state) => (state.status = "error"),
 
-    filter_try_data_reset: (state) => {
+    [MUTATION_FILTER_TRY_DATA_RESET]: (state) => {
         state.tryFilterStatus = "";
         state.tryFilterEntriesAllCount = 0;
         state.tryFilterEntries = [];
     },
-    filter_try_request: (state) => (state.tryFilterStatus = "loading"),
-    filter_try_success: (state, data) => {
+    [MUTATION_FILTER_TRY_REQUEST]: (state) =>
+        (state.tryFilterStatus = "loading"),
+    [MUTATION_FILTER_TRY_SUCCESS]: (state, data) => {
         state.tryFilterStatus = "success";
         state.tryFilterEntries = data.results.map((item) => {
             item.preferred_content = undefined;
@@ -65,22 +97,22 @@ const mutations = {
         });
         state.tryFilterEntriesAllCount = data.count;
     },
-    filter_try_error: (state) => (state.tryFilterStatus = "error"),
+    [MUTATION_FILTER_TRY_ERROR]: (state) => (state.tryFilterStatus = "error"),
 };
 
 const actions = {
-    filters_request: ({ commit }) => {
-        commit("filters_request");
+    [ACTION_FILTERS_REQUEST]: ({ commit }) => {
+        commit(MUTATION_FILTERS_REQUEST);
         axios
             .get("filters/")
             .then((response) => {
-                commit("filters_success", response.data);
+                commit(MUTATION_FILTERS_SUCCESS, response.data);
             })
             .catch(() => {
-                commit("filters_error");
+                commit(MUTATION_FILTERS_ERROR);
             });
     },
-    filter_create_request: ({ commit }, param) => {
+    [ACTION_FILTER_CREATE_REQUEST]: ({ commit }, param) => {
         const url = "filters/";
         const data = {
             enabled: param.enabled,
@@ -98,13 +130,13 @@ const actions = {
         return axios
             .post(url, data, options)
             .then((response) => {
-                commit("filter_create_success", response.data);
+                commit(MUTATION_FILTER_CREATE_SUCCESS, response.data);
             })
             .catch(() => {
-                commit("filter_create_error");
+                commit(MUTATION_FILTER_CREATE_ERROR);
             });
     },
-    filter_edit_request: ({ commit }, param) => {
+    [ACTION_FILTER_EDIT_REQUEST]: ({ commit }, param) => {
         const url = `filters/${param.id}/`;
         const data = {
             enabled: param.enabled,
@@ -122,13 +154,13 @@ const actions = {
         return axios
             .patch(url, data, options)
             .then((response) => {
-                commit("filter_edit_success", response.data);
+                commit(MUTATION_FILTER_EDIT_SUCCESS, response.data);
             })
             .catch(() => {
-                commit("filter_edit_error");
+                commit(MUTATION_FILTER_EDIT_ERROR);
             });
     },
-    filter_delete_request: ({ commit }, param) => {
+    [ACTION_FILTER_DELETE_REQUEST]: ({ commit }, param) => {
         const url = `filters/${param.id}/`;
         const options = {
             headers: {
@@ -139,17 +171,17 @@ const actions = {
         return axios
             .delete(url, options)
             .then(() => {
-                commit("filter_delete_success", param);
+                commit(MUTATION_FILTER_DELETE_SUCCESS, param);
             })
             .catch(() => {
-                commit("filter_delete_error");
+                commit(MUTATION_FILTER_DELETE_ERROR);
             });
     },
-    filter_try_data_reset: ({ commit }) => {
-        commit("filter_try_data_reset");
+    [ACTION_FILTER_TRY_DATA_RESET]: ({ commit }) => {
+        commit(MUTATION_FILTER_TRY_DATA_RESET);
     },
-    filter_try_request: ({ commit }, param) => {
-        commit("filter_try_request");
+    [ACTION_FILTER_TRY_REQUEST]: ({ commit }, param) => {
+        commit(MUTATION_FILTER_TRY_REQUEST);
         const url = `entries/`;
         let params = qs.parse(param.condition);
         params["limit"] = 10;
@@ -158,10 +190,10 @@ const actions = {
                 params: params,
             })
             .then((response) => {
-                commit("filter_try_success", response.data);
+                commit(MUTATION_FILTER_TRY_SUCCESS, response.data);
             })
             .catch(() => {
-                commit("filter_try_error");
+                commit(MUTATION_FILTER_TRY_ERROR);
             });
     },
 };

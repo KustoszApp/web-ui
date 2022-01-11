@@ -1,6 +1,33 @@
 import axios from "axios";
 import { omit } from "../../utils";
 
+import {
+    GET_ENTRIES,
+    GET_ENTRIES_REQUEST_PARAMS,
+    GET_ENTRIES_NEXT_PAGE,
+    GET_ENTRIES_ALL_COUNT,
+    GET_ENTRY,
+    GET_ENTRY_TAGS,
+    GET_STATUS,
+    MUTATION_SET_ENTRIES_REQUEST_PARAMS,
+    MUTATION_ENTRIES_REQUEST,
+    MUTATION_ENTRIES_SUCCESS,
+    MUTATION_ENTRIES_ERROR,
+    MUTATION_ENTRIES_MARK_AS_READ_SUCCESS,
+    MUTATION_ENTRY_REQUEST,
+    MUTATION_ENTRY_SUCCESS,
+    MUTATION_ENTRY_ERROR,
+    MUTATION_ENTRY_TAGS_REQUEST,
+    MUTATION_ENTRY_TAGS_SUCCESS,
+    ACTION_ENTRIES_REQUEST,
+    ACTION_ENTRIES_NEXT_PAGE_REQUEST,
+    ACTION_ENTRIES_MARK_AS_READ,
+    ACTION_ENTRY_REQUEST,
+    ACTION_ENTRY_EDIT_REQUEST,
+    ACTION_ENTRY_TAGS_REQUEST,
+    ACTION_CHANNELS_REQUEST,
+} from "../../types";
+
 const state = {
     status: "",
     entriesRequestParams: {
@@ -14,17 +41,17 @@ const state = {
 };
 
 const getters = {
-    entries: (state) => state.entries,
-    entriesRequestParams: (state) => state.entriesRequestParams,
-    entriesNextPage: (state) => state.entriesNextPage,
-    entriesAllCount: (state) => state.entriesAllCount,
-    entry: (state) => state.entry,
-    entryTags: (state) => state.entryTags,
-    status: (state) => state.status,
+    [GET_ENTRIES]: (state) => state.entries,
+    [GET_ENTRIES_REQUEST_PARAMS]: (state) => state.entriesRequestParams,
+    [GET_ENTRIES_NEXT_PAGE]: (state) => state.entriesNextPage,
+    [GET_ENTRIES_ALL_COUNT]: (state) => state.entriesAllCount,
+    [GET_ENTRY]: (state) => state.entry,
+    [GET_ENTRY_TAGS]: (state) => state.entryTags,
+    [GET_STATUS]: (state) => state.status,
 };
 
 const mutations = {
-    set_entries_request_params: (state, data) => {
+    [MUTATION_SET_ENTRIES_REQUEST_PARAMS]: (state, data) => {
         const { setParamsAsIs, ...params } = data;
         let allRequestParams = {};
         if (setParamsAsIs) {
@@ -51,8 +78,8 @@ const mutations = {
             });
         state.entriesRequestParams = newRequestParams;
     },
-    entries_request: (state) => (state.status = "loading"),
-    entries_success: (state, payload) => {
+    [MUTATION_ENTRIES_REQUEST]: (state) => (state.status = "loading"),
+    [MUTATION_ENTRIES_SUCCESS]: (state, payload) => {
         const context = payload.context;
         const data = payload.data;
         state.status = "success";
@@ -67,86 +94,87 @@ const mutations = {
         state.entriesNextPage = data.next;
         state.entriesAllCount = data.count;
     },
-    entries_error: (state) => (state.status = "error"),
-    entries_mark_as_read_success: (state) => (state.status = "success"),
-    entry_request: (state) => (state.status = "loading"),
-    entry_success: (state, data) => {
+    [MUTATION_ENTRIES_ERROR]: (state) => (state.status = "error"),
+    [MUTATION_ENTRIES_MARK_AS_READ_SUCCESS]: (state) =>
+        (state.status = "success"),
+    [MUTATION_ENTRY_REQUEST]: (state) => (state.status = "loading"),
+    [MUTATION_ENTRY_SUCCESS]: (state, data) => {
         state.status = "success";
         state.entry = data;
     },
-    entry_error: (state) => (state.status = "error"),
-    entry_tags_request: (state) => (state.status = "loading"),
-    entry_tags_success: (state, data) => {
+    [MUTATION_ENTRY_ERROR]: (state) => (state.status = "error"),
+    [MUTATION_ENTRY_TAGS_REQUEST]: (state) => (state.status = "loading"),
+    [MUTATION_ENTRY_TAGS_SUCCESS]: (state, data) => {
         state.status = "success";
         state.entryTags = data.results;
     },
 };
 
 const actions = {
-    entries_request: ({ commit, state }, param) => {
-        commit("entries_request");
-        commit("set_entries_request_params", omit(param, ["type"]));
+    [ACTION_ENTRIES_REQUEST]: ({ commit, state }, param) => {
+        commit(MUTATION_ENTRIES_REQUEST);
+        commit(MUTATION_SET_ENTRIES_REQUEST_PARAMS, omit(param, ["type"]));
         const url = "entries/";
         axios
             .get(url, {
                 params: state.entriesRequestParams,
             })
             .then((response) => {
-                commit("entries_success", {
+                commit(MUTATION_ENTRIES_SUCCESS, {
                     context: "initial_page",
                     data: response.data,
                 });
             })
             .catch(() => {
-                commit("entries_error");
+                commit(MUTATION_ENTRIES_ERROR);
             });
     },
-    entries_next_page_request: ({ commit, state }) => {
+    [ACTION_ENTRIES_NEXT_PAGE_REQUEST]: ({ commit, state }) => {
         if (state.entriesNextPage === null) {
             return;
         }
-        commit("entry_request");
+        commit(MUTATION_ENTRY_REQUEST);
         axios
             .get(state.entriesNextPage)
             .then((response) => {
-                commit("entries_success", {
+                commit(MUTATION_ENTRIES_SUCCESS, {
                     context: "next_page",
                     data: response.data,
                 });
             })
             .catch(() => {
-                commit("entries_error");
+                commit(MUTATION_ENTRIES_ERROR);
             });
     },
-    entries_mark_as_read: ({ dispatch, commit, state }) => {
-        commit("entries_request");
+    [ACTION_ENTRIES_MARK_AS_READ]: ({ dispatch, commit, state }) => {
+        commit(MUTATION_ENTRIES_REQUEST);
         const url = "entries/archive";
         return axios
             .post(url, null, {
                 params: state.entriesRequestParams,
             })
             .then(() => {
-                commit("entries_mark_as_read_success");
-                return dispatch("channels_request").then(() => {
-                    return dispatch("entries_request");
+                commit(MUTATION_ENTRIES_MARK_AS_READ_SUCCESS);
+                return dispatch(ACTION_CHANNELS_REQUEST).then(() => {
+                    return dispatch(ACTION_ENTRIES_REQUEST);
                 });
             })
             .catch(() => {
-                commit("entries_error");
+                commit(MUTATION_ENTRIES_ERROR);
             });
     },
-    entry_request: ({ commit }, param) => {
+    [ACTION_ENTRY_REQUEST]: ({ commit }, param) => {
         const url = `entries/${param.id}/`;
         return axios
             .get(url)
             .then((response) => {
-                commit("entry_success", response.data);
+                commit(MUTATION_ENTRY_SUCCESS, response.data);
             })
             .catch(() => {
-                commit("entry_error");
+                commit(MUTATION_ENTRY_ERROR);
             });
     },
-    entry_edit_request: ({ commit }, param) => {
+    [ACTION_ENTRY_EDIT_REQUEST]: ({ commit }, param) => {
         const url = `entries/${param.id}/`;
         let data = Object.entries(param).filter(
             ([key]) => !["id", "type"].includes(key)
@@ -161,20 +189,20 @@ const actions = {
         return axios
             .patch(url, data, options)
             .then((response) => {
-                commit("entry_success", response.data);
+                commit(MUTATION_ENTRY_SUCCESS, response.data);
             })
             .catch(() => {
-                commit("entry_error");
+                commit(MUTATION_ENTRY_ERROR);
             });
     },
-    entry_tags_request: ({ commit }) => {
+    [ACTION_ENTRY_TAGS_REQUEST]: ({ commit }) => {
         axios
             .get("tags/entry")
             .then((response) => {
-                commit("entry_tags_success", response.data);
+                commit(MUTATION_ENTRY_TAGS_SUCCESS, response.data);
             })
             .catch(() => {
-                commit("entry_error");
+                commit(MUTATION_ENTRY_ERROR);
             });
     },
 };
