@@ -2,16 +2,28 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import store from "../store";
 import Entries from "../views/Entries.vue";
 
-import { ACTION_CHECK_TOKEN, ACTION_USER_DATA_REQUEST } from "../types";
+import {
+    ACTION_CHECK_TOKEN,
+    ACTION_USER_DATA_REQUEST,
+    ROUTE_LOGIN,
+    ROUTE_ENTRIES,
+    ROUTE_FILTERS,
+    ROUTE_SETTINGS,
+    ROUTE_MAINTENANCE_INACTIVE_CHANNELS,
+    ROUTE_MAINTENANCE_NOT_UPDATED_CHANNELS,
+    ROUTE_MAINTENANCE_STALE_CHANNELS,
+} from "../types";
 
 /* eslint-disable no-unused-vars */
 const hasToken = (to, from) => {
     return store.dispatch(ACTION_CHECK_TOKEN).then((hasToken) => {
-        if (!hasToken) return "/login";
+        if (!hasToken) return { name: ROUTE_LOGIN };
     });
 };
 const tokenIsValid = (to, from) => {
-    return store.dispatch(ACTION_USER_DATA_REQUEST).catch(() => "/login");
+    return store.dispatch(ACTION_USER_DATA_REQUEST).catch(() => {
+        return { name: ROUTE_LOGIN };
+    });
 };
 
 const notHasTokenOrNotValidToken = (to, from) => {
@@ -31,11 +43,11 @@ const notHasTokenOrNotValidToken = (to, from) => {
 const routes = [
     {
         path: "/",
-        redirect: "/entries",
+        redirect: { name: ROUTE_ENTRIES },
     },
     {
         path: "/login",
-        name: "login",
+        name: ROUTE_LOGIN,
         component: function () {
             return import(/* webpackChunkName: "login" */ "../views/Login.vue");
         },
@@ -43,13 +55,13 @@ const routes = [
     },
     {
         path: "/entries/",
-        name: "entries",
+        name: ROUTE_ENTRIES,
         component: Entries,
         beforeEnter: [hasToken, tokenIsValid],
     },
     {
         path: "/maintenance/stale_channels",
-        name: "maintenance_stale_channels",
+        name: ROUTE_MAINTENANCE_STALE_CHANNELS,
         component: function () {
             return import(
                 /* webpackChunkName: "maintenance_stale_channels" */ "../views/Maintenance.vue"
@@ -59,7 +71,7 @@ const routes = [
     },
     {
         path: "/maintenance/not_updated_channels",
-        name: "maintenance_not_updated_channels",
+        name: ROUTE_MAINTENANCE_NOT_UPDATED_CHANNELS,
         component: function () {
             return import(
                 /* webpackChunkName: "maintenance_not_updated_channels" */ "../views/Maintenance.vue"
@@ -69,7 +81,7 @@ const routes = [
     },
     {
         path: "/maintenance/inactive_channels",
-        name: "maintenance_inactive_channels",
+        name: ROUTE_MAINTENANCE_INACTIVE_CHANNELS,
         component: function () {
             return import(
                 /* webpackChunkName: "maintenance_inactive_channels" */ "../views/Maintenance.vue"
@@ -79,7 +91,7 @@ const routes = [
     },
     {
         path: "/settings",
-        name: "settings",
+        name: ROUTE_SETTINGS,
         component: function () {
             return import(
                 /* webpackChunkName: "settings" */ "../views/Settings.vue"
@@ -89,7 +101,7 @@ const routes = [
     },
     {
         path: "/filters",
-        name: "filters",
+        name: ROUTE_FILTERS,
         component: function () {
             return import(
                 /* webpackChunkName: "filters" */ "../views/Filters.vue"

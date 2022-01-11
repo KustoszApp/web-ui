@@ -4,7 +4,10 @@
     <router-link
       class="feed__item-link"
       :title="feed.displayed_title"
-      :to="{ name: 'entries', query: { channel: feed.id, channel_tags: null } }"
+      :to="{
+        name: this.ROUTE_ENTRIES,
+        query: { channel: feed.id, channel_tags: null },
+      }"
     >
       {{ feed.displayed_title }}
     </router-link>
@@ -16,6 +19,8 @@
 <script>
 import { BIconPencilFill, BIconRssFill } from "bootstrap-icons-vue";
 
+import { ROUTE_ENTRIES } from "../types";
+
 export default {
   name: "FeedItem",
   components: {
@@ -24,6 +29,11 @@ export default {
   },
   props: {
     feed: Object,
+  },
+  data() {
+    return {
+      ROUTE_ENTRIES,
+    };
   },
 };
 </script>

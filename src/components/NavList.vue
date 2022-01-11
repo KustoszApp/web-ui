@@ -19,7 +19,7 @@
         <router-link
           class="list__item-link"
           :to="{
-            name: 'entries',
+            name: this.ROUTE_ENTRIES,
             query: { channel_tags: group.tag.slug, channel: null },
           }"
         >
@@ -166,6 +166,7 @@ import {
   ACTION_CHANNEL_TAGS_REQUEST,
   GET_CHANNELS,
   GET_CHANNEL_TAGS,
+  ROUTE_ENTRIES,
 } from "../types";
 
 export default {
@@ -202,6 +203,7 @@ export default {
         hour: "numeric",
         minute: "numeric",
       },
+      ROUTE_ENTRIES,
     };
   },
   computed: {

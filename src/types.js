@@ -1,5 +1,9 @@
 /* eslint-disable */
 
+//
+// Vuex store
+//
+
 // auth
 export const GET_HAS_TOKEN = "GET_HAS_TOKEN";
 export const MUTATION_SET_TOKEN = "MUTATION_SET_TOKEN";
@@ -101,3 +105,15 @@ export const MUTATION_USER_DATA_REQUEST = "MUTATION_USER_DATA_REQUEST";
 export const MUTATION_USER_DATA_SUCCESS = "MUTATION_USER_DATA_SUCCESS";
 export const MUTATION_USER_DATA_ERROR = "MUTATION_USER_DATA_ERROR";
 export const ACTION_USER_DATA_REQUEST = "ACTION_USER_DATA_REQUEST";
+
+//
+// Route names
+//
+
+export const ROUTE_LOGIN = "login";
+export const ROUTE_ENTRIES = "entries";
+export const ROUTE_FILTERS = "filters";
+export const ROUTE_SETTINGS = "settings";
+export const ROUTE_MAINTENANCE_STALE_CHANNELS = "maintenance_stale_channels";
+export const ROUTE_MAINTENANCE_NOT_UPDATED_CHANNELS = "maintenance_not_updated_channels";
+export const ROUTE_MAINTENANCE_INACTIVE_CHANNELS = "maintenance_inactive_channels";

@@ -16,7 +16,10 @@
         <label :for="feed.id">{{ feed.displayed_title }}</label>
         (<router-link
           class="list__item-link"
-          :to="{ name: 'entries', params: { entryId: feed.id } }"
+          :to="{
+            name: this.ROUTE_ENTRIES,
+            query: { channel: feed.id, channel_tags: null },
+          }"
         >
           see content </router-link
         >)
@@ -50,6 +53,7 @@ import {
   ACTION_MAINTENANCE_CHANNELS_GET_REQUEST,
   ACTION_MAINTENANCE_CHANNELS_INACTIVATE_REQUEST,
   GET_MAINTENANCE_CHANNELS,
+  ROUTE_ENTRIES,
 } from "../types";
 
 export default {
@@ -61,6 +65,7 @@ export default {
       displayInactivateButton: true,
       displayActivateButton: false,
       displayRemoveButton: false,
+      ROUTE_ENTRIES,
     };
   },
   computed: {

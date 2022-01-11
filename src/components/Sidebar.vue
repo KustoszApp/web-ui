@@ -11,17 +11,18 @@
     <div class="nav__menu">
       <ul class="menu mb-0">
         <li class="menu__item">
-          <router-link to="/maintenance/stale_channels"
+          <router-link :to="{ name: this.ROUTE_MAINTENANCE_STALE_CHANNELS }"
             >Stale channels</router-link
           >
         </li>
         <li class="menu__item">
-          <router-link to="/maintenance/not_updated_channels"
+          <router-link
+            :to="{ name: this.ROUTE_MAINTENANCE_NOT_UPDATED_CHANNELS }"
             >Channels without new entries</router-link
           >
         </li>
         <li class="menu__item">
-          <router-link to="/maintenance/inactive_channels"
+          <router-link :to="{ name: this.ROUTE_MAINTENANCE_INACTIVE_CHANNELS }"
             >Inactive channels</router-link
           >
         </li>
@@ -30,10 +31,10 @@
     <div class="nav__menu">
       <ul class="menu mb-0">
         <li class="menu__item">
-          <router-link to="/filters">Filters</router-link>
+          <router-link :to="{ name: this.ROUTE_FILTERS }">Filters</router-link>
         </li>
         <li class="menu__item">
-          <router-link to="/settings">Options</router-link>
+          <router-link :to="{ name: this.ROUTE_SETTINGS }">Options</router-link>
         </li>
       </ul>
     </div>
@@ -44,13 +45,30 @@
 import AddChannel from "@/components/AddChannel";
 import NavList from "@/components/NavList.vue";
 
-import { ACTION_CHANNEL_TAGS_REQUEST, ACTION_CHANNELS_REQUEST } from "../types";
+import {
+  ACTION_CHANNEL_TAGS_REQUEST,
+  ACTION_CHANNELS_REQUEST,
+  ROUTE_MAINTENANCE_STALE_CHANNELS,
+  ROUTE_MAINTENANCE_INACTIVE_CHANNELS,
+  ROUTE_MAINTENANCE_NOT_UPDATED_CHANNELS,
+  ROUTE_FILTERS,
+  ROUTE_SETTINGS,
+} from "../types";
 
 export default {
   name: "Sidebar",
   components: {
     AddChannel,
     NavList,
+  },
+  data() {
+    return {
+      ROUTE_MAINTENANCE_STALE_CHANNELS,
+      ROUTE_MAINTENANCE_INACTIVE_CHANNELS,
+      ROUTE_MAINTENANCE_NOT_UPDATED_CHANNELS,
+      ROUTE_FILTERS,
+      ROUTE_SETTINGS,
+    };
   },
   mounted() {
     this.$store.dispatch(ACTION_CHANNELS_REQUEST);
