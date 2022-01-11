@@ -171,6 +171,11 @@ export default {
         (x) => x.id === this.entrySelectedContent
       );
       this.entryContent = newContent.content;
+      this.$store.dispatch({
+        type: ACTION_ENTRY_EDIT_REQUEST,
+        id: this.entryId,
+        preferred_content: newContent.id,
+      });
     },
     editedEntryTagsChanged(value) {
       this.$store
