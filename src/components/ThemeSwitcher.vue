@@ -1,42 +1,50 @@
 <template>
-  <div class="nav__themes">
+  <div class="theme-selection">
     <button
+      v-for="(value, key) in colorThemes"
+      :key="key"
       type="button"
       class="btn btn--secondary"
-      @click="switchTheme('light')"
+      @click="switchTheme(key)"
     >
-      Light Theme
-    </button>
-    <button
-      type="button"
-      class="btn btn--secondary ml-2"
-      @click="switchTheme('dark')"
-    >
-      Dark Theme
+      {{ value }}
     </button>
   </div>
 </template>
 
 <script>
-import { ACTION_USER_DATA_EDIT_REQUEST } from "../types";
+import { mapGetters } from "vuex";
+
+import {
+  GET_ALL_COLOR_THEMES,
+  ACTION_SET_USER_THEME_COLOR,
+  ACTION_USER_DATA_EDIT_REQUEST,
+} from "../types";
 
 export default {
   name: "ThemeSwitcher",
-  data() {
-    return {
-      themes: ["light", "dark"],
-    };
+  computed: {
+    ...mapGetters({
+      colorThemes: GET_ALL_COLOR_THEMES,
+    }),
   },
   methods: {
     switchTheme(value) {
-      // theme is set by watcher in ReadOrganizerUI
-      if (this.themes.includes(value)) {
+      this.$store.dispatch(ACTION_SET_USER_THEME_COLOR, value).then(() => {
         this.$store.dispatch({
           type: ACTION_USER_DATA_EDIT_REQUEST,
           theme_color: value,
         });
-      }
+      });
     },
   },
 };
 </script>
+
+<style lang="scss">
+.theme-selection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1ex;
+}
+</style>

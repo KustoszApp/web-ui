@@ -21,7 +21,12 @@ import Sidebar from "@/components/Sidebar.vue";
 import Spinner from "@/components/Spinner.vue";
 import { mapGetters } from "vuex";
 
-import { GET_HAS_TOKEN, GET_STATUS, GET_USER } from "./types";
+import {
+  GET_HAS_TOKEN,
+  GET_STATUS,
+  GET_USER,
+  GET_USER_THEME_COLOR,
+} from "./types";
 
 export default {
   name: "ReadOrganizerUI",
@@ -34,6 +39,7 @@ export default {
       status: GET_STATUS,
       hasToken: GET_HAS_TOKEN,
       user: GET_USER,
+      themeColor: GET_USER_THEME_COLOR,
     }),
     isAuthenticated() {
       return this.hasToken && this.user.is_active;
@@ -41,7 +47,7 @@ export default {
   },
   created() {
     this.$watch(
-      () => this.user.theme_color,
+      () => this.themeColor,
       (newVal) => {
         document.documentElement.setAttribute("theme", newVal);
       }
