@@ -2,6 +2,7 @@ import axios from "axios";
 
 import {
     GET_USER,
+    MUTATION_CLEAR_USER_DATA,
     MUTATION_USER_DATA_REQUEST,
     MUTATION_USER_DATA_SUCCESS,
     MUTATION_USER_DATA_ERROR,
@@ -18,6 +19,7 @@ const getters = {
 };
 
 const mutations = {
+    [MUTATION_CLEAR_USER_DATA]: (state) => (state.user = {}),
     [MUTATION_USER_DATA_REQUEST]: (state) => (state.status = "loading"),
     [MUTATION_USER_DATA_SUCCESS]: (state, data) => {
         state.status = "success";

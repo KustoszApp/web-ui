@@ -33,7 +33,7 @@ const notHasTokenOrNotValidToken = (to, from) => {
             if (hasToken) {
                 return store
                     .dispatch(ACTION_USER_DATA_REQUEST)
-                    .then(() => from);
+                    .then(() => false);
             }
         })
         .catch(() => true);

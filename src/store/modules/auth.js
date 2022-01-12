@@ -8,6 +8,7 @@ import {
     MUTATION_AUTH_LOGIN_REQUEST,
     MUTATION_AUTH_LOGIN_SUCCESS,
     MUTATION_AUTH_LOGIN_ERROR,
+    MUTATION_CLEAR_USER_DATA,
     ACTION_AUTH_LOGIN,
     ACTION_AUTH_LOGOUT,
     ACTION_CHECK_TOKEN,
@@ -80,6 +81,7 @@ const actions = {
     },
     [ACTION_AUTH_LOGOUT]: ({ commit }) => {
         commit(MUTATION_REMOVE_TOKEN);
+        commit(MUTATION_CLEAR_USER_DATA);
         router.push({ path: "/" });
     },
 };
