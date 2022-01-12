@@ -7,10 +7,13 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import EntriesFilter from "@/components/EntriesFilter.vue";
 import EntriesList from "@/components/EntriesList.vue";
 
 import {
+  GET_STATUS,
+  ROUTE_ENTRIES,
   ACTION_ENTRIES_REQUEST,
   ACTION_ENTRY_TAGS_REQUEST,
   ACTION_DISPLAY_SIDEBAR,
@@ -22,10 +25,28 @@ export default {
     EntriesFilter,
     EntriesList,
   },
+  data() {
+    return {
+      ROUTE_ENTRIES,
+    };
+  },
+  computed: {
+    ...mapGetters({
+      status: GET_STATUS,
+    }),
+  },
   methods: {
     queryParamsChanged() {
-      const newQuery = {};
       const $route = this.$route;
+      // watcher is global, but makes sense only on /entries/
+      if ($route.name !== this.ROUTE_ENTRIES) {
+        return;
+      }
+      // poor man's debouncing
+      if (this.status === "loading") {
+        return;
+      }
+      const newQuery = {};
       for (const key in $route.query) {
         const value = $route.query[key];
         if (value !== null && value !== "") {

@@ -1,6 +1,14 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import store from "../store";
-import Entries from "../views/Entries.vue";
+const Login = () => import(/* webpackChunkName: "login" */ "../views/Login");
+const Entries = () =>
+    import(/* webpackChunkName: "entries" */ "../views/Entries");
+const Maintenance = () =>
+    import(/* webpackChunkName: "maintenance" */ "../views/Maintenance");
+const Settings = () =>
+    import(/* webpackChunkName: "settings" */ "../views/Settings");
+const Filters = () =>
+    import(/* webpackChunkName: "filters" */ "../views/Filters");
 
 import {
     ACTION_CHECK_TOKEN,
@@ -48,9 +56,7 @@ const routes = [
     {
         path: "/login",
         name: ROUTE_LOGIN,
-        component: function () {
-            return import(/* webpackChunkName: "login" */ "../views/Login.vue");
-        },
+        component: Login,
         beforeEnter: notHasTokenOrNotValidToken,
     },
     {
@@ -62,51 +68,31 @@ const routes = [
     {
         path: "/maintenance/stale_channels",
         name: ROUTE_MAINTENANCE_STALE_CHANNELS,
-        component: function () {
-            return import(
-                /* webpackChunkName: "maintenance_stale_channels" */ "../views/Maintenance.vue"
-            );
-        },
+        component: Maintenance,
         beforeEnter: [hasToken, tokenIsValid],
     },
     {
         path: "/maintenance/not_updated_channels",
         name: ROUTE_MAINTENANCE_NOT_UPDATED_CHANNELS,
-        component: function () {
-            return import(
-                /* webpackChunkName: "maintenance_not_updated_channels" */ "../views/Maintenance.vue"
-            );
-        },
+        component: Maintenance,
         beforeEnter: [hasToken, tokenIsValid],
     },
     {
         path: "/maintenance/inactive_channels",
         name: ROUTE_MAINTENANCE_INACTIVE_CHANNELS,
-        component: function () {
-            return import(
-                /* webpackChunkName: "maintenance_inactive_channels" */ "../views/Maintenance.vue"
-            );
-        },
+        component: Maintenance,
         beforeEnter: [hasToken, tokenIsValid],
     },
     {
         path: "/settings",
         name: ROUTE_SETTINGS,
-        component: function () {
-            return import(
-                /* webpackChunkName: "settings" */ "../views/Settings.vue"
-            );
-        },
+        component: Settings,
         beforeEnter: [hasToken, tokenIsValid],
     },
     {
         path: "/filters",
         name: ROUTE_FILTERS,
-        component: function () {
-            return import(
-                /* webpackChunkName: "filters" */ "../views/Filters.vue"
-            );
-        },
+        component: Filters,
         beforeEnter: [hasToken, tokenIsValid],
     },
 ];
