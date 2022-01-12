@@ -18,20 +18,24 @@
 </template>
 
 <script>
+import { ACTION_USER_DATA_EDIT_REQUEST } from "../types";
+
 export default {
   name: "ThemeSwitcher",
   data() {
     return {
-      themes: {
-        light: "Jasny Motyw",
-        dark: "Ciemy Motyw",
-      },
+      themes: ["light", "dark"],
     };
   },
   methods: {
     switchTheme(value) {
-      if (value in this.themes)
-        document.documentElement.setAttribute("theme", value);
+      // theme is set by watcher in ReadOrganizerUI
+      if (this.themes.includes(value)) {
+        this.$store.dispatch({
+          type: ACTION_USER_DATA_EDIT_REQUEST,
+          theme_color: value,
+        });
+      }
     },
   },
 };

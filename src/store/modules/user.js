@@ -1,4 +1,5 @@
 import axios from "axios";
+import { omit } from "../../utils";
 
 import {
     GET_USER,
@@ -6,7 +7,11 @@ import {
     MUTATION_USER_DATA_REQUEST,
     MUTATION_USER_DATA_SUCCESS,
     MUTATION_USER_DATA_ERROR,
+    MUTATION_USER_DATA_EDIT_REQUEST,
+    MUTATION_USER_DATA_EDIT_SUCCESS,
+    MUTATION_USER_DATA_EDIT_ERROR,
     ACTION_USER_DATA_REQUEST,
+    ACTION_USER_DATA_EDIT_REQUEST,
 } from "../../types";
 
 const state = {
@@ -26,6 +31,12 @@ const mutations = {
         state.user = data;
     },
     [MUTATION_USER_DATA_ERROR]: (state) => (state.status = "error"),
+    [MUTATION_USER_DATA_EDIT_REQUEST]: (state) => (state.status = "loading"),
+    [MUTATION_USER_DATA_EDIT_SUCCESS]: (state, data) => {
+        state.status = "success";
+        state.user = data;
+    },
+    [MUTATION_USER_DATA_EDIT_ERROR]: (state) => (state.status = "error"),
 };
 
 const actions = {
@@ -38,6 +49,24 @@ const actions = {
             .catch(() => {
                 commit(MUTATION_USER_DATA_ERROR);
                 return Promise.reject();
+            });
+    },
+    [ACTION_USER_DATA_EDIT_REQUEST]: ({ commit }, param) => {
+        const url = "/users/me";
+        const data = omit(param, ["type"]);
+        const options = {
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+        };
+        return axios
+            .patch(url, data, options)
+            .then((response) => {
+                commit(MUTATION_USER_DATA_EDIT_SUCCESS, response.data);
+            })
+            .catch(() => {
+                commit(MUTATION_USER_DATA_ERROR);
             });
     },
 };

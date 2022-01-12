@@ -39,6 +39,14 @@ export default {
       return this.hasToken && this.user.is_active;
     },
   },
+  created() {
+    this.$watch(
+      () => this.user.theme_color,
+      (newVal) => {
+        document.documentElement.setAttribute("theme", newVal);
+      }
+    );
+  },
 };
 </script>
 
@@ -50,11 +58,11 @@ export default {
   @include makeTheme($lightTheme);
 }
 
-[theme="light"] {
+html[theme="light"] {
   @include makeTheme($lightTheme);
 }
 
-[theme="dark"] {
+html[theme="dark"] {
   @include makeTheme($darkTheme);
 }
 
