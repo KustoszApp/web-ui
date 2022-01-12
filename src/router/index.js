@@ -12,6 +12,7 @@ const Filters = () =>
 
 import {
     ACTION_CHECK_TOKEN,
+    ACTION_HIDE_SIDEBAR,
     ACTION_USER_DATA_REQUEST,
     ROUTE_LOGIN,
     ROUTE_ENTRIES,
@@ -45,6 +46,12 @@ const notHasTokenOrNotValidToken = (to, from) => {
             }
         })
         .catch(() => true);
+};
+
+const hideSidebar = (to, from, failure) => {
+    if (!failure) {
+        store.dispatch(ACTION_HIDE_SIDEBAR);
+    }
 };
 /* eslint-enable no-unused-vars */
 
@@ -101,5 +108,7 @@ const router = createRouter({
     history: createWebHashHistory(),
     routes,
 });
+
+router.afterEach(hideSidebar);
 
 export default router;

@@ -1,8 +1,10 @@
 <template>
-  <div id="nav" class="nav" :class="{ ['nav--open']: this.sidebarDisplayed }">
-    <button class="mobile-only hide-menu" @click="hideSidebar">
-      Hide menu
+  <div class="mobile-only sidebar-display-button">
+    <button class="btn btn--secondary" @click="toggleSidebarDisplay">
+      {{ showMenuLabel }}
     </button>
+  </div>
+  <div id="nav" class="nav" :class="{ ['nav--open']: this.sidebarDisplayed }">
     <div class="nav__add">
       <AddChannel />
     </div>
@@ -53,6 +55,7 @@ import {
   ACTION_CHANNEL_TAGS_REQUEST,
   ACTION_CHANNELS_REQUEST,
   ACTION_HIDE_SIDEBAR,
+  ACTION_DISPLAY_SIDEBAR,
   ROUTE_MAINTENANCE_STALE_CHANNELS,
   ROUTE_MAINTENANCE_INACTIVE_CHANNELS,
   ROUTE_MAINTENANCE_NOT_UPDATED_CHANNELS,
@@ -80,10 +83,19 @@ export default {
     ...mapGetters({
       sidebarDisplayed: GET_SIDEBAR_STATE,
     }),
+    showMenuLabel() {
+      if (this.sidebarDisplayed) {
+        return "Hide menu";
+      }
+      return "Show menu";
+    },
   },
   methods: {
-    hideSidebar() {
-      this.$store.dispatch(ACTION_HIDE_SIDEBAR);
+    toggleSidebarDisplay() {
+      const action = this.sidebarDisplayed
+        ? ACTION_HIDE_SIDEBAR
+        : ACTION_DISPLAY_SIDEBAR;
+      this.$store.dispatch(action);
     },
   },
   mounted() {
@@ -127,8 +139,14 @@ export default {
   margin: 0 0 0.5rem;
 }
 
-.hide-menu {
-  margin-bottom: 1rem;
+.sidebar-display-button {
+  display: grid;
+  flex: 0;
+  margin: 0.5rem;
+
+  button {
+    width: 100%;
+  }
 }
 
 .nav__menu {
