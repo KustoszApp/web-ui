@@ -111,6 +111,13 @@ export const MUTATION_USER_DATA_EDIT_ERROR = "MUTATION_USER_DATA_EDIT_ERROR";
 export const ACTION_USER_DATA_REQUEST = "ACTION_USER_DATA_REQUEST";
 export const ACTION_USER_DATA_EDIT_REQUEST = "ACTION_USER_DATA_EDIT_REQUEST";
 
+// views
+export const GET_SIDEBAR_STATE = "GET_SIDEBAR_STATE";
+export const MUTATION_SIDEBAR_DISPLAYED = "MUTATION_SIDEBAR_DISPLAYED";
+export const MUTATION_SIDEBAR_HIDDEN = "MUTATION_SIDEBAR_HIDDEN";
+export const ACTION_DISPLAY_SIDEBAR = "ACTION_DISPLAY_SIDEBAR";
+export const ACTION_HIDE_SIDEBAR = "ACTION_HIDE_SIDEBAR";
+
 //
 // Route names
 //
@@ -122,3 +129,10 @@ export const ROUTE_SETTINGS = "settings";
 export const ROUTE_MAINTENANCE_STALE_CHANNELS = "maintenance_stale_channels";
 export const ROUTE_MAINTENANCE_NOT_UPDATED_CHANNELS = "maintenance_not_updated_channels";
 export const ROUTE_MAINTENANCE_INACTIVE_CHANNELS = "maintenance_inactive_channels";
+
+
+//
+// Named refs
+//
+
+export const REF_SIDEBAR = "REF_SIDEBAR";

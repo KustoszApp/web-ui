@@ -1,5 +1,6 @@
 <template>
   <div class="entries">
+    <button class="mobile-only" @click="showSidebar">Show menu</button>
     <EntriesFilter />
     <EntriesList />
   </div>
@@ -9,7 +10,11 @@
 import EntriesFilter from "@/components/EntriesFilter.vue";
 import EntriesList from "@/components/EntriesList.vue";
 
-import { ACTION_ENTRIES_REQUEST, ACTION_ENTRY_TAGS_REQUEST } from "../types";
+import {
+  ACTION_ENTRIES_REQUEST,
+  ACTION_ENTRY_TAGS_REQUEST,
+  ACTION_DISPLAY_SIDEBAR,
+} from "../types";
 
 export default {
   name: "Entries",
@@ -32,6 +37,9 @@ export default {
         type: ACTION_ENTRIES_REQUEST,
         ...$route.query,
       });
+    },
+    showSidebar() {
+      this.$store.dispatch(ACTION_DISPLAY_SIDEBAR);
     },
   },
   created() {

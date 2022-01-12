@@ -1,5 +1,8 @@
 <template>
-  <div id="nav" class="nav">
+  <div id="nav" class="nav" :class="{ ['nav--open']: this.sidebarDisplayed }">
+    <button class="mobile-only hide-menu" @click="hideSidebar">
+      Hide menu
+    </button>
     <div class="nav__add">
       <AddChannel />
     </div>
@@ -42,17 +45,20 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import AddChannel from "@/components/AddChannel";
 import NavList from "@/components/NavList.vue";
 
 import {
   ACTION_CHANNEL_TAGS_REQUEST,
   ACTION_CHANNELS_REQUEST,
+  ACTION_HIDE_SIDEBAR,
   ROUTE_MAINTENANCE_STALE_CHANNELS,
   ROUTE_MAINTENANCE_INACTIVE_CHANNELS,
   ROUTE_MAINTENANCE_NOT_UPDATED_CHANNELS,
   ROUTE_FILTERS,
   ROUTE_SETTINGS,
+  GET_SIDEBAR_STATE,
 } from "../types";
 
 export default {
@@ -70,6 +76,16 @@ export default {
       ROUTE_SETTINGS,
     };
   },
+  computed: {
+    ...mapGetters({
+      sidebarDisplayed: GET_SIDEBAR_STATE,
+    }),
+  },
+  methods: {
+    hideSidebar() {
+      this.$store.dispatch(ACTION_HIDE_SIDEBAR);
+    },
+  },
   mounted() {
     this.$store.dispatch(ACTION_CHANNELS_REQUEST);
     this.$store.dispatch(ACTION_CHANNEL_TAGS_REQUEST);
@@ -81,9 +97,13 @@ export default {
 .nav {
   background-color: var(--lighter);
   padding: 0.5rem;
-  display: flex;
   flex-direction: column;
   height: 100vh;
+  display: none;
+}
+
+.nav--open {
+  display: flex;
 }
 
 .nav__title {
@@ -102,9 +122,13 @@ export default {
 .nav__sources {
   font-size: 0.875rem;
   flex: 1;
-  overflow-y: scroll;
+  overflow-y: auto;
   scrollbar-width: thin;
   margin: 0 0 0.5rem;
+}
+
+.hide-menu {
+  margin-bottom: 1rem;
 }
 
 .nav__menu {

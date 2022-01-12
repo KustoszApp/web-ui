@@ -6,6 +6,7 @@ import entries from "./modules/entries";
 import filters from "./modules/filters";
 import maintenance from "./modules/maintenance";
 import user from "./modules/user";
+import views from "./modules/views";
 
 export default createStore({
     modules: {
@@ -15,5 +16,6 @@ export default createStore({
         filters,
         maintenance,
         user,
+        views,
     },
 });

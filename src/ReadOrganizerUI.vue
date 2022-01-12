@@ -100,6 +100,19 @@ a {
   overflow: hidden;
 }
 
+@include for-tablet-landscape-up {
+  .reader-wrapper {
+    display: grid;
+    grid-template-columns: 280px auto;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  #nav {
+    display: flex;
+  }
+}
+
 .login-wrapper {
   display: flex;
   align-items: center;
@@ -108,19 +121,12 @@ a {
   background-color: var(--darker);
 }
 
-.reader-wrapper {
-  display: grid;
-  grid-template-columns: 280px auto;
-  line-height: 1.5;
-  height: 100%;
-  overflow: hidden;
-}
-
 .view {
   background-color: var(--darker);
   overflow-y: auto;
   padding-left: 1rem;
   padding-right: 1rem;
+  height: 100vh;
 }
 
 .view__title {
