@@ -158,6 +158,7 @@ export default {
 .entries__list {
   list-style-type: none;
   padding: 0;
+  margin-top: 0;
 }
 
 .entries__list-item {

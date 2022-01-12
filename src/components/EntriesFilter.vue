@@ -1,79 +1,92 @@
 <template>
-  <div class="search-bar">
+  <div class="search-bar" :class="{ 'has-more-options': moreOptionsDisplayed }">
     <div class="column">
       <form
+        class="advanced"
         v-if="advancedFormDisplayed"
         @submit.prevent="advancedQueryStringChanged"
       >
         <input
           type="text"
-          class="input-field"
+          class="input-field advanced"
           placeholder="Advanced query string"
-          style="width: 36.75rem"
           v-model="advancedQueryString"
           @keypress.stop
         />
         <button class="btn btn--primary ml-2" type="submit">Go!</button>
       </form>
-      <form v-else>
-        <button
-          type="button"
-          class="btn btn--secondary"
-          :class="{ 'btn--active': unreadOnly }"
-          @click="toggleUnreadOnly"
-        >
-          Unread only
-        </button>
-        <select
-          v-model="publishedOperator"
-          @change="publishedChanged()"
-          class="select-menu mx-2"
-          name=""
-          id=""
-        >
-          <option
-            v-for="item in publishedOperatorChoices"
-            :key="item.label"
-            :value="item.value"
+      <form class="simple" v-else>
+        <div class="row">
+          <button
+            type="button"
+            class="btn btn--secondary"
+            :class="{ 'btn--active': unreadOnly }"
+            @click="toggleUnreadOnly"
           >
-            {{ item.label }}
-          </option>
-        </select>
-        than
-        <select
-          v-model="publishedRefValue"
-          @change="publishedChanged()"
-          class="select-menu mx-2"
-          name=""
-          id=""
-        >
-          <option
-            v-for="item in publishedRefValues"
-            :key="item.label"
-            :value="item.timeAgo"
+            Unread only
+          </button>
+          <button
+            type="button"
+            class="btn btn--secondary mobile-only"
+            @click="toggleMoreOptions"
           >
-            {{ item.label }}
-          </option>
-        </select>
-        tagged:
-        <Multiselect
-          class="mx-2 search-bar__multiselect"
-          v-model="tags"
-          placeholder="start typing"
-          mode="tags"
-          :options="entryTags"
-          valueProp="slug"
-          trackBy="name"
-          label="name"
-          :closeOnSelect="true"
-          :searchable="true"
-          :createTag="false"
-          @keypress.stop
-          @change="newTagsSet"
-        ></Multiselect>
+            {{ moreOptionsButtonText }}
+          </button>
+        </div>
+        <div class="row">
+          <select
+            v-model="publishedOperator"
+            @change="publishedChanged()"
+            class="select-menu"
+            name=""
+            id=""
+          >
+            <option
+              v-for="item in publishedOperatorChoices"
+              :key="item.label"
+              :value="item.value"
+            >
+              {{ item.label }}
+            </option>
+          </select>
+          than
+          <select
+            v-model="publishedRefValue"
+            @change="publishedChanged()"
+            class="select-menu"
+            name=""
+            id=""
+          >
+            <option
+              v-for="item in publishedRefValues"
+              :key="item.label"
+              :value="item.timeAgo"
+            >
+              {{ item.label }}
+            </option>
+          </select>
+        </div>
+        <div class="row">
+          tagged:
+          <Multiselect
+            class="search-bar__multiselect"
+            v-model="tags"
+            placeholder="start typing"
+            mode="tags"
+            :options="entryTags"
+            valueProp="slug"
+            trackBy="name"
+            label="name"
+            :closeOnSelect="true"
+            :searchable="true"
+            :createTag="false"
+            @keypress.stop
+            @change="newTagsSet"
+          ></Multiselect>
+        </div>
       </form>
     </div>
-    <div class="column ml-auto">
+    <div class="column buttons ml-auto">
       <button
         type="button"
         class="btn btn--secondary"
@@ -160,6 +173,7 @@ export default {
         { label: "2 weeks", timeAgo: 14 },
       ],
       markAllReadModalDisplayed: false,
+      moreOptionsDisplayed: false,
     };
   },
   computed: {
@@ -170,6 +184,12 @@ export default {
     }),
     publishedOperatorChoicesValues() {
       return this.publishedOperatorChoices.map((choice) => choice.value);
+    },
+    moreOptionsButtonText() {
+      if (this.moreOptionsDisplayed) {
+        return "Fewer options";
+      }
+      return "More options";
     },
   },
   methods: {
@@ -186,6 +206,9 @@ export default {
         archived = false;
       }
       this.dispatchFilteredEntriesRequest({ archived: archived });
+    },
+    toggleMoreOptions() {
+      this.moreOptionsDisplayed = !this.moreOptionsDisplayed;
     },
     publishedChanged() {
       const params = {};
@@ -282,14 +305,71 @@ export default {
 </script>
 
 <style lang="scss">
+@import "../scss/mixins";
+@mixin full-form-visible {
+  form.simple .row {
+    display: flex;
+  }
+  .column.buttons {
+    display: flex;
+  }
+}
+
 .search-bar {
   margin-top: 0.5rem;
   margin-bottom: 1rem;
-  display: flex;
+  @include for-tablet-landscape-up {
+    display: flex;
+  }
+
+  form {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    @include for-tablet-landscape-up {
+      margin-bottom: unset;
+    }
+  }
+
+  form.simple {
+    flex-flow: column;
+    @include for-tablet-landscape-up {
+      flex-flow: row;
+    }
+
+    .row {
+      display: none;
+      align-items: baseline;
+      gap: 1ex;
+
+      &:first-child {
+        display: flex;
+      }
+    }
+  }
+
+  input.advanced {
+    width: 50rem;
+    max-width: 100%;
+  }
+
+  .column.buttons {
+    display: none;
+    justify-content: space-between;
+    gap: 1ex;
+  }
+
+  &.has-more-options {
+    @include full-form-visible;
+  }
+
+  @include for-tablet-landscape-up {
+    @include full-form-visible;
+  }
 }
 
 .search-bar__multiselect {
-  width: 300px;
-  display: inline-flex;
+  width: 50ex;
+  min-height: 1rem;
 }
 </style>

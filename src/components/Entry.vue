@@ -28,7 +28,7 @@
       <select
         v-model="entrySelectedContent"
         @change="newContentSelected"
-        class="select-menu ml-2"
+        class="select-menu"
       >
         <option
           v-for="content in entryAvailableContents"
@@ -41,20 +41,22 @@
           min)
         </option>
       </select>
-      Tags:
-      <Multiselect
-        v-model="editedEntryTags"
-        mode="tags"
-        :options="editedEntryTagsOptions"
-        valueProp="name"
-        trackBy="name"
-        label="name"
-        :closeOnSelect="false"
-        :searchable="true"
-        :createTag="true"
-        @change="editedEntryTagsChanged"
-        @keypress.stop
-      ></Multiselect>
+      <div class="row">
+        Tags:
+        <Multiselect
+          v-model="editedEntryTags"
+          mode="tags"
+          :options="editedEntryTagsOptions"
+          valueProp="name"
+          trackBy="name"
+          label="name"
+          :closeOnSelect="false"
+          :searchable="true"
+          :createTag="true"
+          @change="editedEntryTagsChanged"
+          @keypress.stop
+        ></Multiselect>
+      </div>
     </div>
     <div class="entry__content" v-show="isOpen" v-html="entryContent" />
   </div>
@@ -193,6 +195,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import "../scss/mixins";
+
 .entry {
   border-top: 1px solid #7e7e7e;
 }
@@ -210,12 +214,41 @@ export default {
 
 .entry__footer {
   padding: 0.5rem 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 
-  .multiselect {
-    width: auto;
-    min-width: 30%;
-    max-width: 70%;
-    display: inline-flex;
+  @include for-tablet-landscape-up {
+    justify-content: flex-start;
+    gap: 1ex;
+  }
+
+  & > * {
+    flex-basis: calc(50% - 1ex);
+    @include for-tablet-landscape-up {
+      flex-basis: unset;
+    }
+  }
+
+  .select-menu {
+    max-width: 50%;
+  }
+
+  .row {
+    display: flex;
+    align-items: baseline;
+    flex-basis: 100%;
+    gap: 1ex;
+    margin-top: 0.5rem;
+    @include for-tablet-landscape-up {
+      flex-basis: unset;
+      margin-top: unset;
+
+      .multiselect {
+        width: 50ex;
+        max-width: 100%;
+      }
+    }
   }
 }
 
