@@ -103,25 +103,19 @@
         <tr>
           <td class="text-right">Date of last entry publication:</td>
           <td>
-            {{
-              formatDate(
-                editedChannelLastEntryPublishedTime,
-                undefined,
-                dateFormat
-              )
-            }}
+            {{ formatDate(editedChannelLastEntryPublishedTime, dateFormat) }}
           </td>
         </tr>
         <tr>
           <td class="text-right">Date of last content check:</td>
           <td>
-            {{ formatDate(editedChannelLastCheckTime, undefined, dateFormat) }}
+            {{ formatDate(editedChannelLastCheckTime, dateFormat) }}
           </td>
         </tr>
         <tr>
           <td class="text-right">Channel added date:</td>
           <td>
-            {{ formatDate(editedChannelAddedTime, undefined, dateFormat) }}
+            {{ formatDate(editedChannelAddedTime, dateFormat) }}
           </td>
         </tr>
         <tr>

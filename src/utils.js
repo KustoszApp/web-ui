@@ -1,8 +1,8 @@
 import axios from "axios";
 
-function formatDate(value, locale = "pl-PL", options) {
+function formatDate(value, options) {
     const date = new Date(value);
-    return date.toLocaleString(locale, options);
+    return date.toLocaleString(undefined, options);
 }
 
 function getPagedResults(url, data) {
