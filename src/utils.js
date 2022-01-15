@@ -1,6 +1,19 @@
+import axios from "axios";
+
 function formatDate(value, locale = "pl-PL", options) {
     const date = new Date(value);
     return date.toLocaleString(locale, options);
+}
+
+function getPagedResults(url, data) {
+    return axios.get(url).then((response) => {
+        const allData = [...data, ...response.data.results];
+        const nextPage = response.data.next;
+        if (nextPage) {
+            return getPagedResults(nextPage, allData);
+        }
+        return allData;
+    });
 }
 
 function omit(obj, omitKeys) {
@@ -15,4 +28,4 @@ function omit(obj, omitKeys) {
     }, {});
 }
 
-export { formatDate, omit };
+export { formatDate, getPagedResults, omit };

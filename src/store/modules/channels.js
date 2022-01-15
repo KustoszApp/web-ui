@@ -1,5 +1,7 @@
 import axios from "axios";
 
+import { getPagedResults } from "../../utils";
+
 import {
     GET_CHANNELS,
     GET_CHANNEL_TAGS,
@@ -36,7 +38,7 @@ const mutations = {
     [MUTATION_CHANNELS_REQUEST]: (state) => (state.status = "loading"),
     [MUTATION_CHANNELS_SUCCESS]: (state, data) => {
         state.status = "success";
-        state.channels = data.results;
+        state.channels = data;
     },
     [MUTATION_CHANNELS_ERROR]: (state) => (state.status = "error"),
     [MUTATION_CHANNEL_CREATE_REQUEST]: (state) => (state.status = "loading"),
@@ -73,10 +75,10 @@ const mutations = {
 
 const actions = {
     [ACTION_CHANNELS_REQUEST]: ({ commit }) => {
-        axios
-            .get("channels/?limit=200")
-            .then((response) => {
-                commit(MUTATION_CHANNELS_SUCCESS, response.data);
+        const url = "channels/?limit=200";
+        getPagedResults(url, [])
+            .then((channels) => {
+                commit(MUTATION_CHANNELS_SUCCESS, channels);
             })
             .catch(() => {
                 commit(MUTATION_CHANNELS_ERROR);
