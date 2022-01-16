@@ -60,7 +60,17 @@ export default {
       if (channel) return channel.title || channel.displayed_title;
       return "";
     },
+    closeAllOpen(index) {
+      const previousState = this.entries[index].isOpened;
+      this.entries
+        .filter((entry) => entry.isOpened)
+        .forEach((entry) => {
+          entry.isOpened = false;
+        });
+      this.entries[index].isOpened = previousState;
+    },
     open() {
+      this.closeAllOpen(this.focusedIndex);
       this.entries[this.focusedIndex].isOpened =
         !this.entries[this.focusedIndex].isOpened;
     },
@@ -124,6 +134,7 @@ export default {
       }
     },
     handleEntryClick(index) {
+      this.closeAllOpen(index);
       this.entries[index].isOpened = !this.entries[index].isOpened;
     },
     onScroll(e) {
@@ -139,7 +150,6 @@ export default {
         const currentPos = currentTop - element.offsetTop;
 
         element.classList.toggle("on--top", currentPos > 0);
-        console.log(`prev: ${previousPos} current: ${currentPos}`);
 
         if (!isNaN(previousPos)) {
           const force = previousPos > currentPos;
