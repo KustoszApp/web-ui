@@ -182,9 +182,7 @@
 }
 
 .mobile-only {
-  display: block;
   @include for-tablet-landscape-up {
-    display: none;
+    display: none !important;
   }
 }
-

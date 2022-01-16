@@ -127,6 +127,29 @@ export default {
       this.entries[index].isOpened = !this.entries[index].isOpened;
     },
     onScroll(e) {
+      this.openEntryClasses(e);
+      this.fetchMoreEntries(e);
+    },
+    openEntryClasses(e) {
+      const scrollElement = e.target;
+      const currentTop = scrollElement.scrollTop;
+
+      document.querySelectorAll(".entry--open").forEach((element) => {
+        const previousPos = parseInt(element.dataset.previousPos, 10);
+        const currentPos = currentTop - element.offsetTop;
+
+        element.classList.toggle("on--top", currentPos > 0);
+        console.log(`prev: ${previousPos} current: ${currentPos}`);
+
+        if (!isNaN(previousPos)) {
+          const force = previousPos > currentPos;
+          element.classList.toggle("scroll--up", force);
+        }
+
+        element.dataset.previousPos = currentPos;
+      });
+    },
+    fetchMoreEntries(e) {
       if (this.status === "loading") {
         return;
       }

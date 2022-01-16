@@ -6,56 +6,63 @@
       'entry--focused': isFocused,
       'entry--archived': entryArchived,
     }"
+    ref="entryWrapper"
   >
-    <div
-      class="entry__header"
-      @click="handleClick"
-      @click.middle="handleMiddleClick"
-    >
-      <a ref="entryLink" :href="link">{{ title }}</a> •
-      <span class="entry__source">{{ source }}</span> •
-      <span class="entry__author">{{ author }}</span> • added:
-      <span class="entry__published">{{ formatDate(publishedTime) }}</span>
-    </div>
-    <div class="entry__footer" v-show="isOpen">
-      <button
-        type="button"
-        class="btn btn--secondary"
-        @click="toggleArchivedState"
+    <div class="entry__meta">
+      <div
+        class="entry__header"
+        @click="handleClick"
+        @click.middle="handleMiddleClick"
       >
-        Mark as {{ isArchivedString }}
-      </button>
-      <select
-        v-model="entrySelectedContent"
-        @change="newContentSelected"
-        class="select-menu"
-      >
-        <option
-          v-for="content in entryAvailableContents"
-          :key="content.id"
-          :value="content.id"
+        <BIconXLg class="entry__close mobile-only" />
+        <a class="entry__link" ref="entryLink" :href="link">{{ title }}</a>
+        <span class="entry__source">{{ source }}</span>
+        <span class="entry__author">{{ author }}</span>
+        <span class="entry__published"
+          >added: {{ formatDate(publishedTime) }}</span
         >
-          {{ content.source }} {{ content.language }} {{ content.mimetype }} ({{
-            formatReadingTime(content.estimated_reading_time)
-          }}
-          min)
-        </option>
-      </select>
-      <div class="row">
-        Tags:
-        <Multiselect
-          v-model="editedEntryTags"
-          mode="tags"
-          :options="editedEntryTagsOptions"
-          valueProp="name"
-          trackBy="name"
-          label="name"
-          :closeOnSelect="false"
-          :searchable="true"
-          :createTag="true"
-          @change="editedEntryTagsChanged"
-          @keypress.stop
-        ></Multiselect>
+      </div>
+      <div class="entry__footer" v-show="isOpen">
+        <button
+          type="button"
+          class="btn btn--secondary"
+          @click="toggleArchivedState"
+        >
+          Mark as {{ isArchivedString }}
+        </button>
+        <select
+          v-model="entrySelectedContent"
+          @change="newContentSelected"
+          class="select-menu"
+        >
+          <option
+            v-for="content in entryAvailableContents"
+            :key="content.id"
+            :value="content.id"
+          >
+            {{ content.source }} {{ content.language }}
+            {{ content.mimetype }} ({{
+              formatReadingTime(content.estimated_reading_time)
+            }}
+            min)
+          </option>
+        </select>
+        <div class="row">
+          Tags:
+          <Multiselect
+            v-model="editedEntryTags"
+            mode="tags"
+            :options="editedEntryTagsOptions"
+            valueProp="name"
+            trackBy="name"
+            label="name"
+            :closeOnSelect="false"
+            :searchable="true"
+            :createTag="true"
+            @change="editedEntryTagsChanged"
+            @keypress.stop
+          ></Multiselect>
+        </div>
       </div>
     </div>
     <div class="entry__content" v-show="isOpen" v-html="entryContent" />
@@ -63,6 +70,7 @@
 </template>
 
 <script>
+import { BIconXLg } from "bootstrap-icons-vue";
 import Multiselect from "@vueform/multiselect";
 import { formatDate } from "../utils";
 import { mapGetters } from "vuex";
@@ -78,6 +86,7 @@ import {
 export default {
   name: "Entry",
   components: {
+    BIconXLg,
     Multiselect,
   },
   data() {
@@ -133,6 +142,7 @@ export default {
             });
         } else {
           this.entryContent = "";
+          delete this.$refs.entryWrapper.dataset.previousPos;
         }
       });
     },
@@ -206,10 +216,34 @@ export default {
   border-top-color: transparent;
 }
 
+.entry__meta {
+  position: sticky;
+  top: 0;
+}
+
 .entry__header {
   padding: 0.5rem 1rem;
   cursor: pointer;
   background-color: var(--unread);
+
+  .entry__close {
+    display: none;
+    font-size: 2rem;
+    float: right;
+  }
+
+  a.entry__link {
+    margin-right: 0.5ex;
+  }
+
+  span:not(:first-of-type)::before {
+    content: "•";
+    margin: 0 0.5ex;
+  }
+}
+
+.entry--open .entry__header .entry__close {
+  display: inherit;
 }
 
 .entry__footer {
@@ -217,6 +251,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  background-color: var(--darker);
 
   @include for-tablet-landscape-up {
     justify-content: flex-start;
@@ -236,7 +271,7 @@ export default {
 
   .row {
     display: flex;
-    align-items: baseline;
+    align-items: last baseline;
     flex-basis: 100%;
     gap: 1ex;
     margin-top: 0.5rem;
@@ -258,6 +293,24 @@ export default {
   .entry__author,
   .entry__published {
     color: var(--secondary);
+  }
+}
+
+.on--top .entry__header {
+  .entry__source,
+  .entry__author,
+  .entry__published {
+    display: none;
+    @include for-tablet-landscape-up {
+      display: unset;
+    }
+  }
+}
+
+.on--top:not(.scroll--up) .entry__meta {
+  display: none;
+  @include for-tablet-landscape-up {
+    display: unset;
   }
 }
 
