@@ -5,43 +5,61 @@
     </button>
   </div>
   <div id="nav" class="nav" :class="{ ['nav--open']: this.sidebarDisplayed }">
-    <div class="nav__add">
-      <AddChannel />
+    <div class="nav__section">
+      <div class="nav__add">
+        <AddChannel />
+      </div>
     </div>
-    <h2 class="nav__title">Feeds</h2>
-    <div class="nav__sources">
-      <NavList />
+    <div class="nav__section">
+      <Collapse :show="true">
+        <template v-slot:header>
+          <h2 class="nav__title">Feeds</h2>
+        </template>
+        <template v-slot:collapse>
+          <div class="nav__sources">
+            <NavList />
+          </div>
+        </template>
+      </Collapse>
     </div>
-    <h2 class="nav__title">Maintenance</h2>
-    <div class="nav__menu">
-      <ul class="menu mb-0">
-        <li class="menu__item">
-          <router-link :to="{ name: this.ROUTE_MAINTENANCE_STALE_CHANNELS }"
-            >Stale channels</router-link
-          >
-        </li>
-        <li class="menu__item">
-          <router-link
-            :to="{ name: this.ROUTE_MAINTENANCE_NOT_UPDATED_CHANNELS }"
-            >Channels without new entries</router-link
-          >
-        </li>
-        <li class="menu__item">
-          <router-link :to="{ name: this.ROUTE_MAINTENANCE_INACTIVE_CHANNELS }"
-            >Inactive channels</router-link
-          >
-        </li>
-      </ul>
+    <div class="nav__section">
+      <Collapse :show="false">
+        <template v-slot:header>
+          <h2 class="nav__title">Maintenance</h2>
+        </template>
+        <template v-slot:collapse>
+          <div class="nav__menu">
+            <ul class="menu mb-0">
+              <li class="menu__item">
+                <router-link
+                  :to="{ name: this.ROUTE_MAINTENANCE_STALE_CHANNELS }"
+                >
+                  Stale channels
+                </router-link>
+              </li>
+              <li class="menu__item">
+                <router-link
+                  :to="{ name: this.ROUTE_MAINTENANCE_NOT_UPDATED_CHANNELS }"
+                  >Channels without new entries</router-link
+                >
+              </li>
+              <li class="menu__item">
+                <router-link
+                  :to="{ name: this.ROUTE_MAINTENANCE_INACTIVE_CHANNELS }"
+                >
+                  Inactive channels
+                </router-link>
+              </li>
+            </ul>
+          </div>
+        </template>
+      </Collapse>
     </div>
-    <div class="nav__menu">
-      <ul class="menu mb-0">
-        <li class="menu__item">
-          <router-link :to="{ name: this.ROUTE_FILTERS }">Filters</router-link>
-        </li>
-        <li class="menu__item">
-          <router-link :to="{ name: this.ROUTE_SETTINGS }">Options</router-link>
-        </li>
-      </ul>
+    <div class="nav__section">
+      <router-link :to="{ name: this.ROUTE_FILTERS }">Filters</router-link>
+    </div>
+    <div class="nav__section">
+      <router-link :to="{ name: this.ROUTE_SETTINGS }">Options</router-link>
     </div>
   </div>
 </template>
@@ -50,6 +68,7 @@
 import { mapGetters } from "vuex";
 import AddChannel from "@/components/AddChannel";
 import NavList from "@/components/NavList.vue";
+import Collapse from "@/components/Collapse.vue";
 
 import {
   ACTION_CHANNEL_TAGS_REQUEST,
@@ -68,6 +87,7 @@ export default {
   name: "Sidebar",
   components: {
     AddChannel,
+    Collapse,
     NavList,
   },
   data() {
@@ -112,6 +132,7 @@ export default {
   flex-direction: column;
   height: 100vh;
   display: none;
+  overflow-y: auto;
 }
 
 .nav--open {

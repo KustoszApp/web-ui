@@ -5,37 +5,43 @@
         class="list__item list__item--group"
         v-for="group in groupedChannels()"
         :key="group.tag.slug"
-        :class="{ 'unarchived-items': group.unarchived_entries > 0 }"
+        :class="{ 'has--unarchived': group.unarchived_entries > 0 }"
       >
-        <span
-          v-if="group.tag.slug"
-          class="list__item-collapse-icon"
-          :class="{ visible: isGroupVisible(group.tag.slug) }"
-          @click="toggleGroupVisibility(group.tag.slug)"
-        >
-          <BIconChevronDown v-if="isGroupVisible(group.tag.slug)" />
-          <BIconChevronRight v-else />
-        </span>
-        <router-link
-          class="list__item-link"
-          :to="{
-            name: this.ROUTE_ENTRIES,
-            query: { channel_tags: group.tag.slug, channel: null },
-          }"
-        >
-          {{ group.tag.name }}
-        </router-link>
-        <span class="unread-count">{{ group.unarchived_entries }}</span>
-        <ul class="list__content" v-show="isGroupVisible(group.tag.slug)">
-          <li
-            class="list__item"
-            v-for="feed in group.channels"
-            :key="feed.id"
-            :class="{ 'unarchived-items': feed.unarchived_entries > 0 }"
-          >
-            <FeedItem :feed="feed" @edit="showChannelEditModal(feed)" />
-          </li>
-        </ul>
+        <Collapse :show="false">
+          <template v-slot:header>
+            <div class="header">
+              <span v-if="group.tag.slug" class="list__item-collapse-icon">
+                <BIconChevronRight class="icon__right" />
+                <BIconChevronDown class="icon__down" />
+              </span>
+              <router-link
+                class="list__item-link"
+                :to="{
+                  name: this.ROUTE_ENTRIES,
+                  query: { channel_tags: group.tag.slug, channel: null },
+                }"
+                @click.stop
+              >
+                {{ group.tag.name }}
+              </router-link>
+              <span class="unread-count">{{ group.unarchived_entries }}</span>
+            </div>
+          </template>
+          <template v-slot:collapse>
+            <div class="nav__sources">
+              <ul class="list__content">
+                <li
+                  class="list__item"
+                  v-for="feed in group.channels"
+                  :key="feed.id"
+                  :class="{ 'has--unarchived': feed.unarchived_entries > 0 }"
+                >
+                  <FeedItem :feed="feed" @edit="showChannelEditModal(feed)" />
+                </li>
+              </ul>
+            </div>
+          </template>
+        </Collapse>
       </li>
     </ul>
   </div>
@@ -149,6 +155,7 @@
 
 <script>
 import { BIconChevronDown, BIconChevronRight } from "bootstrap-icons-vue";
+import Collapse from "@/components/Collapse.vue";
 import Multiselect from "@vueform/multiselect";
 import VueModal from "@kouts/vue-modal";
 import { mapGetters } from "vuex";
@@ -168,6 +175,7 @@ export default {
   components: {
     BIconChevronDown,
     BIconChevronRight,
+    Collapse,
     Modal: VueModal,
     Multiselect,
     FeedItem,
@@ -250,16 +258,6 @@ export default {
       groups.unshift(totalObj);
       return groups;
     },
-    isGroupVisible(groupSlug) {
-      return this.visibleGroups.has(groupSlug);
-    },
-    toggleGroupVisibility(groupSlug) {
-      if (this.isGroupVisible(groupSlug)) {
-        this.visibleGroups.delete(groupSlug);
-      } else {
-        this.visibleGroups.add(groupSlug);
-      }
-    },
     showChannelEditModal(feed) {
       this.editedChannelId = feed.id;
       this.editedChannelActive = feed.active;
@@ -319,17 +317,17 @@ export default {
   white-space: nowrap;
   font-weight: normal;
 
-  &.unarchived-items {
+  &.has--unarchived > .feed,
+  &.has--unarchived .header {
     font-weight: 700;
 
-    & > .unread-count,
-    & > .feed > .unread-count {
+    .unread-count {
       visibility: visible;
     }
   }
 }
 
-.list__item--group > .unread-count {
+.list__item--group .unread-count {
   margin-left: 0.75rem;
 }
 
@@ -343,6 +341,24 @@ export default {
   height: 18px;
   width: 18px;
   vertical-align: middle;
+}
+
+.collapse-trigger:not(.show) {
+  .icon__right {
+    display: initial;
+  }
+  .icon__down {
+    display: none;
+  }
+}
+
+.collapse-trigger.show {
+  .icon__right {
+    display: none;
+  }
+  .icon__down {
+    display: initial;
+  }
 }
 
 .list__item-link {
@@ -359,5 +375,9 @@ export default {
   margin-left: auto;
   line-height: 1;
   visibility: hidden;
+}
+
+.feed .unread-count {
+  margin-left: auto;
 }
 </style>
