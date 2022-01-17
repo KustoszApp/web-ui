@@ -2,12 +2,15 @@
   <div class="list">
     <ul class="list__content">
       <li
-        class="list__item"
+        class="list__item all__entries"
         :class="{ 'has--unarchived': sumOfAllUnarchived > 0 }"
       >
         <div class="header">
           <router-link
             class="list__item-link"
+            :class="{
+              'router-link-really-active': isAllEntriesPage,
+            }"
             :to="{
               name: this.ROUTE_ENTRIES,
               query: { channel_tags: null, channel: null },
@@ -34,6 +37,10 @@
               </span>
               <router-link
                 class="list__item-link"
+                :class="{
+                  'router-link-really-active':
+                    $route.query.channel_tags === group.tag.slug,
+                }"
                 :to="{
                   name: this.ROUTE_ENTRIES,
                   query: { channel_tags: group.tag.slug, channel: null },
@@ -242,6 +249,11 @@ export default {
       channels: GET_CHANNELS,
       channelTags: GET_CHANNEL_TAGS,
     }),
+    isAllEntriesPage() {
+      const isEntries = this.$route.name === ROUTE_ENTRIES;
+      const hasNoQueryParams = Object.keys(this.$route.query).length === 0;
+      return isEntries && hasNoQueryParams;
+    },
     splitChannelsWithTags() {
       const channelsWithTags = [];
       const channelsWithoutTags = [];
@@ -329,9 +341,7 @@ export default {
 </script>
 
 <style lang="scss">
-.list {
-  font-size: 0.875rem;
-}
+@import "../scss/mixins";
 
 .list__content {
   list-style-type: none;
@@ -340,13 +350,10 @@ export default {
 }
 
 .list__item {
-  color: var(--secondary);
-  margin: 0;
-  overflow: hidden;
-  padding: 0.25rem 0;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-weight: normal;
+  .header {
+    display: flex;
+    align-items: baseline;
+  }
 
   &.has--unarchived > .channel,
   &.has--unarchived .header {
@@ -358,13 +365,17 @@ export default {
   }
 }
 
-.list__item--group .unread-count {
-  margin-left: 0.75rem;
+.list__item--group {
+  .list__content {
+    margin-left: 1rem;
+  }
+  .unread-count {
+    margin-left: 0.75rem;
+  }
 }
 
-.list__item--group .list__item {
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
+.all__entries .unread-count {
+  margin-left: 0.75rem;
 }
 
 .list__item-collapse-icon {
@@ -399,9 +410,7 @@ export default {
 }
 
 .unread-count {
-  border: 2px solid var(--secondary);
-  border-radius: 0.25rem;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   padding: 0 0.5rem;
   margin-left: auto;
   line-height: 1;

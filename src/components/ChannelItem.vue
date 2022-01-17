@@ -3,6 +3,10 @@
     <BIconRssFill class="channel__item-icon" />
     <router-link
       class="channel__item-link"
+      :class="{
+        'router-link-really-active':
+          $route.query.channel === channel.id.toString(),
+      }"
       :title="channel.displayed_title"
       :to="{
         name: this.ROUTE_ENTRIES,
@@ -41,7 +45,7 @@ export default {
 <style lang="scss">
 .channel {
   display: flex;
-  align-items: center;
+  align-items: baseline;
 }
 
 .channel__item-icon {
