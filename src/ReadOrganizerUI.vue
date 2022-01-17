@@ -133,6 +133,10 @@ a {
   padding-left: 1rem;
   padding-right: 1rem;
   height: 100vh;
+  padding-bottom: 3rem; /* offsets button on top of sidebar */
+  @include for-tablet-landscape-up {
+    padding-bottom: 0;
+  }
 }
 
 .view__title {

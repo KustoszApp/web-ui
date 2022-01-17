@@ -138,6 +138,7 @@ export default {
 
 .nav--open {
   display: flex;
+  padding-bottom: 3rem; /* offsets button on top of sidebar */
 }
 
 .nav__title {
