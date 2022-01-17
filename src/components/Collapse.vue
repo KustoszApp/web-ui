@@ -1,15 +1,12 @@
 <template>
   <div
     class="collapse-trigger"
-    :class="{ 'show': containerDisplayed }"
+    :class="{ show: containerDisplayed }"
     @click="toggleDisplay"
   >
     <slot name="header"></slot>
   </div>
-  <div
-    class="collapse-container"
-    :class="{ 'show': containerDisplayed }"
-  >
+  <div class="collapse-container" :class="{ show: containerDisplayed }">
     <slot name="collapse"></slot>
   </div>
 </template>
@@ -31,7 +28,7 @@ export default {
   methods: {
     toggleDisplay() {
       this.containerDisplayed = !this.containerDisplayed;
-    }
+    },
   },
 };
 </script>
