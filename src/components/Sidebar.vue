@@ -4,7 +4,7 @@
       {{ showMenuLabel }}
     </button>
   </div>
-  <div id="nav" class="nav" :class="{ ['nav--open']: this.sidebarDisplayed }">
+  <div id="nav" class="nav" :class="{ 'nav--open': this.sidebarDisplayed }">
     <div class="nav__section">
       <div class="nav__add">
         <AddChannel />
@@ -133,6 +133,7 @@ export default {
   height: 100vh;
   display: none;
   overflow-y: auto;
+  scrollbar-width: thin;
 }
 
 .nav--open {
@@ -155,8 +156,6 @@ export default {
 .nav__sources {
   font-size: 0.875rem;
   flex: 1;
-  overflow-y: auto;
-  scrollbar-width: thin;
   margin: 0 0 0.5rem;
 }
 

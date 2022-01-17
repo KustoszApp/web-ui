@@ -2,8 +2,26 @@
   <div class="list">
     <ul class="list__content">
       <li
+        class="list__item"
+        :class="{ 'has--unarchived': sumOfAllUnarchived > 0 }"
+      >
+        <div class="header">
+          <router-link
+            class="list__item-link"
+            :to="{
+              name: this.ROUTE_ENTRIES,
+              query: { channel_tags: null, channel: null },
+            }"
+            @click.stop
+          >
+            All entries
+          </router-link>
+          <span class="unread-count">{{ sumOfAllUnarchived }}</span>
+        </div>
+      </li>
+      <li
         class="list__item list__item--group"
-        v-for="group in groupedChannels()"
+        v-for="group in groupedChannels"
         :key="group.tag.slug"
         :class="{ 'has--unarchived': group.unarchived_entries > 0 }"
       >
@@ -42,6 +60,14 @@
             </div>
           </template>
         </Collapse>
+      </li>
+      <li
+        class="list__item"
+        v-for="channel in splitChannelsWithTags.channelsWithoutTags"
+        :key="channel.id"
+        :class="{ 'has--unarchived': channel.unarchived_entries > 0 }"
+      >
+        <FeedItem :feed="channel" @edit="showChannelEditModal(channel)" />
       </li>
     </ul>
   </div>
@@ -213,51 +239,52 @@ export default {
       channels: GET_CHANNELS,
       channelTags: GET_CHANNEL_TAGS,
     }),
-  },
-  methods: {
-    groupedChannels() {
-      let totalUnarchived = 0;
-      let groups = {};
+    splitChannelsWithTags() {
+      const channelsWithTags = [];
+      const channelsWithoutTags = [];
       this.channels.forEach((channel) => {
-        totalUnarchived += channel.unarchived_entries;
-        let tags = channel.tags;
+        const tags = channel.tags;
         if (!tags.length) {
-          tags = ["Untagged"];
+          channelsWithoutTags.push(channel);
+        } else {
+          channelsWithTags.push(channel);
         }
-        tags.forEach((tagName) => {
-          if (!(tagName in groups)) {
-            groups[tagName] = {
-              unarchived_entries: 0,
-              channels: [],
-            };
+      });
+      return {
+        channelsWithTags: channelsWithTags,
+        channelsWithoutTags: channelsWithoutTags,
+      };
+    },
+    groupedChannels() {
+      const { channelsWithTags } = this.splitChannelsWithTags;
+      const groups = {};
+      this.channelTags.forEach((tag) => {
+        const tagName = tag.name;
+        groups[tagName] = {
+          unarchived_entries: 0,
+          channels: [],
+          tag: tag,
+        };
+      });
+      channelsWithTags.forEach((channel) => {
+        channel.tags.forEach((tagName) => {
+          if (tagName in groups) {
+            groups[tagName].channels.push(channel);
+            groups[tagName].unarchived_entries += channel.unarchived_entries;
           }
-          groups[tagName].channels.push(channel);
-          groups[tagName].unarchived_entries += channel.unarchived_entries;
         });
       });
-      let totalObj = {
-        unarchived_entries: totalUnarchived,
-        channels: [],
-        tag: {
-          name: "All entries",
-          slug: "",
-        },
-      };
-      groups = Object.keys(groups)
+      return Object.keys(groups)
         .sort()
-        .reduce((obj, key) => {
-          let tag = this.channelTags.find((tag) => tag.name === key);
-          if (tag === undefined) {
-            tag = {
-              name: "Untagged",
-              slug: "channel_has_tags=false",
-            };
-          }
-          return [...obj, { ...groups[key], tag: tag }];
-        }, []);
-      groups.unshift(totalObj);
-      return groups;
+        .map((tagName) => groups[tagName]);
     },
+    sumOfAllUnarchived() {
+      return this.channels.reduce((prev, currentElem) => {
+        return prev + currentElem.unarchived_entries;
+      }, 0);
+    },
+  },
+  methods: {
     showChannelEditModal(feed) {
       this.editedChannelId = feed.id;
       this.editedChannelActive = feed.active;
