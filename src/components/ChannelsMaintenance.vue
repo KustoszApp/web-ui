@@ -1,4 +1,15 @@
 <template>
+  <div v-if="displayDaySelector">
+    <p>
+      That did not receive any entries in last
+      <input
+        type="number"
+        :value="daySelectorValue"
+        @change="daySelectorChanged"
+      />
+      days
+    </p>
+  </div>
   <div class="list">
     <ul class="list__content">
       <li
@@ -27,30 +38,32 @@
     </ul>
   </div>
   <div>
-    <form v-if="displayInactivateButton" @submit.prevent="inactivateChannels">
-      <button class="btn btn--primary" type="submit">
-        Inactivate selected channels
-      </button>
-    </form>
-    <form v-if="displayActivateButton" @submit.prevent="activateChannels">
-      <button class="btn btn--primary" type="submit">
-        Activate selected channels
-      </button>
-    </form>
-    <form v-if="displayRemoveButton" @submit.prevent="removeChannels">
-      <button class="btn btn--primary" type="submit">
-        Remove selected channels
-      </button>
-    </form>
+    <button
+      v-if="displayInactivateButton"
+      class="btn btn--primary"
+      type="submit"
+      @click="inactivateChannels"
+    >
+      {{ inactivateButtonLabel }}
+    </button>
+    <button
+      v-if="displayActivateButton"
+      class="btn btn--primary"
+      type="submit"
+      @click="activateChannels"
+    >
+      {{ activateButtonLabel }}
+    </button>
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
+import { calculateReferenceDate } from "../utils";
 
 import {
-  ACTION_MAINTENANCE_CHANNELS_ACTIVATE_REQUEST,
   ACTION_MAINTENANCE_CHANNELS_GET_REQUEST,
+  ACTION_MAINTENANCE_CHANNELS_ACTIVATE_REQUEST,
   ACTION_MAINTENANCE_CHANNELS_INACTIVATE_REQUEST,
   GET_MAINTENANCE_CHANNELS,
   ROUTE_ENTRIES,
@@ -58,13 +71,17 @@ import {
 
 export default {
   name: "NavList",
+  props: {
+    initialQuery: Object,
+    displayDaySelector: Boolean,
+    displayInactivateButton: Boolean,
+    displayActivateButton: Boolean,
+    displayRemoveButton: Boolean,
+  },
   data() {
     return {
-      query: "",
       checkedChannels: [],
-      displayInactivateButton: true,
-      displayActivateButton: false,
-      displayRemoveButton: false,
+      daySelectorValue: 30,
       ROUTE_ENTRIES,
     };
   },
@@ -72,54 +89,74 @@ export default {
     ...mapGetters({
       maintenance_channels: GET_MAINTENANCE_CHANNELS,
     }),
+    channelsSelected() {
+      return this.checkedChannels.length > 0;
+    },
+    inactivateButtonLabel() {
+      if (this.channelsSelected) {
+        return "Inactivate selected channels";
+      }
+      return "Inactivate all channels";
+    },
+    activateButtonLabel() {
+      if (this.channelsSelected) {
+        return "Activate selected channels";
+      }
+      return "Activate all channels";
+    },
+    getChannelsQuery() {
+      const queryParams = { ...this.initialQuery };
+      if (this.displayDaySelector) {
+        queryParams["last_entry_published_time__lte"] =
+          this.calculateReferenceDate(this.daySelectorValue);
+      }
+      return queryParams;
+    },
+    modifyChannelsQuery() {
+      const queryParams = { ...this.getChannelsQuery };
+      if (this.channelsSelected) {
+        queryParams["id"] = this.checkedChannels.join(",");
+      }
+      return queryParams;
+    },
   },
   methods: {
-    inactivateChannels() {
-      this.$store.dispatch({
-        type: ACTION_MAINTENANCE_CHANNELS_INACTIVATE_REQUEST,
-        query: `id=${this.checkedChannels.join(",")}`,
-      });
-    },
-    activateChannels() {
-      this.$store.dispatch({
-        type: ACTION_MAINTENANCE_CHANNELS_ACTIVATE_REQUEST,
-        query: `id=${this.checkedChannels.join(",")}`,
-      });
-    },
-    removeChannels() {
-      this.$store.dispatch({
-        type: "not_implemented_maintenance_channels_delete_request",
-        query: `id=${this.checkedChannels.join(",")}`,
-      });
-    },
-  },
-  watch: {
-    $route(to) {
-      this.checkedChannels = [];
-      if (to.path.includes("stale")) {
-        this.query = "is_stale=true";
-        this.displayInactivateButton = true;
-        this.displayActivateButton = false;
-        this.displayRemoveButton = false;
-      } else if (to.path.includes("not_updated")) {
-        const date = new Date();
-        date.setDate(date.getDate() - 30); // FIXME: hardcoded
-        const referenceDate = date.toISOString().slice(0, -5);
-        this.query = `last_entry_published_time__lte=${referenceDate}`;
-        this.displayInactivateButton = true;
-        this.displayActivateButton = false;
-        this.displayRemoveButton = false;
-      } else if (to.path.includes("inactive")) {
-        this.query = "active=false";
-        this.displayInactivateButton = false;
-        this.displayActivateButton = true;
-        this.displayRemoveButton = false; // FIXME: should be true
-      }
+    calculateReferenceDate,
+    requestChannels() {
       this.$store.dispatch({
         type: ACTION_MAINTENANCE_CHANNELS_GET_REQUEST,
-        query: this.query,
+        query: this.getChannelsQuery,
       });
     },
+    daySelectorChanged(e) {
+      const newValue = parseInt(e.target.value);
+      this.daySelectorValue = newValue;
+      this.requestChannels();
+    },
+    inactivateChannels() {
+      this.$store
+        .dispatch({
+          type: ACTION_MAINTENANCE_CHANNELS_INACTIVATE_REQUEST,
+          query: this.modifyChannelsQuery,
+        })
+        .then(() => this.requestChannels());
+    },
+    activateChannels() {
+      this.$store
+        .dispatch({
+          type: ACTION_MAINTENANCE_CHANNELS_ACTIVATE_REQUEST,
+          query: this.modifyChannelsQuery,
+        })
+        .then(() => this.requestChannels());
+    },
+  },
+  created() {
+    this.$watch(
+      () => this.initialQuery,
+      (newVal /* eslint-disable-line no-unused-vars*/) => {
+        this.requestChannels();
+      }
+    );
   },
 };
 </script>

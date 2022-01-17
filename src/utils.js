@@ -1,5 +1,11 @@
 import axios from "axios";
 
+function calculateReferenceDate(daysAgo, sliceNum = -5) {
+    const date = new Date();
+    date.setDate(date.getDate() - daysAgo);
+    return date.toISOString().slice(0, sliceNum);
+}
+
 function formatDate(value, options) {
     const date = new Date(value);
     return date.toLocaleString(undefined, options);
@@ -28,4 +34,4 @@ function omit(obj, omitKeys) {
     }, {});
 }
 
-export { formatDate, getPagedResults, omit };
+export { calculateReferenceDate, formatDate, getPagedResults, omit };

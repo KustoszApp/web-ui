@@ -1,4 +1,7 @@
 import axios from "axios";
+import qs from "qs";
+
+import { getPagedResults } from "../../utils";
 
 import {
     GET_MAINTENANCE_CHANNELS,
@@ -25,7 +28,7 @@ const mutations = {
         (state.status = "loading"),
     [MUTATION_MAINTENANCE_CHANNELS_SUCCESS]: (state, data) => {
         state.status = "success";
-        state.maintenance_channels = data.results;
+        state.maintenance_channels = data;
     },
     [MUTATION_MAINTENANCE_CHANNELS_ERROR]: (state) => (state.status = "error"),
     [MUTATION_MAINTENANCE_CHANNELS_CHANGE_SUCCESS]: (state) =>
@@ -34,27 +37,26 @@ const mutations = {
 
 const actions = {
     [ACTION_MAINTENANCE_CHANNELS_GET_REQUEST]: ({ commit }, param) => {
-        const base = "channels/?limit=200";
-        const url = param && param.query ? `${base}&${param.query}` : base;
-        axios
-            .get(url)
-            .then((response) => {
-                commit(MUTATION_MAINTENANCE_CHANNELS_SUCCESS, response.data);
+        const query = qs.stringify(param.query);
+        const url = `channels/?${query}`;
+        getPagedResults(url, [])
+            .then((channels) => {
+                commit(MUTATION_MAINTENANCE_CHANNELS_SUCCESS, channels);
             })
             .catch(() => {
                 commit(MUTATION_MAINTENANCE_CHANNELS_ERROR);
             });
     },
     [ACTION_MAINTENANCE_CHANNELS_INACTIVATE_REQUEST]: ({ commit }, param) => {
-        const base = "channels/inactivate";
-        const url = param && param.query ? `${base}?${param.query}` : base;
+        const query = qs.stringify(param.query);
+        const url = `channels/inactivate?${query}`;
         const options = {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
             },
         };
-        axios
+        return axios
             .post(url, options)
             .then((response) => response)
             .then(() => {
@@ -65,15 +67,15 @@ const actions = {
             });
     },
     [ACTION_MAINTENANCE_CHANNELS_ACTIVATE_REQUEST]: ({ commit }, param) => {
-        const base = "channels/activate";
-        const url = param && param.query ? `${base}?${param.query}` : base;
+        const query = qs.stringify(param.query);
+        const url = `channels/activate?${query}`;
         const options = {
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
             },
         };
-        axios
+        return axios
             .post(url, options)
             .then((response) => response)
             .then(() => {

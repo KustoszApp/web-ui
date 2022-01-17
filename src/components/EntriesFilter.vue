@@ -138,6 +138,7 @@ import Multiselect from "@vueform/multiselect";
 import VueModal from "@kouts/vue-modal";
 import qs from "qs";
 import { mapGetters } from "vuex";
+import { calculateReferenceDate } from "../utils";
 
 import {
   ACTION_ENTRIES_MARK_AS_READ,
@@ -193,6 +194,7 @@ export default {
     },
   },
   methods: {
+    calculateReferenceDate,
     dispatchFilteredEntriesRequest(params) {
       this.$store.dispatch({
         type: ACTION_ENTRIES_REQUEST,
@@ -232,11 +234,6 @@ export default {
       let params = qs.parse(this.advancedQueryString);
       params["setParamsAsIs"] = true;
       this.dispatchFilteredEntriesRequest(params);
-    },
-    calculateReferenceDate(daysAgo, sliceNum = -5) {
-      const date = new Date();
-      date.setDate(date.getDate() - daysAgo);
-      return date.toISOString().slice(0, sliceNum);
     },
     setAdvancedFormValues() {
       this.advancedQueryString = qs.stringify(this.entriesRequestParams);
