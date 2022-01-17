@@ -128,6 +128,10 @@ export default {
         query: this.getChannelsQuery,
       });
     },
+    resetComponentState() {
+      this.checkedChannels = [];
+      this.requestChannels();
+    },
     daySelectorChanged(e) {
       const newValue = parseInt(e.target.value);
       this.daySelectorValue = newValue;
@@ -139,7 +143,7 @@ export default {
           type: ACTION_MAINTENANCE_CHANNELS_INACTIVATE_REQUEST,
           query: this.modifyChannelsQuery,
         })
-        .then(() => this.requestChannels());
+        .then(() => this.resetComponentState());
     },
     activateChannels() {
       this.$store
@@ -147,14 +151,14 @@ export default {
           type: ACTION_MAINTENANCE_CHANNELS_ACTIVATE_REQUEST,
           query: this.modifyChannelsQuery,
         })
-        .then(() => this.requestChannels());
+        .then(() => this.resetComponentState());
     },
   },
   created() {
     this.$watch(
       () => this.initialQuery,
       (newVal /* eslint-disable-line no-unused-vars*/) => {
-        this.requestChannels();
+        this.resetComponentState();
       }
     );
   },
