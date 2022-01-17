@@ -139,6 +139,10 @@ a {
   }
 }
 
+.view.login {
+  height: auto;
+}
+
 .view__title {
   border-bottom: 1px solid var(--primary);
   margin: 0;
