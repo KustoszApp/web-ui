@@ -50,11 +50,14 @@
               <ul class="list__content">
                 <li
                   class="list__item"
-                  v-for="feed in group.channels"
-                  :key="feed.id"
-                  :class="{ 'has--unarchived': feed.unarchived_entries > 0 }"
+                  v-for="channel in group.channels"
+                  :key="channel.id"
+                  :class="{ 'has--unarchived': channel.unarchived_entries > 0 }"
                 >
-                  <FeedItem :feed="feed" @edit="showChannelEditModal(feed)" />
+                  <ChannelItem
+                    :channel="channel"
+                    @edit="showChannelEditModal(channel)"
+                  />
                 </li>
               </ul>
             </div>
@@ -67,7 +70,7 @@
         :key="channel.id"
         :class="{ 'has--unarchived': channel.unarchived_entries > 0 }"
       >
-        <FeedItem :feed="channel" @edit="showChannelEditModal(channel)" />
+        <ChannelItem :channel="channel" @edit="showChannelEditModal(channel)" />
       </li>
     </ul>
   </div>
@@ -186,7 +189,7 @@ import Multiselect from "@vueform/multiselect";
 import VueModal from "@kouts/vue-modal";
 import { mapGetters } from "vuex";
 import { formatDate } from "../utils";
-import FeedItem from "./FeedItem.vue";
+import ChannelItem from "./ChannelItem.vue";
 
 import {
   ACTION_CHANNEL_EDIT_REQUEST,
@@ -204,7 +207,7 @@ export default {
     Collapse,
     Modal: VueModal,
     Multiselect,
-    FeedItem,
+    ChannelItem,
   },
   data() {
     return {
@@ -285,21 +288,22 @@ export default {
     },
   },
   methods: {
-    showChannelEditModal(feed) {
-      this.editedChannelId = feed.id;
-      this.editedChannelActive = feed.active;
-      this.editedChannelDeduplicationEnabled = feed.deduplication_enabled;
-      this.editedChannelTitleUpstream = feed.title_upstream;
-      this.editedChannelTitleUser = feed.title;
-      this.editedChannelDisplayedTitle = feed.displayed_title;
-      this.editedChannelUpdateFrequency = feed.update_frequency;
-      this.editedChannelTags = feed.tags;
+    showChannelEditModal(channel) {
+      this.editedChannelId = channel.id;
+      this.editedChannelActive = channel.active;
+      this.editedChannelDeduplicationEnabled = channel.deduplication_enabled;
+      this.editedChannelTitleUpstream = channel.title_upstream;
+      this.editedChannelTitleUser = channel.title;
+      this.editedChannelDisplayedTitle = channel.displayed_title;
+      this.editedChannelUpdateFrequency = channel.update_frequency;
+      this.editedChannelTags = channel.tags;
       this.editedChannelTagsOptions = this.channelTags.map((tag) => tag.name);
-      this.editedChannelAddedTime = feed.added_time;
-      this.editedChannelLastCheckTime = feed.last_check_time;
-      this.editedChannelLastEntryPublishedTime = feed.last_entry_published_time;
-      this.editedChannelLink = feed.link;
-      this.editedChannelUrl = feed.url;
+      this.editedChannelAddedTime = channel.added_time;
+      this.editedChannelLastCheckTime = channel.last_check_time;
+      this.editedChannelLastEntryPublishedTime =
+        channel.last_entry_published_time;
+      this.editedChannelLink = channel.link;
+      this.editedChannelUrl = channel.url;
       this.channelEditModalDisplayed = true;
     },
     submitNewChannelData() {
@@ -344,7 +348,7 @@ export default {
   white-space: nowrap;
   font-weight: normal;
 
-  &.has--unarchived > .feed,
+  &.has--unarchived > .channel,
   &.has--unarchived .header {
     font-weight: 700;
 
@@ -404,7 +408,7 @@ export default {
   visibility: hidden;
 }
 
-.feed .unread-count {
+.channel .unread-count {
   margin-left: auto;
 }
 </style>

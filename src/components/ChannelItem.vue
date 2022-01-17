@@ -1,18 +1,18 @@
 <template>
-  <div class="feed">
-    <BIconRssFill class="feed__item-icon" />
+  <div class="channel">
+    <BIconRssFill class="channel__item-icon" />
     <router-link
-      class="feed__item-link"
-      :title="feed.displayed_title"
+      class="channel__item-link"
+      :title="channel.displayed_title"
       :to="{
         name: this.ROUTE_ENTRIES,
-        query: { channel: feed.id, channel_tags: null },
+        query: { channel: channel.id, channel_tags: null },
       }"
     >
-      {{ feed.displayed_title }}
+      {{ channel.displayed_title }}
     </router-link>
-    <span class="unread-count">{{ feed.unarchived_entries }}</span>
-    <BIconPencilFill class="feed__item-edit-icon" @click="$emit('edit')" />
+    <span class="unread-count">{{ channel.unarchived_entries }}</span>
+    <BIconPencilFill class="channel__item-edit-icon" @click="$emit('edit')" />
   </div>
 </template>
 
@@ -22,13 +22,13 @@ import { BIconPencilFill, BIconRssFill } from "bootstrap-icons-vue";
 import { ROUTE_ENTRIES } from "../types";
 
 export default {
-  name: "FeedItem",
+  name: "ChannelItem",
   components: {
     BIconPencilFill,
     BIconRssFill,
   },
   props: {
-    feed: Object,
+    channel: Object,
   },
   data() {
     return {
@@ -39,12 +39,12 @@ export default {
 </script>
 
 <style lang="scss">
-.feed {
+.channel {
   display: flex;
   align-items: center;
 }
 
-.feed__item-icon {
+.channel__item-icon {
   vertical-align: middle;
   margin-right: 0.125rem;
   height: 12px;
@@ -52,14 +52,14 @@ export default {
   flex-shrink: 0;
 }
 
-.feed__item-edit-icon {
+.channel__item-edit-icon {
   margin-left: 0.25rem;
   height: 12px;
   width: 12px;
   flex-shrink: 0;
 }
 
-.feed__item-link {
+.channel__item-link {
   color: var(--primary);
   text-decoration: none;
   vertical-align: middle;

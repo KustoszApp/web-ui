@@ -13,7 +13,7 @@
     <div class="nav__section">
       <Collapse :show="true">
         <template v-slot:header>
-          <h2 class="nav__title">Feeds</h2>
+          <h2 class="nav__title">Channels</h2>
         </template>
         <template v-slot:collapse>
           <div class="nav__sources">

@@ -3,22 +3,22 @@
     <ul class="list__content">
       <li
         class="list__item"
-        v-for="feed in maintenance_channels"
-        :key="feed.id"
+        v-for="channel in maintenance_channels"
+        :key="channel.id"
       >
         <input
-          :id="feed.id"
-          :value="feed.id"
+          :id="channel.id"
+          :value="channel.id"
           class="input-check mr-1"
           type="checkbox"
           v-model="checkedChannels"
         />
-        <label :for="feed.id">{{ feed.displayed_title }}</label>
+        <label :for="channel.id">{{ channel.displayed_title }}</label>
         (<router-link
           class="list__item-link"
           :to="{
             name: this.ROUTE_ENTRIES,
-            query: { channel: feed.id, channel_tags: null },
+            query: { channel: channel.id, channel_tags: null },
           }"
         >
           see content </router-link
