@@ -171,7 +171,10 @@ export default {
       e.preventDefault();
       this.$emit("entryClick", this.index);
     },
-    handleMiddleClick() {
+    handleMiddleClick(e) {
+      if (e.target.tagName === "A") {
+        return;
+      }
       window.open(this.link, "_blank");
     },
     formatDate,
