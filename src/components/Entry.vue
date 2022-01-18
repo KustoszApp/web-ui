@@ -107,6 +107,7 @@ export default {
     publishedTime: String,
     source: String,
     author: String,
+    readerPosition: Number,
     entryDefaultContent: Object,
     entryAvailableContents: Array,
     isArchived: Boolean,
@@ -130,7 +131,6 @@ export default {
       this.$nextTick(() => {
         if (value) {
           this.entryContent = this.entryDefaultContent.content;
-          this.$refs.entryLink.scrollIntoView(true);
           this.editedEntryTagsOptions = this.entryTags;
           this.$store
             .dispatch({
@@ -144,6 +144,25 @@ export default {
           this.entryContent = "";
           delete this.$refs.entryWrapper.dataset.previousPos;
         }
+        return value;
+      }).then((value) => {
+        if (!value) {
+          return;
+        }
+        console.debug(`this.readerPosition: ${this.readerPosition}`);
+        if (this.readerPosition <= 0) {
+          this.$refs.entryLink.scrollIntoView(true);
+          return;
+        }
+        const elementHeight = this.$refs.entryWrapper.clientHeight;
+        const readerPosition = elementHeight * this.readerPosition;
+        const scrollOffset = this.$refs.entryWrapper.offsetTop + readerPosition;
+        console.debug(`elementHeight: ${elementHeight}`);
+        console.debug(`readerPosition: ${readerPosition}`);
+        console.debug(`scrollOffset: ${scrollOffset}`);
+        document
+          .getElementById("router-view")
+          .scrollTo({ top: scrollOffset, behavior: "smooth" });
       });
     },
   },

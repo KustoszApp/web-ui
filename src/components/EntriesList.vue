@@ -15,6 +15,7 @@
           :link="entry.link"
           :source="getChannelTitle(entry.channel)"
           :author="entry.author"
+          :readerPosition="entry.reader_position"
           :publishedTime="entry.published_time"
           :entryDefaultContent="entry.preferred_content"
           :entryAvailableContents="entry.available_contents"
@@ -198,7 +199,7 @@ export default {
   mounted() {
     document.addEventListener("keypress", this.onKeypress);
     document
-      .querySelector("#router-view")
+      .getElementById("router-view")
       .addEventListener("scroll", this.onScroll);
   },
   beforeUnmount() {
