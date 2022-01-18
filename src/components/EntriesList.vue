@@ -33,6 +33,7 @@ import Entry from "./Entry.vue";
 import { mapGetters } from "vuex";
 
 import {
+  ACTION_ENTRY_EDIT_REQUEST,
   ACTION_ENTRIES_NEXT_PAGE_REQUEST,
   GET_CHANNELS,
   GET_ENTRIES,
@@ -45,6 +46,7 @@ export default {
     return {
       focusedPrevIndex: -1,
       focusedIndex: -1,
+      scrollRequestDebounce: {},
     };
   },
   computed: {
@@ -151,12 +153,26 @@ export default {
 
         element.classList.toggle("on--top", currentPos > 0);
 
-        if (!isNaN(previousPos)) {
-          const force = previousPos > currentPos;
-          element.classList.toggle("scroll--up", force);
+        element.dataset.previousPos = currentPos;
+
+        if (isNaN(previousPos)) {
+          return;
         }
 
-        element.dataset.previousPos = currentPos;
+        const force = previousPos > currentPos;
+        element.classList.toggle("scroll--up", force);
+
+        if (currentPos === previousPos) {
+          return;
+        }
+
+        const clientHeight = element.clientHeight;
+        const readerPosition = currentPos / clientHeight;
+        const entry = this.entries.find((entry) => entry.isOpened);
+        clearTimeout(this.scrollRequestDebounce);
+        this.scrollRequestDebounce = setTimeout(() => {
+          this.sendEntryReadPositionRequest(entry.id, readerPosition);
+        }, 1000);
       });
     },
     fetchMoreEntries(e) {
@@ -170,6 +186,13 @@ export default {
       if (bottomOfView) {
         this.$store.dispatch(ACTION_ENTRIES_NEXT_PAGE_REQUEST);
       }
+    },
+    sendEntryReadPositionRequest(entry_id, readerPosition) {
+      this.$store.dispatch({
+        type: ACTION_ENTRY_EDIT_REQUEST,
+        id: entry_id,
+        reader_position: readerPosition,
+      });
     },
   },
   mounted() {
