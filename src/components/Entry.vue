@@ -330,9 +330,9 @@ export default {
 }
 
 .on--top:not(.scroll--up) .entry__meta {
-  display: none;
+  visibility: hidden;
   @include for-tablet-landscape-up {
-    display: unset;
+    visibility: unset;
   }
 }
 

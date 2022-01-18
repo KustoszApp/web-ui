@@ -151,6 +151,9 @@ export default {
       document.querySelectorAll(".entry--open").forEach((element) => {
         const previousPos = parseInt(element.dataset.previousPos, 10);
         const currentPos = currentTop - element.offsetTop;
+        console.debug(`currentTop: ${currentTop}`);
+        console.debug(`previousPos: ${previousPos}`);
+        console.debug(`currentPos: ${currentPos}`);
 
         element.classList.toggle("on--top", currentPos > 0);
 
