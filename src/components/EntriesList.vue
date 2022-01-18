@@ -26,6 +26,9 @@
         />
       </li>
     </ul>
+    <div ref="entriesListEnd" :class="{ hidden: !hasMoreEntries }">
+      Fetching more entries
+    </div>
   </div>
 </template>
 
@@ -39,6 +42,7 @@ import {
   GET_CHANNELS,
   GET_ENTRIES,
   GET_STATUS,
+  GET_ENTRIES_NEXT_PAGE,
 } from "../types";
 
 export default {
@@ -48,14 +52,19 @@ export default {
       focusedPrevIndex: -1,
       focusedIndex: -1,
       scrollRequestDebounce: {},
+      entriesListEndObserver: {},
     };
   },
   computed: {
     ...mapGetters({
       status: GET_STATUS,
       entries: GET_ENTRIES,
+      entriesNextPage: GET_ENTRIES_NEXT_PAGE,
       channels: GET_CHANNELS,
     }),
+    hasMoreEntries() {
+      return this.entriesNextPage !== null && this.entriesNextPage !== "";
+    },
   },
   methods: {
     getChannelTitle(channelId) {
@@ -142,7 +151,6 @@ export default {
     },
     onScroll(e) {
       this.openEntryClasses(e);
-      this.fetchMoreEntries(e);
     },
     openEntryClasses(e) {
       const scrollElement = e.target;
@@ -179,17 +187,18 @@ export default {
         }, 1000);
       });
     },
-    fetchMoreEntries(e) {
-      if (this.status === "loading") {
+    fetchMoreEntries(observerEntries) {
+      if (this.entries.length === 0) {
+        console.debug("entries observer: no entries");
         return;
       }
-      const element = e.target;
-      const currentPos = element.scrollHeight - Math.abs(element.scrollTop);
-      const thresholdPos = 2 * element.clientHeight;
-      const bottomOfView = currentPos <= thresholdPos;
-      if (bottomOfView) {
-        this.$store.dispatch(ACTION_ENTRIES_NEXT_PAGE_REQUEST);
+      const entry = observerEntries[0];
+      if (!entry.isIntersecting) {
+        console.debug("entries observer: target not intersecting");
+        return;
       }
+      console.debug("entries observer: target intersecting");
+      this.$store.dispatch(ACTION_ENTRIES_NEXT_PAGE_REQUEST);
     },
     sendEntryReadPositionRequest(entry_id, readerPosition) {
       this.$store.dispatch({
@@ -200,13 +209,19 @@ export default {
     },
   },
   mounted() {
+    const rootElem = document.getElementById("router-view");
     document.addEventListener("keypress", this.onKeypress);
-    document
-      .getElementById("router-view")
-      .addEventListener("scroll", this.onScroll);
+    rootElem.addEventListener("scroll", this.onScroll);
+
+    this.entriesListEndObserver = new IntersectionObserver(
+      this.fetchMoreEntries,
+      { root: rootElem }
+    );
+    this.entriesListEndObserver.observe(this.$refs.entriesListEnd);
   },
   beforeUnmount() {
     document.removeEventListener("keypress", this.onKeypress);
+    this.entriesListEndObserver.disconnect();
   },
   components: {
     Entry,
