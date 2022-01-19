@@ -4,29 +4,31 @@
     :class="{
       'entry--open': isOpen,
       'entry--focused': isFocused,
-      'entry--archived': entryArchived,
+      'entry--archived': this.entry.archived,
     }"
     ref="entryWrapper"
   >
     <div class="entry__meta">
       <div
         class="entry__header"
-        @click="handleClick"
-        @click.middle="handleMiddleClick"
+        @click="handleEntryHeaderClick"
+        @click.middle="handleEntryHeaderMiddleClick"
       >
         <BIconXLg class="entry__close mobile-only" />
-        <a class="entry__link" ref="entryLink" :href="link">{{ title }}</a>
-        <span class="entry__source">{{ source }}</span>
-        <span class="entry__author">{{ author }}</span>
+        <a class="entry__link" ref="entryLink" :href="entry.link">
+          {{ entry.title }}
+        </a>
+        <span class="entry__source">{{ entryChannelTitle }}</span>
+        <span class="entry__author">{{ entry.author }}</span>
         <span class="entry__published"
-          >added: {{ formatDate(publishedTime) }}</span
+          >added: {{ formatDate(entry.published_time) }}</span
         >
       </div>
       <div class="entry__footer" v-show="isOpen">
         <button
           type="button"
           class="btn btn--secondary"
-          @click="toggleArchivedState"
+          @click="requestArchiveStateChange"
         >
           Mark as {{ isArchivedString }}
         </button>
@@ -75,11 +77,10 @@ import Multiselect from "@vueform/multiselect";
 import { formatDate } from "../utils";
 import { mapGetters } from "vuex";
 import {
-  ACTION_CHANNEL_UNARCHIVED_ENTRIES_CHANGE,
   ACTION_ENTRY_EDIT_REQUEST,
   ACTION_ENTRY_REQUEST,
   ACTION_ENTRY_TAGS_REQUEST,
-  GET_ENTRY,
+  GET_CHANNELS,
   GET_ENTRY_TAGS,
 } from "../types";
 
@@ -89,77 +90,89 @@ export default {
     BIconXLg,
     Multiselect,
   },
+  emits: ["archived-change-request", "entry-header-clicked"],
   data() {
     return {
-      entrySelectedContent: this.entryDefaultContent.id,
-      entryContent: "",
-      entryArchived: this.isArchived,
+      entrySelectedContent: this.entry.preferred_content.id,
+      entryContent: this.initialContent,
+      editedArchived: false,
       editedEntryTags: [],
       editedEntryTagsOptions: [],
     };
   },
   props: {
     index: Number,
-    entryId: Number,
-    channelId: Number,
-    title: String,
-    link: String,
-    publishedTime: String,
-    source: String,
-    author: String,
-    readerPosition: Number,
-    entryDefaultContent: Object,
-    entryAvailableContents: Array,
-    isArchived: Boolean,
+    entry: Object,
+    initialContent: String,
     isFocused: Boolean,
     isOpen: Boolean,
   },
   computed: {
     ...mapGetters({
-      entry: GET_ENTRY,
+      channels: GET_CHANNELS,
       entryTags: GET_ENTRY_TAGS,
     }),
+    readerPosition() {
+      return this.entry.reader_position;
+    },
     isArchivedString() {
-      if (this.entryArchived) {
+      if (this.entry.archived) {
         return "unread";
       }
       return "read";
     },
+    entryChannelTitle() {
+      if (this.channels.length === 0) {
+        return;
+      }
+      const channel = this.channels.find(
+        (item) => item.id === this.entry.channel
+      );
+      return channel.displayed_title;
+    },
+    entryAvailableContents() {
+      if ("available_contents" in this.entry) {
+        return this.entry.available_contents;
+      }
+      return this.entry.contents;
+    },
   },
   watch: {
+    initialContent(value) {
+      this.entryContent = value;
+    },
     isOpen(value) {
       this.$nextTick(() => {
         if (value) {
-          this.entryContent = this.entryDefaultContent.content;
           this.editedEntryTagsOptions = this.entryTags;
           this.$store
             .dispatch({
               type: ACTION_ENTRY_REQUEST,
-              id: this.entryId,
+              id: this.entry.id,
             })
             .then(() => {
               this.editedEntryTags = this.entry.tags;
             });
         } else {
-          this.entryContent = "";
           delete this.$refs.entryWrapper.dataset.previousPos;
         }
         return value;
       }).then((value) => {
         if (!value) {
+          /*this.$refs.entryLink.scrollIntoView(true);*/
           return;
         }
-        console.debug(`this.readerPosition: ${this.readerPosition}`);
+        /*console.debug(`this.readerPosition: ${this.readerPosition}`);*/
         if (this.readerPosition <= 0) {
-          this.$refs.entryLink.scrollIntoView(true);
+          /*this.$refs.entryLink.scrollIntoView(true);*/
           return;
         }
         const elementHeight = this.$refs.entryWrapper.clientHeight;
         const readerPosition = elementHeight * this.readerPosition;
         const scrollOffset = this.$refs.entryWrapper.offsetTop + readerPosition;
-        console.debug(`elementHeight: ${elementHeight}`);
-        console.debug(`readerPosition: ${readerPosition}`);
-        console.debug(`scrollOffset: ${scrollOffset}`);
+        /*console.debug(`elementHeight: ${elementHeight}`);*/
+        /*console.debug(`readerPosition: ${readerPosition}`);*/
+        /*console.debug(`scrollOffset: ${scrollOffset}`);*/
         document
           .getElementById("router-view")
           .scrollTo({ top: scrollOffset, behavior: "smooth" });
@@ -167,34 +180,18 @@ export default {
     },
   },
   methods: {
-    toggleArchivedState() {
-      this.entryArchived = !this.entryArchived;
-      this.$store
-        .dispatch({
-          type: ACTION_ENTRY_EDIT_REQUEST,
-          id: this.entryId,
-          archived: this.entryArchived,
-        })
-        .then(() => {
-          let unarchived_entries_count = this.entryArchived
-            ? "decrease"
-            : "increase";
-          this.$store.dispatch({
-            type: ACTION_CHANNEL_UNARCHIVED_ENTRIES_CHANGE,
-            channel_id: this.channelId,
-            unarchived_entries_count: unarchived_entries_count,
-          });
-        });
+    requestArchiveStateChange() {
+      this.$emit("archived-change-request", this.index);
     },
-    handleClick(e) {
+    handleEntryHeaderClick(e) {
       e.preventDefault();
-      this.$emit("entryClick", this.index);
+      this.$emit("entry-header-clicked", this.index);
     },
-    handleMiddleClick(e) {
+    handleEntryHeaderMiddleClick(e) {
       if (e.target.tagName === "A") {
         return;
       }
-      window.open(this.link, "_blank");
+      window.open(this.entry.link, "_blank");
     },
     formatDate,
     formatReadingTime(value) {
@@ -207,7 +204,7 @@ export default {
       this.entryContent = newContent.content;
       this.$store.dispatch({
         type: ACTION_ENTRY_EDIT_REQUEST,
-        id: this.entryId,
+        id: this.entry.id,
         preferred_content: newContent.id,
       });
     },
@@ -215,7 +212,7 @@ export default {
       this.$store
         .dispatch({
           type: ACTION_ENTRY_EDIT_REQUEST,
-          id: this.entryId,
+          id: this.entry.id,
           tags: value,
         })
         .then(() => {

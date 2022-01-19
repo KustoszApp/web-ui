@@ -6,7 +6,6 @@ import {
     GET_ENTRIES_REQUEST_PARAMS,
     GET_ENTRIES_NEXT_PAGE,
     GET_ENTRIES_ALL_COUNT,
-    GET_ENTRY,
     GET_ENTRY_TAGS,
     GET_STATUS,
     MUTATION_SET_ENTRIES_REQUEST_PARAMS,
@@ -36,7 +35,6 @@ const state = {
     entriesNextPage: "",
     entriesAllCount: 0,
     entries: [],
-    entry: [],
     entryTags: [],
 };
 
@@ -45,7 +43,6 @@ const getters = {
     [GET_ENTRIES_REQUEST_PARAMS]: (state) => state.entriesRequestParams,
     [GET_ENTRIES_NEXT_PAGE]: (state) => state.entriesNextPage,
     [GET_ENTRIES_ALL_COUNT]: (state) => state.entriesAllCount,
-    [GET_ENTRY]: (state) => state.entry,
     [GET_ENTRY_TAGS]: (state) => state.entryTags,
     [GET_STATUS]: (state) => state.status,
 };
@@ -83,9 +80,7 @@ const mutations = {
         const context = payload.context;
         const data = payload.data;
         state.status = "success";
-        const newEntries = data.results.map((item) => {
-            return { ...item, isFocused: false, isOpened: false };
-        });
+        const newEntries = data.results;
         if (context === "initial_page") {
             state.entries = newEntries;
         } else {
@@ -100,7 +95,16 @@ const mutations = {
     [MUTATION_ENTRY_REQUEST]: (state) => (state.status = "loading"),
     [MUTATION_ENTRY_SUCCESS]: (state, data) => {
         state.status = "success";
-        state.entry = data;
+        const entryIndex = state.entries.findIndex(
+            (entry) => entry.id === data.id
+        );
+        if (0 > entryIndex) {
+            console.error(
+                `Got response for entry ${data.id} that is not on list of entries`
+            );
+            return;
+        }
+        state.entries[entryIndex] = data;
     },
     [MUTATION_ENTRY_ERROR]: (state) => (state.status = "error"),
     [MUTATION_ENTRY_TAGS_REQUEST]: (state) => (state.status = "loading"),
