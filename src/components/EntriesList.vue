@@ -103,21 +103,58 @@ export default {
       this.focusedIndex = index;
 
       const entry = this.entries[index];
+      const container = this.entryRefs[index];
 
       this.initialEntryContent = entry.preferred_content.content;
       this.$store.dispatch({
         type: ACTION_ENTRY_REQUEST,
         id: entry.id,
       });
-      this.setupContentObserver(index);
+      this.$nextTick(() => {
+        this.openEntryScroll(entry, container);
+        this.setupContentObserver(index);
+      });
       this.setupEntryHeaderObserver(index);
     },
     closeEntry(index) {
-      console.log(index); // FIXME: only for linter to shut up
       this.initialEntryContent = "";
       this.openedIndex = -1;
       this.openedEntryObserver.disconnect();
       this.openedEntryObserver = null;
+      const elem = this.entryRefs[index];
+
+      this.$nextTick(() => {
+        this.ensureElementInViewport(elem);
+      });
+    },
+    openEntryScroll(entry, ref) {
+      const clientHeight = window.innerHeight;
+      const refDomRect = ref.getBoundingClientRect();
+
+      if (refDomRect.top > clientHeight / 2) {
+        ref.scrollIntoView(true);
+      }
+
+      if (0.02 >= entry.reader_position) {
+        return;
+      }
+
+      const content = ref.querySelector(".entry__content");
+      const headerHeight = ref
+        .querySelector(".entry__meta")
+        .getBoundingClientRect().height;
+      const entryHeight = content.getBoundingClientRect().height;
+      const entryTop = content.getBoundingClientRect().top;
+      const ratio = entryHeight * entry.reader_position;
+      for (let curElem of content.getElementsByTagName("*")) {
+        const elemDomRect = curElem.getBoundingClientRect();
+        const elemPos = elemDomRect.top - entryTop;
+        const elemPosWithOffset = elemPos + headerHeight;
+        if (elemPosWithOffset > ratio) {
+          curElem.scrollIntoView();
+          break;
+        }
+      }
     },
     setupEntryHeaderObserver(index) {
       this.clearObserver(this.entryHeaderObserver);
@@ -139,39 +176,60 @@ export default {
     setupContentObserver(index) {
       this.clearObserver(this.openedEntryObserver);
       this.$nextTick(() => {
-        // DOM is updated, we have correct height now
-        // FIXME: here's a good place to scroll to last known position,
-        // or to ensure entry is on top - do it before we install observer
         const elem = this.entryRefs[index];
         const entryContentElem = elem.querySelector(".entry__content");
         this.openedEntryObserver = new IntersectionObserver(
           this.openedEntryScrolled,
           { threshold: [0] }
         );
-        for (let child of entryContentElem.children) {
+        for (let child of entryContentElem.getElementsByTagName("*")) {
           this.openedEntryObserver.observe(child);
         }
       });
     },
     openedEntryScrolled(observerEntries) {
+      const contentNode = observerEntries[0].target.closest(".entry__content");
+      if (contentNode === null) {
+        return;
+      }
+      // ignore observer initialization callback
+      const allTargets = contentNode.getElementsByTagName("*").length;
+      if (observerEntries.length === allTargets) {
+        return;
+      }
       const entriesLeaving = observerEntries.filter((entry) => {
         return !entry.isIntersecting;
       });
-
       if (entriesLeaving.length === 0) {
         return;
       }
 
-      const observerTarget = entriesLeaving[0];
-      const parentNode = observerTarget.target.parentNode;
-      const clientHeight = window.innerHeight;
-      let readerPosition = null;
-
-      if (0 > observerTarget.boundingClientRect.top) {
-        readerPosition = observerTarget.target.offsetTop;
+      // if multiple elements left viewport, pick up the highest one
+      let observerTarget = entriesLeaving[0];
+      if (entriesLeaving.length > 1) {
+        let largestHeightSeen = -1;
+        entriesLeaving.forEach((target) => {
+          const height = target.boundingClientRect.height;
+          if (height > largestHeightSeen) {
+            observerTarget = target;
+            largestHeightSeen = height;
+          }
+        });
       }
-      if (observerTarget.boundingClientRect.top > clientHeight) {
-        readerPosition = observerTarget.target.offsetTop - clientHeight;
+
+      let readerPosition = null;
+      const clientHeight = window.innerHeight;
+      const entryTop = contentNode.getBoundingClientRect().top;
+      const elemDomRect = observerTarget.target.getBoundingClientRect();
+      const elemPos = elemDomRect.top - entryTop;
+
+      // element is above viewport - user scrolls down
+      if (0 > elemDomRect.top) {
+        readerPosition = elemPos + elemDomRect.height;
+      }
+      // element is below viewport - user scrolls up
+      if (elemDomRect.top > clientHeight) {
+        readerPosition = elemPos - clientHeight;
       }
 
       if (readerPosition === null) {
@@ -179,7 +237,7 @@ export default {
         return;
       }
 
-      const readerPositionRatio = readerPosition / parentNode.clientHeight;
+      const readerPositionRatio = readerPosition / contentNode.clientHeight;
       const entry = this.entries[this.openedIndex];
 
       // FIXME: here's a good place to mark entry as read automatically as we reach bottom
@@ -212,15 +270,12 @@ export default {
     },
     fetchMoreEntries(observerEntries) {
       if (this.entries.length === 0) {
-        console.debug("entries observer: no entries");
         return;
       }
       const entry = observerEntries[0];
       if (!entry.isIntersecting) {
-        console.debug("entries observer: target not intersecting");
         return;
       }
-      console.debug("entries observer: target intersecting");
       this.$store.dispatch(ACTION_ENTRIES_NEXT_PAGE_REQUEST);
     },
     sendEntryReadPositionRequest(entry_id, readerPosition) {
@@ -229,6 +284,19 @@ export default {
         id: entry_id,
         reader_position: readerPosition,
       });
+    },
+    ensureElementInViewport(elem) {
+      const domrect = elem.getBoundingClientRect();
+      const clientHeight = window.innerHeight;
+
+      if (0 > domrect.top) {
+        elem.scrollIntoView(true);
+        return;
+      }
+
+      if (domrect.top >= clientHeight) {
+        elem.scrollIntoView(false);
+      }
     },
 
     // browser event handlers
@@ -290,6 +358,8 @@ export default {
       }
 
       this.focusedIndex = focusedIndexNew;
+      const elem = this.entryRefs[focusedIndexNew];
+      this.ensureElementInViewport(elem);
     },
     focusPrev() {
       const focusedIndexNew = this.focusedIndex - 1;
@@ -299,6 +369,8 @@ export default {
       }
 
       this.focusedIndex = focusedIndexNew;
+      const elem = this.entryRefs[focusedIndexNew];
+      this.ensureElementInViewport(elem);
     },
     debugScrolling(e) {
       const elem = e.target;
