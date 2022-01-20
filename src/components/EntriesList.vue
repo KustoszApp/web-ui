@@ -166,8 +166,16 @@ export default {
         threshold: [1],
         rootMargin: "-1px 0px 0px 0px",
       };
+      let lastTimestamp = 0;
       this.entryHeaderObserver = new IntersectionObserver((observerEntries) => {
         const entry = observerEntries[0];
+        const entryTime = entry.time;
+        // when element is exactly at top, our styling may cause it
+        // to flicker, which results in a flurry of events
+        if (50 > entryTime - lastTimestamp) {
+          return;
+        }
+        lastTimestamp = entryTime;
         const elem = entry.target.parentNode;
         elem.classList.toggle("on--top", entry.intersectionRatio < 1);
       }, observerOptions);
