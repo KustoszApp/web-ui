@@ -321,6 +321,7 @@ export default {
         case "Enter":
         case "Space":
         case "KeyO":
+          e.preventDefault();
           this.toggleOpened(this.focusedIndex);
           break;
         case "KeyM":
