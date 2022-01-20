@@ -240,7 +240,9 @@ export default {
       const readerPositionRatio = readerPosition / contentNode.clientHeight;
       const entry = this.entries[this.openedIndex];
 
-      // FIXME: here's a good place to mark entry as read automatically as we reach bottom
+      if (!entry.archived && readerPositionRatio > 0.9) {
+        this.changeArchivedState(this.openedIndex);
+      }
 
       clearTimeout(this.scrollRequestDebounce);
       this.scrollRequestDebounce = setTimeout(() => {
