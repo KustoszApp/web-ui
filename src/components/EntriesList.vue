@@ -54,6 +54,7 @@ export default {
       scrollRequestDebounce: {},
       entriesListEndObserver: null,
       openedEntryObserver: null,
+      entryHeaderObserver: null,
       previousTop: 0,
       previousHeight: 0,
     };
@@ -83,6 +84,12 @@ export default {
       }
       this.entryRefs.push(elem);
     },
+    clearObserver(observer) {
+      if (observer === null) {
+        return;
+      }
+      observer.disconnect();
+    },
     toggleOpened(index) {
       const currentlyOpened = this.isOpened(index);
       if (!currentlyOpened) {
@@ -103,6 +110,7 @@ export default {
         id: entry.id,
       });
       this.setupContentObserver(index);
+      this.setupEntryHeaderObserver(index);
     },
     closeEntry(index) {
       console.log(index); // FIXME: only for linter to shut up
@@ -111,10 +119,25 @@ export default {
       this.openedEntryObserver.disconnect();
       this.openedEntryObserver = null;
     },
+    setupEntryHeaderObserver(index) {
+      this.clearObserver(this.entryHeaderObserver);
+      const rootElem = document.getElementById("router-view");
+      const elem = this.entryRefs[index];
+      const entryHeaderElem = elem.querySelector(".entry__header");
+      const observerOptions = {
+        root: rootElem,
+        threshold: [1],
+        rootMargin: "-1px 0px 0px 0px",
+      };
+      this.entryHeaderObserver = new IntersectionObserver((observerEntries) => {
+        const entry = observerEntries[0];
+        const elem = entry.target.parentNode;
+        elem.classList.toggle("on--top", entry.intersectionRatio < 1);
+      }, observerOptions);
+      this.entryHeaderObserver.observe(entryHeaderElem);
+    },
     setupContentObserver(index) {
-      if (this.openedEntryObserver !== null) {
-        this.openedEntryObserver.disconnect();
-      }
+      this.clearObserver(this.openedEntryObserver);
       this.$nextTick(() => {
         // DOM is updated, we have correct height now
         // FIXME: here's a good place to scroll to last known position,
@@ -324,10 +347,9 @@ export default {
   },
   beforeUnmount() {
     document.removeEventListener("keypress", this.onKeypress);
-    this.entriesListEndObserver.disconnect();
-    if (this.openedEntryObserver !== null) {
-      this.openedEntryObserver.disconnect();
-    }
+    this.clearObserver(this.entriesListEndObserver);
+    this.clearObserver(this.openedEntryObserver);
+    this.clearObserver(this.entryHeaderObserver);
   },
   components: {
     Entry,

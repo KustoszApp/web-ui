@@ -293,7 +293,7 @@ export default {
   }
 }
 
-.on--top:not(.scroll--up) .entry__meta {
+#router-view:not(.scroll--up) .entry__meta.on--top {
   visibility: hidden;
   @include for-tablet-landscape-up {
     visibility: unset;
