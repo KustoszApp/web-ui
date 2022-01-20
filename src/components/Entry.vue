@@ -54,7 +54,7 @@
           <Multiselect
             v-model="editedEntryTags"
             mode="tags"
-            :options="editedEntryTagsOptions"
+            :options="entryTags"
             valueProp="name"
             trackBy="name"
             label="name"
@@ -78,7 +78,6 @@ import { formatDate } from "../utils";
 import { mapGetters } from "vuex";
 import {
   ACTION_ENTRY_EDIT_REQUEST,
-  ACTION_ENTRY_REQUEST,
   ACTION_ENTRY_TAGS_REQUEST,
   GET_CHANNELS,
   GET_ENTRY_TAGS,
@@ -90,14 +89,17 @@ export default {
     BIconXLg,
     Multiselect,
   },
-  emits: ["archived-change-request", "entry-header-clicked"],
+  emits: [
+    "archived-change-request",
+    "entry-content-changed",
+    "entry-header-clicked",
+  ],
   data() {
     return {
       entrySelectedContent: this.entry.preferred_content.id,
       entryContent: this.initialContent,
       editedArchived: false,
-      editedEntryTags: [],
-      editedEntryTagsOptions: [],
+      editedEntryTags: this.entry.tags,
     };
   },
   props: {
@@ -141,43 +143,6 @@ export default {
     initialContent(value) {
       this.entryContent = value;
     },
-    isOpen(value) {
-      this.$nextTick(() => {
-        if (value) {
-          this.editedEntryTagsOptions = this.entryTags;
-          this.$store
-            .dispatch({
-              type: ACTION_ENTRY_REQUEST,
-              id: this.entry.id,
-            })
-            .then(() => {
-              this.editedEntryTags = this.entry.tags;
-            });
-        } else {
-          delete this.$refs.entryWrapper.dataset.previousPos;
-        }
-        return value;
-      }).then((value) => {
-        if (!value) {
-          /*this.$refs.entryLink.scrollIntoView(true);*/
-          return;
-        }
-        /*console.debug(`this.readerPosition: ${this.readerPosition}`);*/
-        if (this.readerPosition <= 0) {
-          /*this.$refs.entryLink.scrollIntoView(true);*/
-          return;
-        }
-        const elementHeight = this.$refs.entryWrapper.clientHeight;
-        const readerPosition = elementHeight * this.readerPosition;
-        const scrollOffset = this.$refs.entryWrapper.offsetTop + readerPosition;
-        /*console.debug(`elementHeight: ${elementHeight}`);*/
-        /*console.debug(`readerPosition: ${readerPosition}`);*/
-        /*console.debug(`scrollOffset: ${scrollOffset}`);*/
-        document
-          .getElementById("router-view")
-          .scrollTo({ top: scrollOffset, behavior: "smooth" });
-      });
-    },
   },
   methods: {
     requestArchiveStateChange() {
@@ -202,10 +167,12 @@ export default {
         (x) => x.id === this.entrySelectedContent
       );
       this.entryContent = newContent.content;
+      this.$emit("entry-content-changed", this.index);
       this.$store.dispatch({
         type: ACTION_ENTRY_EDIT_REQUEST,
         id: this.entry.id,
         preferred_content: newContent.id,
+        reader_position: 0,
       });
     },
     editedEntryTagsChanged(value) {

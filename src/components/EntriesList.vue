@@ -6,6 +6,7 @@
         class="entries__list-item"
         v-for="(entry, index) in entries"
         :key="entry.id"
+        :ref="storeEntryRef"
       >
         <Entry
           :index="index"
@@ -15,6 +16,7 @@
           :isOpen="isOpened(index)"
           @archived-change-request="changeArchivedState"
           @entry-header-clicked="toggleOpened"
+          @entry-content-changed="setupContentObserver"
         />
       </li>
     </ul>
@@ -29,6 +31,7 @@ import Entry from "./Entry.vue";
 import { mapGetters } from "vuex";
 
 import {
+  ACTION_ENTRY_REQUEST,
   ACTION_ENTRY_EDIT_REQUEST,
   ACTION_ENTRIES_NEXT_PAGE_REQUEST,
   ACTION_CHANNEL_UNARCHIVED_ENTRIES_CHANGE,
@@ -46,9 +49,11 @@ export default {
       focusedIndex: -1,
       openedIndex: -1,
       initialEntryContent: "",
+      entryRefs: [],
       scrollEventDebounce: {},
       scrollRequestDebounce: {},
-      entriesListEndObserver: {},
+      entriesListEndObserver: null,
+      openedEntryObserver: null,
       previousTop: 0,
       previousHeight: 0,
     };
@@ -72,6 +77,12 @@ export default {
     isOpened(index) {
       return index === this.openedIndex;
     },
+    storeEntryRef(elem) {
+      if (!elem) {
+        return;
+      }
+      this.entryRefs.push(elem);
+    },
     toggleOpened(index) {
       const currentlyOpened = this.isOpened(index);
       if (!currentlyOpened) {
@@ -85,13 +96,75 @@ export default {
       this.focusedIndex = index;
 
       const entry = this.entries[index];
-      console.log(entry);
+
       this.initialEntryContent = entry.preferred_content.content;
+      this.$store.dispatch({
+        type: ACTION_ENTRY_REQUEST,
+        id: entry.id,
+      });
+      this.setupContentObserver(index);
     },
     closeEntry(index) {
       console.log(index); // FIXME: only for linter to shut up
       this.initialEntryContent = "";
       this.openedIndex = -1;
+      this.openedEntryObserver.disconnect();
+      this.openedEntryObserver = null;
+    },
+    setupContentObserver(index) {
+      if (this.openedEntryObserver !== null) {
+        this.openedEntryObserver.disconnect();
+      }
+      this.$nextTick(() => {
+        // DOM is updated, we have correct height now
+        // FIXME: here's a good place to scroll to last known position,
+        // or to ensure entry is on top - do it before we install observer
+        const elem = this.entryRefs[index];
+        const entryContentElem = elem.querySelector(".entry__content");
+        this.openedEntryObserver = new IntersectionObserver(
+          this.openedEntryScrolled,
+          { threshold: [0] }
+        );
+        for (let child of entryContentElem.children) {
+          this.openedEntryObserver.observe(child);
+        }
+      });
+    },
+    openedEntryScrolled(observerEntries) {
+      const entriesLeaving = observerEntries.filter((entry) => {
+        return !entry.isIntersecting;
+      });
+
+      if (entriesLeaving.length === 0) {
+        return;
+      }
+
+      const observerTarget = entriesLeaving[0];
+      const parentNode = observerTarget.target.parentNode;
+      const clientHeight = window.innerHeight;
+      let readerPosition = null;
+
+      if (0 > observerTarget.boundingClientRect.top) {
+        readerPosition = observerTarget.target.offsetTop;
+      }
+      if (observerTarget.boundingClientRect.top > clientHeight) {
+        readerPosition = observerTarget.target.offsetTop - clientHeight;
+      }
+
+      if (readerPosition === null) {
+        console.error("Element left viewport in undefined way");
+        return;
+      }
+
+      const readerPositionRatio = readerPosition / parentNode.clientHeight;
+      const entry = this.entries[this.openedIndex];
+
+      // FIXME: here's a good place to mark entry as read automatically as we reach bottom
+
+      clearTimeout(this.scrollRequestDebounce);
+      this.scrollRequestDebounce = setTimeout(() => {
+        this.sendEntryReadPositionRequest(entry.id, readerPositionRatio);
+      }, 1000);
     },
     changeArchivedState(index) {
       const entry = this.entries[index];
@@ -228,41 +301,6 @@ export default {
       const force = previousTop > currentTop;
       element.classList.toggle("scroll--up", force);
     },
-    openEntryClassesOld(e) {
-      const scrollElement = e.target;
-      const currentTop = scrollElement.scrollTop;
-
-      document.querySelectorAll(".entry--open").forEach((element) => {
-        const previousPos = parseInt(element.dataset.previousPos, 10);
-        const currentPos = currentTop - element.offsetTop;
-        console.debug(`currentTop: ${currentTop}`);
-        console.debug(`previousPos: ${previousPos}`);
-        console.debug(`currentPos: ${currentPos}`);
-
-        element.classList.toggle("on--top", currentPos > 0);
-
-        element.dataset.previousPos = currentPos;
-
-        if (isNaN(previousPos)) {
-          return;
-        }
-
-        const force = previousPos > currentPos;
-        element.classList.toggle("scroll--up", force);
-
-        if (currentPos === previousPos) {
-          return;
-        }
-
-        const clientHeight = element.clientHeight;
-        const readerPosition = currentPos / clientHeight;
-        const entry = this.entries.find((entry) => entry.isOpened);
-        clearTimeout(this.scrollRequestDebounce);
-        this.scrollRequestDebounce = setTimeout(() => {
-          this.sendEntryReadPositionRequest(entry.id, readerPosition);
-        }, 1000);
-      });
-    },
   },
   watch: {
     entriesRequestParams(newVal /* eslint-disable-line no-unused-vars*/) {
@@ -281,9 +319,15 @@ export default {
     );
     this.entriesListEndObserver.observe(this.$refs.entriesListEnd);
   },
+  beforeUpdate() {
+    this.entryRefs = [];
+  },
   beforeUnmount() {
     document.removeEventListener("keypress", this.onKeypress);
     this.entriesListEndObserver.disconnect();
+    if (this.openedEntryObserver !== null) {
+      this.openedEntryObserver.disconnect();
+    }
   },
   components: {
     Entry,
