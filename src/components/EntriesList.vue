@@ -336,7 +336,6 @@ export default {
     onScroll(e) {
       clearTimeout(this.scrollEventDebounce);
       this.scrollEventDebounce = setTimeout(() => {
-        /*this.debugScrolling(e);*/
         this.scrolledUpClass(e);
       }, 10);
     },
@@ -385,17 +384,13 @@ export default {
       const elem = this.entryRefs[focusedIndexNew];
       this.ensureElementInViewport(elem);
     },
-    debugScrolling(e) {
-      const elem = e.target;
-      console.log(new Date());
-      console.log(`scrollTop: ${elem.scrollTop}`);
-      console.log(`scrollHeight: ${elem.scrollHeight}`);
-      console.log(`clientHeight: ${elem.clientHeight}`);
-    },
     scrolledUpClass(e) {
       const element = e.target;
-      const currentTop = element.scrollTop;
-      const currentHeight = element.scrollHeight;
+      const domrect = element
+        .getElementsByTagName("*")[0]
+        .getBoundingClientRect();
+      const currentTop = domrect.top;
+      const currentHeight = domrect.height;
       const previousTop = this.previousTop;
       const previousHeight = this.previousHeight;
 
@@ -403,10 +398,15 @@ export default {
       this.previousHeight = currentHeight;
 
       if (currentHeight !== previousHeight) {
+        element.classList.remove("scroll-up");
         return;
       }
 
-      const force = previousTop > currentTop;
+      if (previousTop === currentTop) {
+        return;
+      }
+
+      const force = currentTop > previousTop;
       element.classList.toggle("scroll--up", force);
     },
   },
