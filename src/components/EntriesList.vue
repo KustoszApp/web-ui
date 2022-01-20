@@ -301,23 +301,33 @@ export default {
 
     // browser event handlers
     onKeypress(e) {
-      if (e.code == "KeyJ") {
-        this.openNext();
+      if (event.isComposing || event.keyCode === 229) {
+        return;
       }
-      if (e.code == "KeyK") {
-        this.openPrev();
-      }
-      if (e.code == "KeyP") {
-        this.focusPrev();
-      }
-      if (e.code == "KeyN") {
-        this.focusNext();
-      }
-      if (e.code == "KeyO") {
-        this.toggleOpened(this.focusedIndex);
-      }
-      if (e.code == "KeyM") {
-        this.changeArchivedState(this.focusedIndex);
+      switch (e.code) {
+        case "KeyJ":
+          this.openNext();
+          break;
+        case "KeyK":
+          this.openPrev();
+          break;
+        case "KeyB":
+        case "KeyP":
+          this.focusPrev();
+          break;
+        case "KeyN":
+          this.focusNext();
+          break;
+        case "Enter":
+        case "Space":
+        case "KeyO":
+          this.toggleOpened(this.focusedIndex);
+          break;
+        case "KeyM":
+          this.changeArchivedState(this.focusedIndex);
+          break;
+        default:
+          () => {}; // noop
       }
     },
     onScroll(e) {
@@ -406,7 +416,7 @@ export default {
   mounted() {
     const rootElem = document.getElementById("router-view");
 
-    document.addEventListener("keypress", this.onKeypress);
+    document.addEventListener("keydown", this.onKeypress);
     rootElem.addEventListener("scroll", this.onScroll);
     this.entriesListEndObserver = new IntersectionObserver(
       this.fetchMoreEntries,
@@ -418,7 +428,7 @@ export default {
     this.entryRefs = [];
   },
   beforeUnmount() {
-    document.removeEventListener("keypress", this.onKeypress);
+    document.removeEventListener("keydown", this.onKeypress);
     this.clearObserver(this.entriesListEndObserver);
     this.clearObserver(this.openedEntryObserver);
     this.clearObserver(this.entryHeaderObserver);
