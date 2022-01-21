@@ -148,8 +148,15 @@ export default {
       const ratio = entryHeight * entry.reader_position;
       for (let curElem of content.getElementsByTagName("*")) {
         const elemDomRect = curElem.getBoundingClientRect();
+        let elemMarginBottom = parseInt(
+          window.getComputedStyle(curElem).marginBottom,
+          10
+        );
+        if (isNaN(elemMarginBottom)) {
+          elemMarginBottom = 0;
+        }
         const elemPos = elemDomRect.top - entryTop;
-        const elemPosWithOffset = elemPos + headerHeight;
+        const elemPosWithOffset = elemPos + elemMarginBottom + headerHeight;
         if (elemPosWithOffset > ratio) {
           curElem.scrollIntoView();
           break;
