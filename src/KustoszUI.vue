@@ -29,7 +29,7 @@ import {
 } from "./types";
 
 export default {
-  name: "ReadOrganizerUI",
+  name: "KustoszUI",
   components: {
     Sidebar,
     Spinner,
@@ -101,7 +101,7 @@ a {
   color: var(--link);
 }
 
-#readorganizer {
+#kustosz {
   height: 100%;
   overflow: hidden;
 }

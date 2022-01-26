@@ -1,4 +1,4 @@
-# Read Organizer web UI
+# Kustosz web UI
 
 ## Project setup
 ```
