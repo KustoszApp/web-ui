@@ -1,0 +1,37 @@
+# SPDX-FileCopyrightText: 2022 Mirek Długosz <mirek@mirekdlugosz.com>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+name: CD
+on:
+  push:
+    tags:
+      - '[0-9]+\.[0-9]+\.[0-9]+'
+
+jobs:
+  publish-npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+  publish-github:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Prepare GitHub release body
+        run: |
+          previousTag=$(git tag --sort=-creatordate | sed -n 2p)
+          git shortlog ${previousTag}..${{ github.ref }} > ${{ github.workspace }}-CHANGELOG.txt
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: ${{ github.workspace }}-CHANGELOG.txt
