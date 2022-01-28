@@ -1,6 +1,7 @@
 {
   "name": "kustosz-web-ui",
   "version": "0.1.0",
+  "description": "Focus on the worthwhile content with Kustosz, open source self-hosted web application. This package contains frontend code.",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
