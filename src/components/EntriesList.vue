@@ -311,7 +311,7 @@ export default {
         return;
       }
 
-      if (domrect.top >= clientHeight) {
+      if (domrect.bottom >= clientHeight) {
         elem.scrollIntoView(false);
       }
     },
