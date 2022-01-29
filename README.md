@@ -1,24 +1,17 @@
-# Kustosz web UI
+# Kustosz - frontend repository
 
-## Project setup
+Focus on the worthwhile content with Kustosz, open source self-hosted web application.
+
+This repository contains frontend source code.
+
+## Installation
+
 ```
 npm install
-```
-
-### Compiles and hot-reloads for development
-```
 npm run serve
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
+## License
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Kustosz is distributed under terms of [European Union Public Licence](https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12)
+# Kustosz web UI
