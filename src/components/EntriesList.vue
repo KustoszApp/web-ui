@@ -5,13 +5,14 @@
       <li
         class="entries__list-item"
         v-for="(entry, index) in entries"
+        :data-vue-index="index"
         :key="entry.id"
         :ref="storeEntryRef"
       >
         <Entry
           :index="index"
           :entry="entry"
-          :initialContent="initialEntryContent"
+          :initialContent="initialEntryContentFor(index)"
           :isFocused="isFocused(index)"
           :isOpen="isOpened(index)"
           @archived-change-request="changeArchivedState"
@@ -49,7 +50,7 @@ export default {
       focusedIndex: -1,
       openedIndex: -1,
       initialEntryContent: "",
-      entryRefs: [],
+      entryRefs: {},
       scrollEventDebounce: {},
       scrollRequestDebounce: {},
       entriesListEndObserver: null,
@@ -82,13 +83,25 @@ export default {
       if (!elem) {
         return;
       }
-      this.entryRefs.push(elem);
+      const key = elem.dataset.vueIndex;
+      this.entryRefs[key] = elem;
     },
     clearObserver(observer) {
       if (observer === null) {
         return;
       }
       observer.disconnect();
+    },
+    initialEntryContentFor(index) {
+      const currentlyOpened = this.isOpened(index);
+      if (!currentlyOpened) {
+        return "";
+      }
+      return this.initialEntryContent;
+    },
+    getEntryRef(index) {
+      const key = index.toString(10);
+      return this.entryRefs[key];
     },
     toggleOpened(index) {
       const currentlyOpened = this.isOpened(index);
@@ -103,7 +116,7 @@ export default {
       this.focusedIndex = index;
 
       const entry = this.entries[index];
-      const container = this.entryRefs[index];
+      const container = this.getEntryRef(index);
 
       const initialEntryContentObj = entry.preferred_content;
       if (initialEntryContentObj) {
@@ -124,7 +137,7 @@ export default {
       this.openedIndex = -1;
       this.openedEntryObserver.disconnect();
       this.openedEntryObserver = null;
-      const elem = this.entryRefs[index];
+      const elem = this.getEntryRef(index);
 
       this.$nextTick(() => {
         this.ensureElementInViewport(elem);
@@ -169,7 +182,7 @@ export default {
     setupEntryHeaderObserver(index) {
       this.clearObserver(this.entryHeaderObserver);
       const rootElem = document.getElementById("router-view");
-      const elem = this.entryRefs[index];
+      const elem = this.getEntryRef(index);
       const entryHeaderElem = elem.querySelector(".entry__header");
       const observerOptions = {
         root: rootElem,
@@ -194,7 +207,7 @@ export default {
     setupContentObserver(index) {
       this.clearObserver(this.openedEntryObserver);
       this.$nextTick(() => {
-        const elem = this.entryRefs[index];
+        const elem = this.getEntryRef(index);
         const entryContentElem = elem.querySelector(".entry__content");
         this.openedEntryObserver = new IntersectionObserver(
           this.openedEntryScrolled,
@@ -390,7 +403,7 @@ export default {
       }
 
       this.focusedIndex = focusedIndexNew;
-      const elem = this.entryRefs[focusedIndexNew];
+      const elem = this.getEntryRef(focusedIndexNew);
       this.ensureElementInViewport(elem);
     },
     focusPrev() {
@@ -401,7 +414,7 @@ export default {
       }
 
       this.focusedIndex = focusedIndexNew;
-      const elem = this.entryRefs[focusedIndexNew];
+      const elem = this.getEntryRef(focusedIndexNew);
       this.ensureElementInViewport(elem);
     },
     scrolledUpClass(e) {
@@ -448,7 +461,7 @@ export default {
     this.entriesListEndObserver.observe(this.$refs.entriesListEnd);
   },
   beforeUpdate() {
-    this.entryRefs = [];
+    this.entryRefs = {};
   },
   beforeUnmount() {
     document.removeEventListener("keydown", this.onKeypress);
