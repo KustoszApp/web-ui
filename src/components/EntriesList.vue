@@ -105,7 +105,10 @@ export default {
       const entry = this.entries[index];
       const container = this.entryRefs[index];
 
-      this.initialEntryContent = entry.preferred_content.content;
+      const initialEntryContentObj = entry.preferred_content;
+      if (initialEntryContentObj) {
+        this.initialEntryContent = initialEntryContentObj.content;
+      }
       this.$store.dispatch({
         type: ACTION_ENTRY_REQUEST,
         id: entry.id,

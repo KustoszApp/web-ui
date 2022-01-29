@@ -33,7 +33,7 @@
           Mark as {{ isArchivedString }}
         </button>
         <select
-          v-model="entrySelectedContent"
+          v-model="entrySelectedContentComputed"
           @change="newContentSelected"
           class="select-menu"
         >
@@ -96,7 +96,7 @@ export default {
   ],
   data() {
     return {
-      entrySelectedContent: this.entry.preferred_content.id,
+      entrySelectedContent: -1,
       entryContent: this.initialContent,
       editedArchived: false,
       editedEntryTags: this.entry.tags,
@@ -131,6 +131,21 @@ export default {
         (item) => item.id === this.entry.channel
       );
       return channel.displayed_title;
+    },
+    entrySelectedContentComputed: {
+      get() {
+        if (this.entrySelectedContent >= 0) {
+          return this.entrySelectedContent;
+        }
+        const preferredContent = this.entry.preferred_content;
+        if (preferredContent === null) {
+          return this.entrySelectedContent;
+        }
+        return preferredContent.id;
+      },
+      set(newVal) {
+        this.entrySelectedContent = newVal;
+      },
     },
     entryAvailableContents() {
       if ("available_contents" in this.entry) {
