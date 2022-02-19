@@ -55,6 +55,7 @@
     "not dead"
   ],
   "vue": {
+    "publicPath": "./",
     "filenameHashing": false,
     "css": {
       "loaderOptions": {
