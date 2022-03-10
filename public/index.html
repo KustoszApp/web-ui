@@ -7,7 +7,11 @@
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title><%= htmlWebpackPlugin.options.title %></title>
     <script>
-        window.kustoszBackendURL = 'http://127.0.0.1:8000/api/v1/';
+        const customKustoszBackendURL = '';
+        window.kustoszBackendURL = customKustoszBackendURL;
+        if (customKustoszBackendURL === '') {
+            window.kustoszBackendURL = window.location.origin + "/api/v1";
+        }
     </script>
   </head>
   <body>

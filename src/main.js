@@ -5,6 +5,10 @@ import router from "./router";
 import store from "./store";
 import "./registerServiceWorker";
 
-axios.defaults.baseURL = window.kustoszBackendURL;
+let baseURL = window.kustoszBackendURL;
+if (process.env.NODE_ENV === "development") {
+    baseURL = process.env.KUSTOSZ_BACKEND_URL || "http://127.0.0.1:8000/api/v1";
+}
+axios.defaults.baseURL = baseURL;
 
 createApp(KustoszUI).use(store).use(router).mount("#kustosz");
