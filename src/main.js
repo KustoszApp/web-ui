@@ -7,7 +7,9 @@ import "./registerServiceWorker";
 
 let baseURL = window.kustoszBackendURL;
 if (process.env.NODE_ENV === "development") {
-    baseURL = process.env.KUSTOSZ_BACKEND_URL || "http://127.0.0.1:8000/api/v1";
+    baseURL =
+        process.env.VUE_APP_KUSTOSZ_BACKEND_URL ||
+        "http://127.0.0.1:8000/api/v1";
 }
 axios.defaults.baseURL = baseURL;
 
