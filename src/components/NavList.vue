@@ -111,7 +111,7 @@
           id="channel-title"
           class="input-field"
           v-model="editedChannelTitleUser"
-          @keypress.stop
+          @keydown.stop
         />
         <small class="muted"
           >(default name provided by channel author: "{{
@@ -138,7 +138,7 @@
           :closeOnSelect="false"
           :searchable="true"
           :createTag="true"
-          @keypress.stop
+          @keydown.stop
         ></Multiselect>
       </p>
       <table>

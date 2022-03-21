@@ -11,7 +11,7 @@
           class="input-field advanced"
           placeholder="Advanced query string"
           v-model="advancedQueryString"
-          @keypress.stop
+          @keydown.stop
         />
         <button class="btn btn--primary ml-2" type="submit">Go!</button>
       </form>
@@ -80,7 +80,7 @@
             :closeOnSelect="true"
             :searchable="true"
             :createTag="false"
-            @keypress.stop
+            @keydown.stop
             @change="newTagsSet"
           ></Multiselect>
         </div>

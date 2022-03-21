@@ -62,7 +62,7 @@
             :searchable="true"
             :createTag="true"
             @change="editedEntryTagsChanged"
-            @keypress.stop
+            @keydown.stop
           ></Multiselect>
         </div>
       </div>

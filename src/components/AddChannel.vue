@@ -38,7 +38,7 @@
               :closeOnSelect="false"
               :searchable="true"
               :createTag="true"
-              @keypress.stop
+              @keydown.stop
             ></Multiselect>
           </div>
         </div>
