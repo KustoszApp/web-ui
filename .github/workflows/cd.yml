@@ -38,7 +38,17 @@ jobs:
           echo '```' > "${{ env.CHANGELOG_PATH }}"
           git shortlog ${previousTag}..${{ github.ref }} >> "${{ env.CHANGELOG_PATH }}"
           echo '```' >> "${{ env.CHANGELOG_PATH }}"
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+      - name: Install Kustosz
+        run: npm install
+      - name: Build production assets
+        run: npm run build
+      - name: Create archive with production assets
+        run: tar -cJf kustosz.tar.xz -C dist/ .
       - name: Create GitHub release
         uses: softprops/action-gh-release@v1
         with:
           body_path: "${{ env.CHANGELOG_PATH }}"
+          files: kustosz.tar.xz
