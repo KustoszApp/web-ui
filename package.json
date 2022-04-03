@@ -4,12 +4,12 @@
   "description": "Focus on the worthwhile content with Kustosz, open source self-hosted web application. This package contains frontend code.",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "cp ./vue-modal-postcss.config.js ./node_modules/@kouts/vue-modal/postcss.config.js && vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@kouts/vue-modal": "^3.0.2",
     "@fullhuman/postcss-purgecss": "^3.0.0",
+    "@kouts/vue-modal": "^3.0.2",
     "@vueform/multiselect": "^2.2.0",
     "axios": "^0.24.0",
     "bootstrap-icons-vue": "^0.8.0",
@@ -48,35 +48,27 @@
       "ecmaVersion": 2020
     },
     "rules": {
-        "vue/multi-word-component-names": ["error", {
-            "ignores": [
-                "Collapse",
-                "Entries",
-                "Entry",
-                "Filters",
-                "Login",
-                "Maintenance",
-                "Settings",
-                "Sidebar",
-                "Spinner"
-            ]
-        }]
+      "vue/multi-word-component-names": [
+        "error",
+        {
+          "ignores": [
+            "Collapse",
+            "Entries",
+            "Entry",
+            "Filters",
+            "Login",
+            "Maintenance",
+            "Settings",
+            "Sidebar",
+            "Spinner"
+          ]
+        }
+      ]
     }
   },
   "browserslist": [
     "> 1%",
     "last 2 versions",
     "not dead"
-  ],
-  "vue": {
-    "publicPath": "./",
-    "filenameHashing": false,
-    "css": {
-      "loaderOptions": {
-        "scss": {
-          "additionalData": "@import '~@/scss/variables.scss';"
-        }
-      }
-    }
-  }
+  ]
 }
