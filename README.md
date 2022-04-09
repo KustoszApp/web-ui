@@ -1,5 +1,7 @@
 [![Kustosz](./kustosz_logo.svg)](https://www.kustosz.org)
 
+![GitHub](https://img.shields.io/github/license/KustoszApp/web-ui?color=green) ![node-lts](https://img.shields.io/node/v-lts/kustosz-web-ui) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/KustoszApp/web-ui/CI?label=CI) ![GitHub issues](https://img.shields.io/github/issues/KustoszApp/web-ui?color=green) ![GitHub pull requests](https://img.shields.io/github/issues-pr/KustoszApp/web-ui) ![GitHub Repo stars](https://img.shields.io/github/stars/KustoszApp/web-ui?color=green) ![GitHub Release Date](https://img.shields.io/github/release-date/KustoszApp/web-ui) ![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/KustoszApp/web-ui/latest?color=green) ![GitHub last commit](https://img.shields.io/github/last-commit/KustoszApp/web-ui)
+
 # Kustosz - frontend repository
 
 Focus on the worthwhile content with Kustosz, open source self-hosted web application.
