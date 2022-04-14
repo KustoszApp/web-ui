@@ -18,8 +18,12 @@
         <a class="entry__link" ref="entryLink" :href="entry.link">
           {{ entry.title }}
         </a>
-        <span class="entry__source">{{ entryChannelTitle }}</span>
-        <span class="entry__author">{{ entry.author }}</span>
+        <span class="entry__source" v-if="entryChannelTitle">
+          {{ entryChannelTitle }}
+        </span>
+        <span class="entry__author" v-if="entry.author">
+          {{ entry.author }}
+        </span>
         <span class="entry__published"
           >added: {{ formatDate(entry.published_time) }}</span
         >
@@ -130,7 +134,7 @@ export default {
       const channel = this.channels.find(
         (item) => item.id === this.entry.channel
       );
-      return channel.displayed_title;
+      return channel?.displayed_title;
     },
     entrySelectedContentComputed: {
       get() {
