@@ -14,6 +14,7 @@
             type="checkbox"
             class="form-switch__input"
             :checked="filter.enabled"
+            @change="enableChanged(filter)"
           />
           {{ filter.name }}
         </label>
@@ -230,6 +231,13 @@ export default {
     },
     newFilter() {
       this.editFilterModalDisplayed = true;
+    },
+    enableChanged(filter) {
+      this.$store.dispatch({
+        type: ACTION_FILTER_EDIT_REQUEST,
+        id: filter.id,
+        enabled: !filter.enabled,
+      });
     },
     editFilter(filter) {
       this.editedFilterId = filter.id;
