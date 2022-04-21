@@ -25,7 +25,13 @@
           {{ entry.author }}
         </span>
         <span class="entry__published"
-          >added: {{ formatDate(entry.published_time) }}</span
+          >added:
+          {{
+            formatDate(entry.published_time, {
+              dateStyle: "short",
+              timeStyle: "short",
+            })
+          }}</span
         >
       </div>
       <div class="entry__footer" v-show="isOpen">
