@@ -190,3 +190,9 @@
 .hidden {
   visibility: hidden;
 }
+
+span.vm {
+  top: inherit;
+  background-color: inherit;
+  box-shadow: inherit;
+}
