@@ -70,7 +70,7 @@ import {
 } from "../types";
 
 export default {
-  name: "NavList",
+  name: "ChannelsMaintenance",
   props: {
     initialQuery: Object,
     displayDaySelector: Boolean,
