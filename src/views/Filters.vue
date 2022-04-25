@@ -4,7 +4,9 @@
       <BIconFunnelFill />
       Filters
     </h2>
-    <FiltersComponent />
+    <div class="section">
+      <FiltersComponent />
+    </div>
   </div>
 </template>
 
