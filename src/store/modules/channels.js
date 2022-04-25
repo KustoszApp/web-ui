@@ -16,6 +16,7 @@ import {
     MUTATION_CHANNEL_TAGS_REQUEST,
     MUTATION_CHANNEL_TAGS_SUCCESS,
     MUTATION_CHANNEL_UNARCHIVED_ENTRIES_CHANGE,
+    MUTATION_MAINTENANCE_CHANNELS_DELETE_SUCCESS,
     ACTION_CHANNELS_REQUEST,
     ACTION_CHANNEL_CREATE_REQUEST,
     ACTION_CHANNEL_EDIT_REQUEST,
@@ -51,6 +52,12 @@ const mutations = {
                 state.channels[idx] = data;
             }
         });
+    },
+    [MUTATION_MAINTENANCE_CHANNELS_DELETE_SUCCESS]: (state, data) => {
+        state.status = "success";
+        state.channels = state.channels.filter(
+            (channel) => !data.deleted_channels.includes(channel.id)
+        );
     },
     [MUTATION_CHANNEL_TAGS_REQUEST]: (state) => (state.status = "loading"),
     [MUTATION_CHANNEL_TAGS_SUCCESS]: (state, data) => {

@@ -9,9 +9,11 @@ import {
     MUTATION_MAINTENANCE_CHANNELS_SUCCESS,
     MUTATION_MAINTENANCE_CHANNELS_ERROR,
     MUTATION_MAINTENANCE_CHANNELS_CHANGE_SUCCESS,
+    MUTATION_MAINTENANCE_CHANNELS_DELETE_SUCCESS,
     ACTION_MAINTENANCE_CHANNELS_GET_REQUEST,
     ACTION_MAINTENANCE_CHANNELS_INACTIVATE_REQUEST,
     ACTION_MAINTENANCE_CHANNELS_ACTIVATE_REQUEST,
+    ACTION_MAINTENANCE_CHANNELS_DELETE_REQUEST,
 } from "../../types";
 
 const state = {
@@ -79,6 +81,31 @@ const actions = {
             .post(url, options)
             .then((response) => response)
             .then(() => {
+                commit(MUTATION_MAINTENANCE_CHANNELS_CHANGE_SUCCESS);
+            })
+            .catch(() => {
+                commit(MUTATION_MAINTENANCE_CHANNELS_ERROR);
+            });
+    },
+    [ACTION_MAINTENANCE_CHANNELS_DELETE_REQUEST]: ({ commit }, param) => {
+        const query = qs.stringify(param.query);
+        const url = `channels/delete?${query}`;
+        const data = {
+            keep_tagged_entries: param.keep_tagged_entries,
+        };
+        const options = {
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+        };
+        return axios
+            .post(url, data, options)
+            .then((response) => {
+                commit(
+                    MUTATION_MAINTENANCE_CHANNELS_DELETE_SUCCESS,
+                    response.data
+                );
                 commit(MUTATION_MAINTENANCE_CHANNELS_CHANGE_SUCCESS);
             })
             .catch(() => {

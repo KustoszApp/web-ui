@@ -2,15 +2,16 @@
   <div class="maintenance">
     <h2 class="view__title">
       <BIconTools />
-      Maintenance
+      {{ sectionTitle }} - Maintenance
     </h2>
     <div class="section">
+      <p v-html="pageDescription"></p>
       <ChannelsMaintenance
         :initialQuery="initialQuery"
         :displayDaySelector="displayDaySelector"
         :displayInactivateButton="displayInactivateButton"
         :displayActivateButton="displayActivateButton"
-        :displayRemoveButton="displayRemoveButton"
+        :displayDeleteButton="displayDeleteButton"
       />
     </div>
   </div>
@@ -38,7 +39,9 @@ export default {
       displayDaySelector: false,
       displayInactivateButton: false,
       displayActivateButton: false,
-      displayRemoveButton: false,
+      displayDeleteButton: false,
+      pageDescription: "",
+      sectionTitle: "",
     };
   },
   methods: {
@@ -47,7 +50,9 @@ export default {
       this.displayDaySelector = false;
       this.displayInactivateButton = false;
       this.displayActivateButton = false;
-      this.displayRemoveButton = false;
+      this.displayDeleteButton = false;
+      this.pageDescription = "";
+      this.sectionTitle = "";
     },
     setupViewBasedOnRouteName() {
       const routeName = this.$route.name;
@@ -59,6 +64,9 @@ export default {
             active: true,
             is_stale: true,
           };
+          this.sectionTitle = "Stale channels";
+          this.pageDescription =
+            "Channels become stale when Kustosz can't access them for extended period of time. They disappeared from the web or have been moved without leaving proper redirection in place. <a href='https://docs.kustosz.org/en/stable/basic-usage.html#stale-channels'>Read more</a>.";
           break;
         case ROUTE_MAINTENANCE_NOT_UPDATED_CHANNELS:
           this.resetInitialData();
@@ -68,12 +76,18 @@ export default {
             active: true,
             last_entry_published_time__lte: "",
           };
+          this.sectionTitle = "Channels without new entries";
+          this.pageDescription =
+            "Channels that are online, but have not produced a new entry in number of days. <a href='https://docs.kustosz.org/en/stable/basic-usage.html#channels-without-new-entries'>Read more</a>.";
           break;
         case ROUTE_MAINTENANCE_INACTIVE_CHANNELS:
           this.resetInitialData();
           this.displayActivateButton = true;
-          this.displayRemoveButton = true;
+          this.displayDeleteButton = true;
           this.initialQuery = { active: false };
+          this.sectionTitle = "Inactive channels";
+          this.pageDescription =
+            "Channels that have “active” flag turned off. <a href='https://docs.kustosz.org/en/stable/basic-usage.html#inactive-channels'>Read more</a>.";
           break;
         default:
           () => {}; // noop
