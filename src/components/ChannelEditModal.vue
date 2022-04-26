@@ -129,7 +129,7 @@ export default {
     channel: Object,
     modalDisplayed: Boolean,
   },
-  emits: ["update:modelValue"],
+  emits: ["update:modalDisplayed"],
   data() {
     return {
       editedChannelId: 0,
