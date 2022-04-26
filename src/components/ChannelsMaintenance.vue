@@ -25,6 +25,7 @@
           v-model="checkedChannels"
         />
         <label :for="channel.id">{{ channel.displayed_title }}</label>
+        <a @click="showChannelEditModal(channel)">Details</a>
         (<router-link
           class="list__item-link"
           :to="{
@@ -99,10 +100,16 @@
       </button>
     </div>
   </Modal>
+  <ChannelEditModal
+    :channel="editedChannel"
+    :modalDisplayed="channelEditModalDisplayed"
+    @update:modalDisplayed="(newVal) => (channelEditModalDisplayed = newVal)"
+  />
 </template>
 
 <script>
 import { mapGetters } from "vuex";
+import ChannelEditModal from "@/components/ChannelEditModal.vue";
 import VueModal from "@kouts/vue-modal";
 import { calculateReferenceDate } from "../utils";
 
@@ -118,6 +125,7 @@ import {
 export default {
   name: "ChannelsMaintenance",
   components: {
+    ChannelEditModal,
     Modal: VueModal,
   },
   props: {
@@ -131,7 +139,9 @@ export default {
     return {
       checkedChannels: [],
       daySelectorValue: 30,
+      editedChannel: {},
       ROUTE_ENTRIES,
+      channelEditModalDisplayed: false,
       deleteChannelsModalDisplayed: false,
       deleteTaggedEntries: false,
     };
@@ -202,13 +212,19 @@ export default {
     },
     resetComponentState() {
       this.checkedChannels = [];
+      this.channelEditModalDisplayed = false;
       this.deleteChannelsModalDisplayed = false;
+      this.editedChannel = {};
       this.requestChannels();
     },
     daySelectorChanged(e) {
       const newValue = parseInt(e.target.value);
       this.daySelectorValue = newValue;
       this.requestChannels();
+    },
+    showChannelEditModal(channel) {
+      this.editedChannel = channel;
+      this.channelEditModalDisplayed = true;
     },
     inactivateChannels() {
       this.$store
