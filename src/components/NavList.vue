@@ -81,119 +81,17 @@
       </li>
     </ul>
   </div>
-  <Modal
-    v-model="channelEditModalDisplayed"
-    :title="`Editing channel ${this.editedChannelDisplayedTitle}`"
-    modal-class="modal modal-lg"
-  >
-    <div class="modal-body">
-      <p>
-        <input
-          class="input-check mr-1"
-          type="checkbox"
-          id="editedChannelActive"
-          v-model="editedChannelActive"
-        />
-        <label for="editedChannelActive">active</label>
-      </p>
-      <p>
-        <input
-          class="input-check mr-1"
-          type="checkbox"
-          id="editedChannelDeduplicationEnabled"
-          v-model="editedChannelDeduplicationEnabled"
-        />
-        <label for="editedChannelDeduplicationEnabled">is deduplicated</label>
-      </p>
-      <p>
-        <label for="channel-title">Name of channel:</label>
-        <input
-          id="channel-title"
-          class="input-field"
-          v-model="editedChannelTitleUser"
-          @keydown.stop
-        />
-        <small class="muted"
-          >(default name provided by channel author: "{{
-            editedChannelTitleUpstream
-          }}")
-        </small>
-      </p>
-      <p>
-        <label for="update-frequency"> Update frequency (seconds): </label>
-        <input
-          id="update-frequency"
-          class="input-field"
-          type="number"
-          v-model="editedChannelUpdateFrequency"
-          min="1"
-        />
-      </p>
-      <p>
-        Tags:
-        <Multiselect
-          v-model="editedChannelTags"
-          mode="tags"
-          :options="editedChannelTagsOptions"
-          :closeOnSelect="false"
-          :searchable="true"
-          :createTag="true"
-          @keydown.stop
-        ></Multiselect>
-      </p>
-      <table>
-        <tr>
-          <td class="text-right">Date of last entry publication:</td>
-          <td>
-            {{ formatDate(editedChannelLastEntryPublishedTime, dateFormat) }}
-          </td>
-        </tr>
-        <tr>
-          <td class="text-right">Date of last content check:</td>
-          <td>
-            {{ formatDate(editedChannelLastCheckTime, dateFormat) }}
-          </td>
-        </tr>
-        <tr>
-          <td class="text-right">Channel added date:</td>
-          <td>
-            {{ formatDate(editedChannelAddedTime, dateFormat) }}
-          </td>
-        </tr>
-        <tr>
-          <td class="text-right">Channel link:</td>
-          <td>
-            <a :href="editedChannelLink">{{ editedChannelLink }}</a>
-          </td>
-        </tr>
-        <tr>
-          <td class="text-right">Channel URL:</td>
-          <td>
-            <a :href="editedChannelUrl">{{ editedChannelUrl }}</a>
-          </td>
-        </tr>
-      </table>
-    </div>
-
-    <div class="modal-footer">
-      <button
-        class="btn btn--secondary"
-        @click="channelEditModalDisplayed = false"
-      >
-        Close this window
-      </button>
-      <button class="btn btn--primary ml-2" @click="submitNewChannelData()">
-        Save
-      </button>
-    </div>
-  </Modal>
+  <ChannelEditModal
+    :channel="editedChannel"
+    :modalDisplayed="channelEditModalDisplayed"
+    @update:modalDisplayed="(newVal) => (channelEditModalDisplayed = newVal)"
+  />
 </template>
 
 <script>
 import { BIconChevronDown, BIconChevronRight } from "bootstrap-icons-vue";
 import Collapse from "@/components/Collapse.vue";
-import Multiselect from "@vueform/multiselect";
-import VueModal from "@kouts/vue-modal";
+import ChannelEditModal from "@/components/ChannelEditModal.vue";
 import { mapGetters } from "vuex";
 import { formatDate } from "../utils";
 import ChannelItem from "./ChannelItem.vue";
@@ -212,35 +110,14 @@ export default {
     BIconChevronDown,
     BIconChevronRight,
     Collapse,
-    Modal: VueModal,
-    Multiselect,
+    ChannelEditModal,
     ChannelItem,
   },
   data() {
     return {
       channelEditModalDisplayed: false,
-      editedChannelId: 0,
-      editedChannelActive: false,
-      editedChannelDeduplicationEnabled: false,
-      editedChannelDisplayedTitle: "",
-      editedChannelTitleUpstream: "",
-      editedChannelTitleUser: "",
-      editedChannelUpdateFrequency: 0,
-      editedChannelTags: [],
-      editedChannelTagsOptions: [],
-      editedChannelAddedTime: "",
-      editedChannelLastCheckTime: "",
-      editedChannelLastEntryPublishedTime: "",
-      editedChannelLink: "",
-      editedChannelUrl: "",
+      editedChannel: {},
       visibleGroups: new Set(),
-      dateFormat: {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "numeric",
-        minute: "numeric",
-      },
       ROUTE_ENTRIES,
     };
   },
@@ -301,21 +178,7 @@ export default {
   },
   methods: {
     showChannelEditModal(channel) {
-      this.editedChannelId = channel.id;
-      this.editedChannelActive = channel.active;
-      this.editedChannelDeduplicationEnabled = channel.deduplication_enabled;
-      this.editedChannelTitleUpstream = channel.title_upstream;
-      this.editedChannelTitleUser = channel.title;
-      this.editedChannelDisplayedTitle = channel.displayed_title;
-      this.editedChannelUpdateFrequency = channel.update_frequency;
-      this.editedChannelTags = channel.tags;
-      this.editedChannelTagsOptions = this.channelTags.map((tag) => tag.name);
-      this.editedChannelAddedTime = channel.added_time;
-      this.editedChannelLastCheckTime = channel.last_check_time;
-      this.editedChannelLastEntryPublishedTime =
-        channel.last_entry_published_time;
-      this.editedChannelLink = channel.link;
-      this.editedChannelUrl = channel.url;
+      this.editedChannel = channel;
       this.channelEditModalDisplayed = true;
     },
     submitNewChannelData() {
