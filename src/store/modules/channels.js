@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import { getPagedResults } from "../../utils";
+import router from "../../router";
 
 import {
     GET_CHANNELS,
@@ -22,6 +23,10 @@ import {
     ACTION_CHANNEL_EDIT_REQUEST,
     ACTION_CHANNEL_TAGS_REQUEST,
     ACTION_CHANNEL_UNARCHIVED_ENTRIES_CHANGE,
+    ACTION_MAINTENANCE_CHANNELS_GET_REQUEST,
+    ROUTE_MAINTENANCE_STALE_CHANNELS,
+    ROUTE_MAINTENANCE_NOT_UPDATED_CHANNELS,
+    ROUTE_MAINTENANCE_INACTIVE_CHANNELS,
 } from "../../types";
 
 const state = {
@@ -53,6 +58,7 @@ const mutations = {
             }
         });
     },
+    [MUTATION_CHANNEL_EDIT_ERROR]: (state) => (state.status = "error"),
     [MUTATION_MAINTENANCE_CHANNELS_DELETE_SUCCESS]: (state, data) => {
         state.status = "success";
         state.channels = state.channels.filter(
@@ -117,7 +123,7 @@ const actions = {
                 commit(MUTATION_CHANNEL_CREATE_ERROR);
             });
     },
-    [ACTION_CHANNEL_EDIT_REQUEST]: ({ commit }, param) => {
+    [ACTION_CHANNEL_EDIT_REQUEST]: ({ dispatch, commit }, param) => {
         const url = `channels/${param.channel_id}/`;
         const data = {
             active: param.active,
@@ -136,6 +142,15 @@ const actions = {
             .patch(url, data, options)
             .then((response) => {
                 commit(MUTATION_CHANNEL_EDIT_SUCCESS, response.data);
+                const maintenance_routes = [
+                    ROUTE_MAINTENANCE_STALE_CHANNELS,
+                    ROUTE_MAINTENANCE_NOT_UPDATED_CHANNELS,
+                    ROUTE_MAINTENANCE_INACTIVE_CHANNELS,
+                ];
+                const currentRoute = router.currentRoute.value.name;
+                if (maintenance_routes.includes(currentRoute)) {
+                    dispatch(ACTION_MAINTENANCE_CHANNELS_GET_REQUEST);
+                }
             })
             .catch(() => {
                 commit(MUTATION_CHANNEL_EDIT_ERROR);

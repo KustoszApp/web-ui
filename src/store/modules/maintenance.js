@@ -10,6 +10,7 @@ import {
     MUTATION_MAINTENANCE_CHANNELS_ERROR,
     MUTATION_MAINTENANCE_CHANNELS_CHANGE_SUCCESS,
     MUTATION_MAINTENANCE_CHANNELS_DELETE_SUCCESS,
+    MUTATION_MAINTENANCE_SET_LAST_GET_URL,
     ACTION_MAINTENANCE_CHANNELS_GET_REQUEST,
     ACTION_MAINTENANCE_CHANNELS_INACTIVATE_REQUEST,
     ACTION_MAINTENANCE_CHANNELS_ACTIVATE_REQUEST,
@@ -18,6 +19,7 @@ import {
 
 const state = {
     status: "",
+    maintenance_last_get_url: "",
     maintenance_channels: [],
 };
 
@@ -35,12 +37,24 @@ const mutations = {
     [MUTATION_MAINTENANCE_CHANNELS_ERROR]: (state) => (state.status = "error"),
     [MUTATION_MAINTENANCE_CHANNELS_CHANGE_SUCCESS]: (state) =>
         (state.status = "success"),
+    [MUTATION_MAINTENANCE_SET_LAST_GET_URL]: (state, last_url) => {
+        state.maintenance_last_get_url = last_url;
+    },
 };
 
 const actions = {
-    [ACTION_MAINTENANCE_CHANNELS_GET_REQUEST]: ({ commit }, param) => {
-        const query = qs.stringify(param.query);
-        const url = `channels/?${query}`;
+    [ACTION_MAINTENANCE_CHANNELS_GET_REQUEST]: ({ commit, state }, param) => {
+        let url;
+        if (param === undefined) {
+            // channel was modified and we are on channels maintenance page
+            // request fresh list of channels
+            url = state.maintenance_last_get_url;
+        } else {
+            // we navigated to channels maintenance page
+            const query = qs.stringify(param.query);
+            url = `channels/?${query}`;
+            state.maintenance_last_get_url = url;
+        }
         getPagedResults(url, [])
             .then((channels) => {
                 commit(MUTATION_MAINTENANCE_CHANNELS_SUCCESS, channels);
