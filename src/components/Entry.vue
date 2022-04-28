@@ -15,15 +15,18 @@
         @click.middle="handleEntryHeaderMiddleClick"
       >
         <BIconXLg class="entry__close mobile-only" />
-        <a class="entry__link" ref="entryLink" :href="entry.link">
-          {{ entry.title }}
-        </a>
-        <span class="entry__source" v-if="entryChannelTitle">
-          {{ entryChannelTitle }}
-        </span>
-        <span class="entry__author" v-if="entry.author">
-          {{ entry.author }}
-        </span>
+        <a
+          class="entry__link"
+          ref="entryLink"
+          :href="entry.link"
+          v-html="entry.title"
+        />
+        <span
+          class="entry__source"
+          v-if="entryChannelTitle"
+          v-html="entryChannelTitle"
+        />
+        <span class="entry__author" v-if="entry.author" v-html="entry.author" />
         <span class="entry__published"
           >added:
           {{
