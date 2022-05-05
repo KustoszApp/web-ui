@@ -48,10 +48,28 @@ const notHasTokenOrNotValidToken = (to, from) => {
         .catch(() => true);
 };
 
+const updatePageTitle = (to, from, failure) => {
+    if (failure) {
+        return;
+    }
+
+    const baseTitle = "Kustosz";
+    let title = baseTitle;
+    if (to.meta.title) {
+        title = `${to.meta.title} - ${baseTitle}`;
+    }
+    document.title = title;
+};
+
 const hideSidebar = (to, from, failure) => {
     if (!failure) {
         store.dispatch(ACTION_HIDE_SIDEBAR);
     }
+};
+
+const afterEachHandler = (to, from, failure) => {
+    updatePageTitle(to, from, failure);
+    hideSidebar(to, from, failure);
 };
 /* eslint-enable no-unused-vars */
 
@@ -65,6 +83,9 @@ const routes = [
         name: ROUTE_LOGIN,
         component: Login,
         beforeEnter: notHasTokenOrNotValidToken,
+        meta: {
+            title: "Login",
+        },
     },
     {
         path: "/entries/",
@@ -77,30 +98,45 @@ const routes = [
         name: ROUTE_MAINTENANCE_STALE_CHANNELS,
         component: Maintenance,
         beforeEnter: [hasToken, tokenIsValid],
+        meta: {
+            title: "Stale channels - Maintenance",
+        },
     },
     {
         path: "/maintenance/not_updated_channels",
         name: ROUTE_MAINTENANCE_NOT_UPDATED_CHANNELS,
         component: Maintenance,
         beforeEnter: [hasToken, tokenIsValid],
+        meta: {
+            title: "Channels without new entries - Maintenance",
+        },
     },
     {
         path: "/maintenance/inactive_channels",
         name: ROUTE_MAINTENANCE_INACTIVE_CHANNELS,
         component: Maintenance,
         beforeEnter: [hasToken, tokenIsValid],
+        meta: {
+            title: "Inactive channels - Maintenance",
+        },
     },
     {
         path: "/settings",
         name: ROUTE_SETTINGS,
         component: Settings,
         beforeEnter: [hasToken, tokenIsValid],
+        meta: {
+            title: "Settings",
+        },
     },
     {
         path: "/filters",
         name: ROUTE_FILTERS,
         component: Filters,
         beforeEnter: [hasToken, tokenIsValid],
+        meta: {
+            title: "Filters",
+        },
     },
 ];
 
@@ -109,6 +145,6 @@ const router = createRouter({
     routes,
 });
 
-router.afterEach(hideSidebar);
+router.afterEach(afterEachHandler);
 
 export default router;
