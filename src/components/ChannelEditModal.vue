@@ -86,8 +86,29 @@
         </tr>
         <tr>
           <td class="text-right">Channel URL:</td>
-          <td>
+          <td class="channel-input-cell" v-if="editedChannelUrlEditingEnabled">
+            <input
+              id="editedChannelUrl"
+              type="text"
+              class="input-field"
+              v-model="editedChannelUrl"
+              @keydown.stop
+            />
+            <button
+              class="btn btn--secondary"
+              @click="editedChannelUrlEditingEnabled = false"
+            >
+              OK
+            </button>
+          </td>
+          <td v-else>
             <a :href="editedChannelUrl">{{ editedChannelUrl }}</a>
+            <button
+              class="btn btn--secondary"
+              @click="editedChannelUrlEditingEnabled = true"
+            >
+              <BIconPencilFill />
+            </button>
           </td>
         </tr>
       </table>
@@ -108,6 +129,7 @@
 </template>
 
 <script>
+import { BIconPencilFill } from "bootstrap-icons-vue";
 import Multiselect from "@vueform/multiselect";
 import VueModal from "@kouts/vue-modal";
 import { mapGetters } from "vuex";
@@ -122,6 +144,7 @@ import {
 export default {
   name: "ChannelEditModal",
   components: {
+    BIconPencilFill,
     Modal: VueModal,
     Multiselect,
   },
@@ -145,6 +168,7 @@ export default {
       editedChannelLastEntryPublishedTime: "",
       editedChannelLink: "",
       editedChannelUrl: "",
+      editedChannelUrlEditingEnabled: false,
       dateFormat: {
         year: "numeric",
         month: "long",
@@ -186,17 +210,32 @@ export default {
         channel.last_entry_published_time;
       this.editedChannelLink = channel.link;
       this.editedChannelUrl = channel.url;
+      this.editedChannelUrlEditingEnabled = false;
     },
     submitNewChannelData() {
+      const payloadMap = [
+        ["active", "Active"],
+        ["deduplication_enabled", "DeduplicationEnabled"],
+        ["tags", "Tags"],
+        ["title", "TitleUser"],
+        ["update_frequency", "UpdateFrequency"],
+        ["url", "Url"],
+      ];
+      const payload = {
+        channel_id: this.editedChannelId,
+      };
+
+      payloadMap.forEach(([payloadKey, thisKey]) => {
+        thisKey = `editedChannel${thisKey}`;
+        if (this.channel[payloadKey] !== this[thisKey]) {
+          payload[payloadKey] = this[thisKey];
+        }
+      });
+
       this.$store
         .dispatch({
           type: ACTION_CHANNEL_EDIT_REQUEST,
-          channel_id: this.editedChannelId,
-          active: this.editedChannelActive,
-          deduplication_enabled: this.editedChannelDeduplicationEnabled,
-          tags: this.editedChannelTags,
-          title: this.editedChannelTitleUser,
-          update_frequency: this.editedChannelUpdateFrequency,
+          ...payload,
         })
         .then(() => {
           this.$store.dispatch({
@@ -215,4 +254,11 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.channel-input-cell {
+  white-space: nowrap;
+}
+td button {
+  margin-left: 0.2rem;
+}
+</style>

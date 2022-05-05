@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { getPagedResults } from "../../utils";
+import { getPagedResults, omit } from "../../utils";
 import router from "../../router";
 
 import {
@@ -125,13 +125,7 @@ const actions = {
     },
     [ACTION_CHANNEL_EDIT_REQUEST]: ({ dispatch, commit }, param) => {
         const url = `channels/${param.channel_id}/`;
-        const data = {
-            active: param.active,
-            deduplication_enabled: param.deduplication_enabled,
-            tags: param.tags,
-            title: param.title,
-            update_frequency: param.update_frequency,
-        };
+        const data = omit(param, ["type"]);
         const options = {
             headers: {
                 Accept: "application/json",
