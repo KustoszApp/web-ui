@@ -71,11 +71,27 @@ export default {
 }
 
 html[data-theme="light"] {
-  @include makeTheme($lightTheme);
+  --primary: #2d2d2d;
+  --secondary: #505050;
+  --warning: #ffae00;
+  --danger: #ff5130;
+  --lighter: #f0f0f0;
+  --darker: #ebebeb;
+  --focus: #1d9bf3;
+  --link: #1d9bf3;
+  --unread: #ffffff;
 }
 
 html[data-theme="dark"] {
-  @include makeTheme($darkTheme);
+  --primary: #dfdfdf;
+  --secondary: #707070;
+  --warning: #ffae00;
+  --danger: #ff5130;
+  --lighter: #323232;
+  --darker: #2d2d2d;
+  --focus: #00fec5;
+  --link: #00fec5;
+  --unread: #3d3d3d;
 }
 
 // 2. default styles and resets
