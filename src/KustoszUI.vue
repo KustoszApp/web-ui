@@ -26,6 +26,7 @@ import {
   GET_STATUS,
   GET_USER,
   GET_USER_THEME_COLOR,
+  GET_DEFAULT_THEME_COLOR,
 } from "./types";
 
 export default {
@@ -39,17 +40,22 @@ export default {
       status: GET_STATUS,
       hasToken: GET_HAS_TOKEN,
       user: GET_USER,
-      themeColor: GET_USER_THEME_COLOR,
+      userThemeColor: GET_USER_THEME_COLOR,
+      defaultThemeColor: GET_DEFAULT_THEME_COLOR,
     }),
     isAuthenticated() {
       return this.hasToken && this.user.is_active;
     },
   },
   created() {
+    document.documentElement.dataset.theme = this.defaultThemeColor;
     this.$watch(
-      () => this.themeColor,
+      () => this.userThemeColor,
       (newVal) => {
-        document.documentElement.setAttribute("theme", newVal);
+        if (newVal === undefined || newVal === "") {
+          newVal = this.defaultThemeColor;
+        }
+        document.documentElement.dataset.theme = newVal;
       }
     );
   },
@@ -62,14 +68,13 @@ export default {
 // 1. variables
 
 :root {
+}
+
+html[data-theme="light"] {
   @include makeTheme($lightTheme);
 }
 
-html[theme="light"] {
-  @include makeTheme($lightTheme);
-}
-
-html[theme="dark"] {
+html[data-theme="dark"] {
   @include makeTheme($darkTheme);
 }
 

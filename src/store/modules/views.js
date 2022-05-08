@@ -1,6 +1,7 @@
 import {
     GET_SIDEBAR_STATE,
     GET_ALL_COLOR_THEMES,
+    GET_DEFAULT_THEME_COLOR,
     MUTATION_SIDEBAR_DISPLAYED,
     MUTATION_SIDEBAR_HIDDEN,
     ACTION_DISPLAY_SIDEBAR,
@@ -18,6 +19,7 @@ const state = {
 const getters = {
     [GET_SIDEBAR_STATE]: (state) => state.sidebarDisplayed,
     [GET_ALL_COLOR_THEMES]: (state) => state.colorThemes,
+    [GET_DEFAULT_THEME_COLOR]: (state) => Object.keys(state.colorThemes)[0],
 };
 
 const mutations = {
