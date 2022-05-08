@@ -7,7 +7,7 @@
     <div class="modal-body">
       <p>
         <input
-          class="input-check mr-1"
+          class="input-check"
           type="checkbox"
           id="editedChannelActive"
           v-model="editedChannelActive"
@@ -16,7 +16,7 @@
       </p>
       <p>
         <input
-          class="input-check mr-1"
+          class="input-check"
           type="checkbox"
           id="editedChannelDeduplicationEnabled"
           v-model="editedChannelDeduplicationEnabled"
@@ -115,15 +115,17 @@
     </div>
 
     <div class="modal-footer">
-      <button
-        class="btn btn--secondary"
-        @click="channelEditModalDisplayed = false"
-      >
-        Close this window
-      </button>
-      <button class="btn btn--primary ml-2" @click="submitNewChannelData()">
-        Save
-      </button>
+      <div class="btn-row">
+        <button
+          class="btn btn--secondary"
+          @click="channelEditModalDisplayed = false"
+        >
+          Close this window
+        </button>
+        <button class="btn btn--primary" @click="submitNewChannelData()">
+          Save
+        </button>
+      </div>
     </div>
   </Modal>
 </template>

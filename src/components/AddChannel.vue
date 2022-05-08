@@ -46,15 +46,17 @@
     </div>
 
     <div class="modal-footer">
-      <button
-        class="btn btn--secondary"
-        @click="addChannelModalDisplayed = false"
-      >
-        Close this window
-      </button>
-      <button class="btn btn--primary ml-2" @click="createChannelClicked">
-        Save
-      </button>
+      <div class="btn-row">
+        <button
+          class="btn btn--secondary"
+          @click="addChannelModalDisplayed = false"
+        >
+          Close this window
+        </button>
+        <button class="btn btn--primary" @click="createChannelClicked">
+          Save
+        </button>
+      </div>
     </div>
   </Modal>
 </template>

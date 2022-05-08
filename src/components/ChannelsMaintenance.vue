@@ -20,7 +20,7 @@
         <input
           :id="channel.id"
           :value="channel.id"
-          class="input-check mr-1"
+          class="input-check"
           type="checkbox"
           v-model="checkedChannels"
         />
@@ -38,7 +38,7 @@
       </li>
     </ul>
   </div>
-  <div>
+  <div class="btn-row">
     <button
       v-if="displayInactivateButton"
       class="btn btn--primary"
@@ -57,7 +57,7 @@
     </button>
     <button
       v-if="displayDeleteButton"
-      class="btn btn--primary ml-2"
+      class="btn btn--primary"
       type="submit"
       @click="deleteChannelsModalDisplayed = true"
     >
@@ -76,7 +76,7 @@
       <p>This can't be undone.</p>
       <p v-if="totalTaggedEntriesCount > 0">
         <input
-          class="input-check mr-1"
+          class="input-check"
           type="checkbox"
           id="deleteTaggedEntries"
           v-model="deleteTaggedEntries"
@@ -89,15 +89,15 @@
     </div>
 
     <div class="modal-footer">
-      <button
-        class="btn btn--secondary"
-        @click="deleteChannelsModalDisplayed = false"
-      >
-        Close this window
-      </button>
-      <button class="btn btn--primary ml-2" @click="deleteChannels">
-        Delete
-      </button>
+      <div class="btn-row">
+        <button
+          class="btn btn--secondary"
+          @click="deleteChannelsModalDisplayed = false"
+        >
+          Close this window
+        </button>
+        <button class="btn btn--primary" @click="deleteChannels">Delete</button>
+      </div>
     </div>
   </Modal>
   <ChannelEditModal

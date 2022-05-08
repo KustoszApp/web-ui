@@ -78,31 +78,29 @@
           </div>
         </div>
         <div class="panel-footer">
-          <button
-            type="button"
-            class="btn btn--primary"
-            @click="tryFilter"
-            :disabled="tryFilterStatus === 'loading'"
-          >
-            Try
-          </button>
-          <!--<button type="button" class="btn btn--primary ml-2">
-            Run
-          </button>-->
-          <button
-            type="button"
-            class="btn btn--primary ml-2"
-            @click="saveFilter"
-          >
-            Save
-          </button>
-          <button
-            type="button"
-            class="btn btn--primary ml-2"
-            @click="cancelEditing"
-          >
-            Cancel
-          </button>
+          <div class="btn-row">
+            <button
+              type="button"
+              class="btn btn--primary"
+              @click="tryFilter"
+              :disabled="tryFilterStatus === 'loading'"
+            >
+              Try
+            </button>
+            <!--<button type="button" class="btn btn--primary">
+              Run
+            </button>-->
+            <button type="button" class="btn btn--primary" @click="saveFilter">
+              Save
+            </button>
+            <button
+              type="button"
+              class="btn btn--primary"
+              @click="cancelEditing"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       </form>
       <div class="try-results" v-if="tryFilterStatus === 'success'">

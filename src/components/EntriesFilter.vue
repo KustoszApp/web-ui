@@ -13,7 +13,7 @@
           v-model="advancedQueryString"
           @keydown.stop
         />
-        <button class="btn btn--primary ml-2" type="submit">Go!</button>
+        <button class="btn btn--primary" type="submit">Go!</button>
       </form>
       <form class="simple" v-else>
         <div class="row">
@@ -120,15 +120,17 @@
     </div>
 
     <div class="modal-footer">
-      <button
-        class="btn btn--secondary"
-        @click="markAllReadModalDisplayed = false"
-      >
-        Close this window
-      </button>
-      <button class="btn btn--primary ml-2" @click="markAllReadClicked">
-        Mark as read
-      </button>
+      <div class="btn-row">
+        <button
+          class="btn btn--secondary"
+          @click="markAllReadModalDisplayed = false"
+        >
+          Close this window
+        </button>
+        <button class="btn btn--primary" @click="markAllReadClicked">
+          Mark as read
+        </button>
+      </div>
     </div>
   </Modal>
 </template>
