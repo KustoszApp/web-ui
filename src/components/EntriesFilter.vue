@@ -362,6 +362,5 @@ export default {
 
 .search-bar__multiselect {
   width: 50ex;
-  min-height: 1rem;
 }
 </style>

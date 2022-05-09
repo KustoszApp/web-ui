@@ -1,9 +1,9 @@
 <template>
   <div class="entries">
-    <ul class="entries__list">
+    <ul class="entries-list">
       <div v-if="entries.length == 0">No entries</div>
       <li
-        class="entries__list-item"
+        class="entries-list__item"
         v-for="(entry, index) in entries"
         :data-vue-index="index"
         :key="entry.id"
@@ -200,7 +200,7 @@ export default {
         }
         lastTimestamp = entryTime;
         const elem = entry.target.parentNode;
-        elem.classList.toggle("on--top", entry.intersectionRatio < 1);
+        elem.classList.toggle("on-top", entry.intersectionRatio < 1);
       }, observerOptions);
       this.entryHeaderObserver.observe(entryHeaderElem);
     },
@@ -422,14 +422,15 @@ export default {
       const domrect = element
         .getElementsByTagName("*")[0]
         .getBoundingClientRect();
-      const currentTop = domrect.top;
-      const currentHeight = domrect.height;
+      const currentTop = parseInt(domrect.top, 10);
+      const currentHeight = parseInt(domrect.height, 10);
       const previousTop = this.previousTop;
       const previousHeight = this.previousHeight;
 
       this.previousTop = currentTop;
       this.previousHeight = currentHeight;
 
+      // app navigation triggered scroll event
       if (currentHeight !== previousHeight) {
         element.classList.remove("scroll-up");
         return;
@@ -440,7 +441,7 @@ export default {
       }
 
       const force = currentTop > previousTop;
-      element.classList.toggle("scroll--up", force);
+      element.classList.toggle("scroll-up", force);
     },
   },
   watch: {
@@ -476,13 +477,13 @@ export default {
 </script>
 
 <style lang="scss">
-.entries__list {
+.entries-list {
   list-style-type: none;
   padding: 0;
   margin-top: 0;
 }
 
-.entries__list-item {
+.entries-list__item {
   margin: 0;
 }
 </style>

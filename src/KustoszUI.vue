@@ -74,6 +74,12 @@ export default {
   --kustosz-4: #ece6d6;
   --kustosz-5: #242b31;
   --kustosz-6: #344655;
+
+  /* forms */
+  --main-border-width: 1px;
+  --main-border-radius: 0.25rem;
+  --ms-border-width: var(--main-border-width);
+  --ms-py: 0.25rem;
 }
 
 html[data-theme="light"] {
@@ -106,6 +112,7 @@ html[data-theme="light"] {
   --ms-placeholder-color: #8f8f8f;
   --ms-tag-bg: var(--main-action-bg-color);
   --ms-tag-color: var(--main-text-color);
+  --ms-border-color: var(--main-text-color);
 }
 
 html[data-theme="dark"] {
@@ -136,6 +143,9 @@ html[data-theme="dark"] {
   /* used by multiselect */
   --ms-bg: transparent;
   --ms-placeholder-color: #8f8f8f;
+  --ms-tag-bg: var(--main-action-bg-color);
+  --ms-tag-color: var(--main-text-color);
+  --ms-border-color: var(--main-text-color);
 }
 
 // 2. default styles and resets
@@ -181,10 +191,10 @@ span.vm {
 // 3.1. Buttons
 
 .btn {
-  border-radius: 0.25rem;
+  border-radius: var(--main-border-radius);
   display: inline-block;
   padding: 0.25rem 0.75rem;
-  border: 2px solid transparent;
+  border: var(--main-border-width) solid transparent;
   transition: all 0.3s ease-out, visibility 0s;
   line-height: 1.5;
   background-color: var(--btn-bg-color);
@@ -236,8 +246,8 @@ span.vm {
   background-position: center right 0.25rem;
   background-size: 0.5rem 0.6rem;
   appearance: none;
-  border: 2px solid;
-  border-radius: 0.25rem;
+  border: var(--main-border-width) solid;
+  border-radius: var(--main-border-radius);
   color: inherit;
   line-height: 1.5;
   padding: 0.25rem 0.75rem;
@@ -247,41 +257,15 @@ span.vm {
 
 .input-field {
   background-color: transparent;
-  border: 2px solid var(--main-text-color);
-  border-radius: 0.25rem;
+  border: var(--main-border-width) solid var(--main-text-color);
+  border-radius: var(--main-border-radius);
   display: inline-block;
   line-height: 1.5;
   padding: 0.25rem 0.75rem;
   width: 100%;
 }
 
-.input-check {
-  border-radius: 0.25rem;
-  width: 1rem;
-  height: 1rem;
-  margin-top: 0.15rem;
-  vertical-align: top;
-  background-color: #fff;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  border: 2px solid var(--main-text-color);
-  appearance: none;
-  color-adjust: exact;
-}
-
-.input-check:checked {
-  background-color: var(--secondary-text-color);
-  border-color: var(--secondary-text-color);
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
-}
-
-.multiselect {
-  border-width: 2px;
-  border-color: var(--main-text-color);
-}
-
-.input-check + label {
+input[type="checkbox"] + label {
   margin-left: 0.5rem;
 }
 

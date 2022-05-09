@@ -283,7 +283,7 @@ export default {
 
   .row {
     display: flex;
-    align-items: last baseline;
+    align-items: center;
     flex-basis: 100%;
     gap: 1ex;
     margin-top: 0.5rem;
@@ -299,7 +299,7 @@ export default {
   }
 }
 
-.on--top .entry__header {
+.on-top .entry__header {
   .entry__source,
   .entry__author,
   .entry__published {
@@ -310,7 +310,7 @@ export default {
   }
 }
 
-#router-view:not(.scroll--up) .entry__meta.on--top {
+#router-view:not(.scroll-up) .entry__meta.on-top {
   visibility: hidden;
   @include for-tablet-landscape-up {
     visibility: unset;
