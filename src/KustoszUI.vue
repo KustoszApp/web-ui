@@ -68,19 +68,44 @@ export default {
 // 1. variables
 
 :root {
+  --kustosz-1: #6b8469;
+  --kustosz-2: #b5cab2;
+  --kustosz-3: #415242;
+  --kustosz-4: #ece6d6;
+  --kustosz-5: #242b31;
+  --kustosz-6: #344655;
 }
 
 html[data-theme="light"] {
-  --main-text-color: #2d2d2d;
-  --main-bg-color: #ebebeb;
+  --main-text-color: #242b31;
+  --main-bg-color: #ece6d6;
   --secondary-text-color: #505050;
   --main-link-color: #1d9bf3;
-  --danger-bg-color: #ff5130;
-  --main-action-bg-color: #ffae00;
-  --nav-bg-color: #f0f0f0;
-  --danger-text-color: #f0f0f0;
   --focus-outline-color: #1d9bf3;
-  --unread-entry-header-bg-color: #ffffff;
+  --nav-bg-color: #e4ebed;
+  /* buttons */
+  --btn-bg-color: #e0dbcc;
+  --btn-active-text-color: #020304;
+  --btn-active-bg-color: #948c78;
+  --main-action-bg-color: #b5cab2;
+  --main-action-active-text-color: var(--btn-active-text-color);
+  --main-action-active-bg-color: #657d61;
+  --danger-bg-color: #ff5130;
+  --danger-text-color: #f0f0f0;
+  --danger-active-bg-color: #cc4227;
+  --danger-active-text-color: var(--danger-text-color);
+  /* entry */
+  --entry-header-bg-color: #ffffff;
+  --entry-archived-header-bg-color: var(--main-bg-color);
+  --entry-focused-header-bg-color: var(--main-action-bg-color);
+  --entry-archived-focused-header-bg-color: #cfd6b2;
+  --entry-focused-header-link-color: #06457c;
+
+  /* used by multiselect */
+  --ms-bg: transparent;
+  --ms-placeholder-color: #8f8f8f;
+  --ms-tag-bg: var(--main-action-bg-color);
+  --ms-tag-color: var(--main-text-color);
 }
 
 html[data-theme="dark"] {
@@ -88,12 +113,29 @@ html[data-theme="dark"] {
   --main-bg-color: #2d2d2d;
   --secondary-text-color: #707070;
   --main-link-color: #00fec5;
-  --danger-bg-color: #ff5130;
-  --main-action-bg-color: #ffae00;
-  --nav-bg-color: #323232;
-  --danger-text-color: #323232;
   --focus-outline-color: #00fec5;
-  --unread-entry-header-bg-color: #3d3d3d;
+  --nav-bg-color: #323232;
+  /* buttons */
+  --btn-bg-color: #e0dbcc;
+  --btn-active-text-color: var(--main-action-active-text-color);
+  --btn-active-bg-color: #948c78;
+  --main-action-bg-color: #ffae00;
+  --main-action-active-text-color: #020304;
+  --main-action-active-bg-color: #657d61;
+  --danger-bg-color: #ff5130;
+  --danger-text-color: #323232;
+  --danger-active-bg-color: #ff5130;
+  --danger-active-text-color: #ff5130;
+  /* entry */
+  --entry-header-bg-color: #ffffff;
+  --entry-archived-header-bg-color: var(--main-bg-color);
+  --entry-focused-header-bg-color: var(--main-action-bg-color);
+  --entry-archived-focused-header-bg-color: #cfd6b2;
+  --entry-focused-header-link-color: #06457c;
+
+  /* used by multiselect */
+  --ms-bg: transparent;
+  --ms-placeholder-color: #8f8f8f;
 }
 
 // 2. default styles and resets
@@ -111,6 +153,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--main-text-color);
+  background-color: var(--main-bg-color);
 }
 
 h1,
@@ -144,55 +187,39 @@ span.vm {
   border: 2px solid transparent;
   transition: all 0.3s ease-out, visibility 0s;
   line-height: 1.5;
-}
+  background-color: var(--btn-bg-color);
 
-.btn--active {
-  box-shadow: 0 0 0 4px var(--focus-outline-color);
+  &:hover,
+  &.btn--active {
+    color: var(--btn-active-text-color);
+    background-color: var(--btn-active-bg-color);
+  }
 }
 
 .btn--block {
   width: 100%;
 }
 
-.btn--primary {
+.btn--main-action {
   color: var(--main-text-color);
   background-color: var(--main-action-bg-color);
-}
 
-.btn--primary:hover {
-  color: var(--main-action-bg-color);
-  background-color: transparent;
-  border-color: var(--main-action-bg-color);
-}
-
-/* FIXME: do wypierdolenia
-jest zwykły button
-button--action (wyróżnia się innym tłem, powoduje trwałą zmianę danych)
-button--danger (do usuwania)
-*/
-
-.btn--secondary {
-  color: var(--main-text-color);
-  border-color: var(--main-text-color);
-  background-color: transparent;
-}
-
-.btn--secondary.btn--active,
-.btn--secondary:hover {
-  background-color: var(--main-text-color);
-  color: var(--lighter);
-}
-
-.btn--warning {
-  color: var(--main-text-color);
-  border-color: transparent;
-  background-color: var(--main-action-bg-color);
+  &:hover,
+  &.btn--active {
+    color: var(--main-action-active-text-color);
+    background-color: var(--main-action-active-bg-color);
+  }
 }
 
 .btn--danger {
   color: var(--danger-text-color);
-  border-color: transparent;
   background-color: var(--danger-bg-color);
+
+  &:hover,
+  &.btn--active {
+    color: var(--danger-active-text-color);
+    background-color: var(--danger-active-bg-color);
+  }
 }
 
 .btn-row {

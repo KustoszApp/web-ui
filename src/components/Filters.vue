@@ -2,7 +2,7 @@
   <div class="filters">
     <button
       type="button"
-      class="btn btn--primary btn--big"
+      class="btn btn--main-action btn--big"
       @click="newFilter()"
     >
       Add filter
@@ -20,7 +20,7 @@
         </label>
       </div>
       <div class="col">
-        <button class="btn btn--warning" @click="editFilter(filter)">
+        <button class="btn" @click="editFilter(filter)">
           <BIconPencilFill />
         </button>
       </div>
@@ -81,21 +81,25 @@
           <div class="btn-row">
             <button
               type="button"
-              class="btn btn--primary"
+              class="btn btn--main-action"
               @click="tryFilter"
               :disabled="tryFilterStatus === 'loading'"
             >
               Try
             </button>
-            <!--<button type="button" class="btn btn--primary">
+            <!--<button type="button" class="btn btn--main-action">
               Run
             </button>-->
-            <button type="button" class="btn btn--primary" @click="saveFilter">
+            <button
+              type="button"
+              class="btn btn--main-action"
+              @click="saveFilter"
+            >
               Save
             </button>
             <button
               type="button"
-              class="btn btn--primary"
+              class="btn btn--main-action"
               @click="cancelEditing"
             >
               Cancel

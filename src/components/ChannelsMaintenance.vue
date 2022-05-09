@@ -41,7 +41,7 @@
   <div class="btn-row">
     <button
       v-if="displayInactivateButton"
-      class="btn btn--primary"
+      class="btn btn--main-action"
       type="submit"
       @click="inactivateChannels"
     >
@@ -49,7 +49,7 @@
     </button>
     <button
       v-if="displayActivateButton"
-      class="btn btn--primary"
+      class="btn btn--main-action"
       type="submit"
       @click="activateChannels"
     >
@@ -57,7 +57,7 @@
     </button>
     <button
       v-if="displayDeleteButton"
-      class="btn btn--primary"
+      class="btn btn--danger"
       type="submit"
       @click="deleteChannelsModalDisplayed = true"
     >
@@ -90,13 +90,10 @@
 
     <div class="modal-footer">
       <div class="btn-row">
-        <button
-          class="btn btn--secondary"
-          @click="deleteChannelsModalDisplayed = false"
-        >
+        <button class="btn" @click="deleteChannelsModalDisplayed = false">
           Close this window
         </button>
-        <button class="btn btn--primary" @click="deleteChannels">Delete</button>
+        <button class="btn btn--danger" @click="deleteChannels">Delete</button>
       </div>
     </div>
   </Modal>

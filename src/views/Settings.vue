@@ -10,7 +10,11 @@
     </div>
     <div class="section">
       <h3 class="section-title">Account</h3>
-      <button type="button" class="btn btn--primary btn--big" @click="logout">
+      <button
+        type="button"
+        class="btn btn--main-action btn--big"
+        @click="logout"
+      >
         Logout
       </button>
     </div>

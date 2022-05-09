@@ -38,11 +38,7 @@
         >
       </div>
       <div class="entry__footer" v-show="isOpen">
-        <button
-          type="button"
-          class="btn btn--secondary"
-          @click="requestArchiveStateChange"
-        >
+        <button type="button" class="btn" @click="requestArchiveStateChange">
           Mark as {{ isArchivedString }}
         </button>
         <select
@@ -220,25 +216,30 @@ export default {
 
 <style lang="scss">
 @import "../scss/mixins";
-
 .entry {
-  border-top: 1px solid #7e7e7e;
+  --current-entry-header-bg-color: var(--entry-header-bg-color);
+  margin-bottom: 0.25rem;
+}
+
+.entry--archived {
+  --current-entry-header-bg-color: var(--entry-archived-header-bg-color);
 }
 
 .entry--focused {
-  outline: 3px solid var(--focus-outline-color);
-  border-top-color: transparent;
+  --current-entry-header-bg-color: var(--entry-focused-header-bg-color);
+  --current-header-link-color: var(--entry-focused-header-link-color);
 }
 
-.entry__meta {
-  position: sticky;
-  top: 0;
+.entry--archived.entry--focused {
+  --current-entry-header-bg-color: var(
+    --entry-archived-focused-header-bg-color
+  );
 }
 
 .entry__header {
   padding: 0.5rem 1rem;
   cursor: pointer;
-  background-color: var(--unread-entry-header-bg-color);
+  background-color: var(--current-entry-header-bg-color);
 
   .entry__close {
     display: none;
@@ -247,6 +248,7 @@ export default {
   }
 
   a.entry__link {
+    color: var(--current-header-link-color, var(--main-link-color));
     margin-right: 0.5ex;
   }
 
@@ -254,10 +256,6 @@ export default {
     content: "•";
     margin: 0 0.5ex;
   }
-}
-
-.entry--open .entry__header .entry__close {
-  display: inherit;
 }
 
 .entry__footer {
@@ -301,15 +299,6 @@ export default {
   }
 }
 
-.entry--archived .entry__header {
-  background-color: var(--main-bg-color);
-
-  .entry__author,
-  .entry__published {
-    color: var(--secondary-text-color);
-  }
-}
-
 .on--top .entry__header {
   .entry__source,
   .entry__author,
@@ -333,8 +322,19 @@ export default {
   color: var(--secondary-text-color);
 }
 
-.entry--open .entry__header {
-  border-bottom-color: transparent;
+.entry--open {
+  .entry__header {
+    border-bottom-color: transparent;
+
+    .entry__close {
+      display: inherit;
+    }
+  }
+
+  .entry__meta {
+    position: sticky;
+    top: 0;
+  }
 }
 
 .entry__content {

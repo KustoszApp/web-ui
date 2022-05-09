@@ -4,7 +4,7 @@
       v-for="(value, key) in colorThemes"
       :key="key"
       type="button"
-      class="btn btn--secondary"
+      class="btn"
       @click="switchTheme(key)"
     >
       {{ value }}

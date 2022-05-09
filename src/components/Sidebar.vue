@@ -1,6 +1,6 @@
 <template>
   <div class="mobile-only sidebar-display-button">
-    <button class="btn btn--secondary" @click="toggleSidebarDisplay">
+    <button class="btn" @click="toggleSidebarDisplay">
       {{ showMenuLabel }}
     </button>
   </div>

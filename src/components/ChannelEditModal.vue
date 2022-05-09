@@ -94,19 +94,13 @@
               v-model="editedChannelUrl"
               @keydown.stop
             />
-            <button
-              class="btn btn--secondary"
-              @click="editedChannelUrlEditingEnabled = false"
-            >
+            <button class="btn" @click="editedChannelUrlEditingEnabled = false">
               OK
             </button>
           </td>
           <td v-else>
             <a :href="editedChannelUrl">{{ editedChannelUrl }}</a>
-            <button
-              class="btn btn--secondary"
-              @click="editedChannelUrlEditingEnabled = true"
-            >
+            <button class="btn" @click="editedChannelUrlEditingEnabled = true">
               <BIconPencilFill />
             </button>
           </td>
@@ -116,13 +110,10 @@
 
     <div class="modal-footer">
       <div class="btn-row">
-        <button
-          class="btn btn--secondary"
-          @click="channelEditModalDisplayed = false"
-        >
+        <button class="btn" @click="channelEditModalDisplayed = false">
           Close this window
         </button>
-        <button class="btn btn--primary" @click="submitNewChannelData()">
+        <button class="btn btn--main-action" @click="submitNewChannelData()">
           Save
         </button>
       </div>

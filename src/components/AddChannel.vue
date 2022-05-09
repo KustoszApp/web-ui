@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    class="btn btn--primary btn--big"
+    class="btn btn--main-action btn--big"
     @click="openAddChannelModal"
   >
     Add channel
@@ -47,13 +47,10 @@
 
     <div class="modal-footer">
       <div class="btn-row">
-        <button
-          class="btn btn--secondary"
-          @click="addChannelModalDisplayed = false"
-        >
+        <button class="btn" @click="addChannelModalDisplayed = false">
           Close this window
         </button>
-        <button class="btn btn--primary" @click="createChannelClicked">
+        <button class="btn btn--main-action" @click="createChannelClicked">
           Save
         </button>
       </div>

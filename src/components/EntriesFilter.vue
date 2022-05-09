@@ -13,13 +13,13 @@
           v-model="advancedQueryString"
           @keydown.stop
         />
-        <button class="btn btn--primary" type="submit">Go!</button>
+        <button class="btn btn--main-action" type="submit">Go!</button>
       </form>
       <form class="simple" v-else>
         <div class="row">
           <button
             type="button"
-            class="btn btn--secondary"
+            class="btn btn--main-action"
             :class="{ 'btn--active': unreadOnly }"
             @click="toggleUnreadOnly"
           >
@@ -27,7 +27,7 @@
           </button>
           <button
             type="button"
-            class="btn btn--secondary mobile-only"
+            class="btn mobile-only"
             @click="toggleMoreOptions"
           >
             {{ moreOptionsButtonText }}
@@ -89,20 +89,16 @@
     <div class="column buttons ml-auto">
       <button
         type="button"
-        class="btn btn--secondary"
+        class="btn"
         :class="{ 'btn--active': advancedFormDisplayed }"
         @click="toggleAdvancedFormDisplayed"
       >
         Advanced search
       </button>
-      <!-- <button type="button" class="btn btn--secondary">
+      <!-- <button type="button" class="btn">
         Set filter as default
       </button> -->
-      <button
-        type="button"
-        class="btn btn--secondary"
-        @click="showMarkAllReadModal"
-      >
+      <button type="button" class="btn" @click="showMarkAllReadModal">
         Mark all as read
       </button>
     </div>
@@ -121,13 +117,10 @@
 
     <div class="modal-footer">
       <div class="btn-row">
-        <button
-          class="btn btn--secondary"
-          @click="markAllReadModalDisplayed = false"
-        >
+        <button class="btn" @click="markAllReadModalDisplayed = false">
           Close this window
         </button>
-        <button class="btn btn--primary" @click="markAllReadClicked">
+        <button class="btn btn--main-action" @click="markAllReadClicked">
           Mark as read
         </button>
       </div>

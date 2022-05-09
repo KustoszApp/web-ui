@@ -22,7 +22,9 @@
           required
         />
       </div>
-      <button type="submit" class="btn btn--primary btn--block">Login</button>
+      <button type="submit" class="btn btn--main-action btn--block">
+        Login
+      </button>
     </form>
   </div>
 </template>
@@ -56,14 +58,19 @@ export default {
 </script>
 
 <style lang="scss">
+#login > * {
+  margin-bottom: 1rem;
+}
+
 #login .form-group {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 1rem;
+  align-items: center;
 
   input {
     width: 65%;
     background-color: white;
+    margin: 0.4rem;
   }
 }
 </style>
