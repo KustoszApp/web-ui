@@ -86,7 +86,7 @@
         </div>
       </form>
     </div>
-    <div class="column buttons ml-auto">
+    <div class="column row btn-row ml-auto">
       <button
         type="button"
         class="btn"
@@ -96,7 +96,7 @@
         Advanced search
       </button>
       <!-- <button type="button" class="btn">
-        Set filter as default
+        Save filter
       </button> -->
       <button type="button" class="btn" @click="showMarkAllReadModal">
         Mark all as read
@@ -296,13 +296,13 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "../scss/mixins";
 @mixin full-form-visible {
   form.simple .row {
     display: flex;
   }
-  .column.buttons {
+  .column.btn-row {
     display: flex;
   }
 }
@@ -345,10 +345,26 @@ export default {
     max-width: 100%;
   }
 
-  .column.buttons {
+  .column.btn-row {
     display: none;
     justify-content: space-between;
+    flex-wrap: wrap;
     gap: 1ex;
+
+    .btn {
+      width: calc(50% - 1ex);
+      /* uncomment once third button is added
+      &:first-of-type {
+        width: 100%;
+      }*/
+
+      @include for-tablet-landscape-up {
+        width: unset;
+        /*&:first-of-type {
+          width: unset;
+        }*/
+      }
+    }
   }
 
   &.has-more-options {
