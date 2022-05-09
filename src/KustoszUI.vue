@@ -71,27 +71,29 @@ export default {
 }
 
 html[data-theme="light"] {
-  --primary: #2d2d2d;
-  --secondary: #505050;
-  --warning: #ffae00;
-  --danger: #ff5130;
-  --lighter: #f0f0f0;
-  --darker: #ebebeb;
-  --focus: #1d9bf3;
-  --link: #1d9bf3;
-  --unread: #ffffff;
+  --main-text-color: #2d2d2d;
+  --main-bg-color: #ebebeb;
+  --secondary-text-color: #505050;
+  --main-link-color: #1d9bf3;
+  --danger-bg-color: #ff5130;
+  --main-action-bg-color: #ffae00;
+  --nav-bg-color: #f0f0f0;
+  --danger-text-color: #f0f0f0;
+  --focus-outline-color: #1d9bf3;
+  --unread-entry-header-bg-color: #ffffff;
 }
 
 html[data-theme="dark"] {
-  --primary: #dfdfdf;
-  --secondary: #707070;
-  --warning: #ffae00;
-  --danger: #ff5130;
-  --lighter: #323232;
-  --darker: #2d2d2d;
-  --focus: #00fec5;
-  --link: #00fec5;
-  --unread: #3d3d3d;
+  --main-text-color: #dfdfdf;
+  --main-bg-color: #2d2d2d;
+  --secondary-text-color: #707070;
+  --main-link-color: #00fec5;
+  --danger-bg-color: #ff5130;
+  --main-action-bg-color: #ffae00;
+  --nav-bg-color: #323232;
+  --danger-text-color: #323232;
+  --focus-outline-color: #00fec5;
+  --unread-entry-header-bg-color: #3d3d3d;
 }
 
 // 2. default styles and resets
@@ -108,7 +110,7 @@ body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: var(--primary);
+  color: var(--main-text-color);
 }
 
 h1,
@@ -122,7 +124,7 @@ h6 {
 }
 
 a {
-  color: var(--link);
+  color: var(--main-link-color);
 }
 
 span.vm {
@@ -145,7 +147,7 @@ span.vm {
 }
 
 .btn--active {
-  box-shadow: 0 0 0 4px var(--focus);
+  box-shadow: 0 0 0 4px var(--focus-outline-color);
 }
 
 .btn--block {
@@ -153,38 +155,44 @@ span.vm {
 }
 
 .btn--primary {
-  color: var(--primary);
-  background-color: var(--warning);
+  color: var(--main-text-color);
+  background-color: var(--main-action-bg-color);
 }
 
 .btn--primary:hover {
-  color: var(--warning);
+  color: var(--main-action-bg-color);
   background-color: transparent;
-  border-color: var(--warning);
+  border-color: var(--main-action-bg-color);
 }
 
+/* FIXME: do wypierdolenia
+jest zwykły button
+button--action (wyróżnia się innym tłem, powoduje trwałą zmianę danych)
+button--danger (do usuwania)
+*/
+
 .btn--secondary {
-  color: var(--primary);
-  border-color: var(--primary);
+  color: var(--main-text-color);
+  border-color: var(--main-text-color);
   background-color: transparent;
 }
 
 .btn--secondary.btn--active,
 .btn--secondary:hover {
-  background-color: var(--primary);
+  background-color: var(--main-text-color);
   color: var(--lighter);
 }
 
 .btn--warning {
-  color: var(--primary);
+  color: var(--main-text-color);
   border-color: transparent;
-  background-color: var(--warning);
+  background-color: var(--main-action-bg-color);
 }
 
 .btn--danger {
-  color: var(--lighter);
+  color: var(--danger-text-color);
   border-color: transparent;
-  background-color: var(--danger);
+  background-color: var(--danger-bg-color);
 }
 
 .btn-row {
@@ -212,7 +220,7 @@ span.vm {
 
 .input-field {
   background-color: transparent;
-  border: 2px solid var(--primary);
+  border: 2px solid var(--main-text-color);
   border-radius: 0.25rem;
   display: inline-block;
   line-height: 1.5;
@@ -230,20 +238,20 @@ span.vm {
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
-  border: 2px solid var(--primary);
+  border: 2px solid var(--main-text-color);
   appearance: none;
   color-adjust: exact;
 }
 
 .input-check:checked {
-  background-color: var(--secondary);
-  border-color: var(--secondary);
+  background-color: var(--secondary-text-color);
+  border-color: var(--secondary-text-color);
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
 }
 
 .multiselect {
   border-width: 2px;
-  border-color: var(--primary);
+  border-color: var(--main-text-color);
 }
 
 .input-check + label {
@@ -281,7 +289,7 @@ span.vm {
 .view__title-icon {
   height: 20px;
   width: 20px;
-  color: var(--primary);
+  color: var(--main-text-color);
 }
 
 .section {
@@ -340,11 +348,11 @@ span.vm {
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: var(--darker);
+  background-color: var(--main-bg-color);
 }
 
 .view {
-  background-color: var(--darker);
+  background-color: var(--main-bg-color);
   overflow-y: auto;
   padding-left: 1rem;
   padding-right: 1rem;
@@ -360,7 +368,7 @@ span.vm {
 }
 
 .view__title {
-  border-bottom: 1px solid var(--primary);
+  border-bottom: 1px solid var(--main-text-color);
   margin: 0;
   padding: 0.5rem 1.5rem 0;
 }

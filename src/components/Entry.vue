@@ -226,7 +226,7 @@ export default {
 }
 
 .entry--focused {
-  outline: 3px solid var(--focus);
+  outline: 3px solid var(--focus-outline-color);
   border-top-color: transparent;
 }
 
@@ -238,7 +238,7 @@ export default {
 .entry__header {
   padding: 0.5rem 1rem;
   cursor: pointer;
-  background-color: var(--unread);
+  background-color: var(--unread-entry-header-bg-color);
 
   .entry__close {
     display: none;
@@ -265,7 +265,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  background-color: var(--darker);
+  background-color: var(--main-bg-color);
 
   @include for-tablet-landscape-up {
     justify-content: flex-start;
@@ -302,11 +302,11 @@ export default {
 }
 
 .entry--archived .entry__header {
-  background-color: var(--darker);
+  background-color: var(--main-bg-color);
 
   .entry__author,
   .entry__published {
-    color: var(--secondary);
+    color: var(--secondary-text-color);
   }
 }
 
@@ -330,7 +330,7 @@ export default {
 
 .entry__author,
 .entry__published {
-  color: var(--secondary);
+  color: var(--secondary-text-color);
 }
 
 .entry--open .entry__header {

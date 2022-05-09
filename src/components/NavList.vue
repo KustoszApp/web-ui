@@ -267,7 +267,7 @@ export default {
 }
 
 .list__item-link {
-  color: var(--primary);
+  color: var(--main-text-color);
   text-decoration: none;
   vertical-align: middle;
 }

@@ -37,7 +37,7 @@ export default {
 
 .spinner > .spinner__element {
   position: absolute;
-  border: 4px solid var(--primary);
+  border: 4px solid var(--main-text-color);
   opacity: 1;
   border-radius: 50%;
   animation: spinner 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;

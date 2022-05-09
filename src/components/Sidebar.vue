@@ -137,7 +137,7 @@ export default {
 @import "../scss/mixins";
 
 .nav {
-  background-color: var(--lighter);
+  background-color: var(--nav-bg-color);
   padding: 0.5rem 1rem;
   flex-direction: column;
   height: 100vh;
@@ -147,12 +147,12 @@ export default {
 
   a {
     text-decoration: none;
-    color: var(--primary);
+    color: var(--main-text-color);
   }
 
   .nav__section:not(.channels-list) a.router-link-exact-active,
   a.router-link-really-active {
-    color: var(--link);
+    color: var(--main-link-color);
   }
 }
 
@@ -207,7 +207,7 @@ export default {
 }
 
 .list__item {
-  color: var(--secondary);
+  color: var(--secondary-text-color);
   margin: 0;
   overflow: hidden;
   padding: 0.5rem 0;

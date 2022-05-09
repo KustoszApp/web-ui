@@ -303,7 +303,7 @@ export default {
 }
 
 .form-switch__input {
-  border: 2px solid var(--primary);
+  border: 2px solid var(--main-text-color);
   border-radius: 1rem;
   margin-top: 0.25rem;
   width: 2rem;
@@ -316,13 +316,13 @@ export default {
 }
 
 .form-switch__input:checked {
-  background-color: var(--secondary);
+  background-color: var(--secondary-text-color);
   background-position: right center;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
 }
 
 .panel-title {
-  border-bottom: 1px solid var(--primary);
+  border-bottom: 1px solid var(--main-text-color);
 }
 
 .panel-content {
