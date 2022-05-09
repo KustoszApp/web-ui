@@ -84,11 +84,11 @@ export default {
 
 html[data-theme="light"] {
   --main-text-color: #242b31;
-  --main-bg-color: #ece6d6;
+  --main-bg-color: #f1eddf;
   --secondary-text-color: #505050;
-  --main-link-color: #1d9bf3;
+  --main-link-color: #1e67aa;
   --focus-outline-color: #1d9bf3;
-  --nav-bg-color: #e4ebed;
+  --nav-bg-color: #dfe5e1;
   /* buttons */
   --btn-bg-color: #e0dbcc;
   --btn-active-text-color: #020304;
@@ -104,7 +104,7 @@ html[data-theme="light"] {
   --entry-header-bg-color: #ffffff;
   --entry-archived-header-bg-color: var(--main-bg-color);
   --entry-focused-header-bg-color: var(--main-action-bg-color);
-  --entry-archived-focused-header-bg-color: #cfd6b2;
+  --entry-archived-focused-header-bg-color: var(--btn-bg-color);
   --entry-focused-header-link-color: #06457c;
 
   /* used by multiselect */
