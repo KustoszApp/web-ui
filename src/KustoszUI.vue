@@ -307,6 +307,15 @@ input[type="checkbox"] + label {
   padding: 0.5rem 2rem;
 }
 
+.row {
+  display: flex;
+  margin-bottom: 0.5rem;
+}
+
+.direction-column {
+  flex-direction: column;
+}
+
 // 3.6. Utility classes
 .ml-auto {
   margin-left: auto;

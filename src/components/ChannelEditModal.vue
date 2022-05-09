@@ -5,7 +5,7 @@
     modal-class="modal modal-lg"
   >
     <div class="modal-body">
-      <p>
+      <p class="row">
         <input
           class="input-check"
           type="checkbox"
@@ -14,7 +14,7 @@
         />
         <label for="editedChannelActive">active</label>
       </p>
-      <p>
+      <p class="row">
         <input
           class="input-check"
           type="checkbox"
@@ -23,7 +23,7 @@
         />
         <label for="editedChannelDeduplicationEnabled">is deduplicated</label>
       </p>
-      <p>
+      <p class="row direction-column">
         <label for="channel-title">Name of channel:</label>
         <input
           id="channel-title"
@@ -37,7 +37,7 @@
           }}")
         </small>
       </p>
-      <p>
+      <p class="row direction-column">
         <label for="update-frequency"> Update frequency (seconds): </label>
         <input
           id="update-frequency"
@@ -47,8 +47,8 @@
           min="1"
         />
       </p>
-      <p>
-        Tags:
+      <p class="row direction-column">
+        <label>Tags:</label>
         <Multiselect
           v-model="editedChannelTags"
           mode="tags"
@@ -59,53 +59,51 @@
           @keydown.stop
         ></Multiselect>
       </p>
-      <table>
-        <tr>
-          <td class="text-right">Date of last entry publication:</td>
-          <td>
-            {{ formatDate(editedChannelLastEntryPublishedTime, dateFormat) }}
-          </td>
-        </tr>
-        <tr>
-          <td class="text-right">Date of last content check:</td>
-          <td>
-            {{ formatDate(editedChannelLastCheckTime, dateFormat) }}
-          </td>
-        </tr>
-        <tr>
-          <td class="text-right">Channel added date:</td>
-          <td>
-            {{ formatDate(editedChannelAddedTime, dateFormat) }}
-          </td>
-        </tr>
-        <tr>
-          <td class="text-right">Channel link:</td>
-          <td>
-            <a :href="editedChannelLink">{{ editedChannelLink }}</a>
-          </td>
-        </tr>
-        <tr>
-          <td class="text-right">Channel URL:</td>
-          <td class="channel-input-cell" v-if="editedChannelUrlEditingEnabled">
-            <input
-              id="editedChannelUrl"
-              type="text"
-              class="input-field"
-              v-model="editedChannelUrl"
-              @keydown.stop
-            />
-            <button class="btn" @click="editedChannelUrlEditingEnabled = false">
-              OK
-            </button>
-          </td>
-          <td v-else>
-            <a :href="editedChannelUrl">{{ editedChannelUrl }}</a>
-            <button class="btn" @click="editedChannelUrlEditingEnabled = true">
-              <BIconPencilFill />
-            </button>
-          </td>
-        </tr>
-      </table>
+      <div class="row label-left">
+        <p><label class="text-right">Date of last entry publication:</label></p>
+        <p>
+          {{ formatDate(editedChannelLastEntryPublishedTime, dateFormat) }}
+        </p>
+      </div>
+      <div class="row label-left">
+        <p><label class="text-right">Date of last content check:</label></p>
+        <p>
+          {{ formatDate(editedChannelLastCheckTime, dateFormat) }}
+        </p>
+      </div>
+      <div class="row label-left">
+        <p><label class="text-right">Channel added date:</label></p>
+        <p>
+          {{ formatDate(editedChannelAddedTime, dateFormat) }}
+        </p>
+      </div>
+      <div class="row label-left">
+        <p><label class="text-right">Channel link:</label></p>
+        <p>
+          <a :href="editedChannelLink">{{ editedChannelLink }}</a>
+        </p>
+      </div>
+      <div class="row label-left">
+        <p><label class="text-right">Channel URL:</label></p>
+        <p class="row" v-if="editedChannelUrlEditingEnabled">
+          <input
+            id="editedChannelUrl"
+            type="text"
+            class="input-field"
+            v-model="editedChannelUrl"
+            @keydown.stop
+          />
+          <button class="btn" @click="editedChannelUrlEditingEnabled = false">
+            OK
+          </button>
+        </p>
+        <p class="row" v-else>
+          <a :href="editedChannelUrl">{{ editedChannelUrl }}</a>
+          <button class="btn" @click="editedChannelUrlEditingEnabled = true">
+            <BIconPencilFill />
+          </button>
+        </p>
+      </div>
     </div>
 
     <div class="modal-footer">
@@ -247,11 +245,34 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.channel-input-cell {
-  white-space: nowrap;
-}
-td button {
-  margin-left: 0.2rem;
+<style lang="scss" scoped>
+@import "../scss/mixins";
+
+.row.label-left {
+  flex-direction: column;
+  align-items: baseline;
+
+  @include for-tablet-landscape-up {
+    flex-direction: unset;
+    gap: 1rem;
+    height: 2rem;
+  }
+
+  p {
+    margin: 0;
+
+    &:first-child {
+      min-width: max-content;
+      @include for-tablet-landscape-up {
+        text-align: right;
+        width: 28ex;
+      }
+    }
+
+    &.row {
+      align-items: baseline;
+      gap: 0.25rem;
+    }
+  }
 }
 </style>

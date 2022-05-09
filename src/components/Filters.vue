@@ -296,11 +296,6 @@ export default {
 </script>
 
 <style lang="scss">
-.row {
-  display: flex;
-  margin-bottom: 0.5rem;
-}
-
 .form-switch {
   padding: 0.25rem 0;
   margin-right: 4rem;
