@@ -38,14 +38,20 @@
         </small>
       </p>
       <p class="row direction-column">
-        <label for="update-frequency"> Update frequency (seconds): </label>
-        <input
-          id="update-frequency"
-          class="input-field"
-          type="number"
+        <label for="update-frequency"> Update channel every: </label>
+        <select
           v-model="editedChannelUpdateFrequency"
-          min="1"
-        />
+          class="select-menu"
+          id="update-frequency"
+        >
+          <option
+            v-for="item in editedChannelUpdateFrequencyChoices"
+            :key="item.label"
+            :value="item.value"
+          >
+            {{ item.label }}
+          </option>
+        </select>
       </p>
       <p class="row direction-column">
         <label>Tags:</label>
@@ -167,6 +173,14 @@ export default {
         hour: "numeric",
         minute: "numeric",
       },
+      editedChannelUpdateFrequencyChoices: [
+        { label: "5 minutes", value: 5 * 60 },
+        { label: "10 minutes", value: 10 * 60 },
+        { label: "15 minutes", value: 15 * 60 },
+        { label: "30 minutes", value: 30 * 60 },
+        { label: "1 hour", value: 60 * 60 },
+        { label: "2 hours", value: 120 * 60 },
+      ],
     };
   },
   computed: {
@@ -248,9 +262,16 @@ export default {
 <style lang="scss" scoped>
 @import "../scss/mixins";
 
+.row {
+  align-items: baseline;
+}
+
+.select-menu {
+  width: 100%;
+}
+
 .row.label-left {
   flex-direction: column;
-  align-items: baseline;
 
   @include for-tablet-landscape-up {
     flex-direction: unset;
@@ -270,7 +291,6 @@ export default {
     }
 
     &.row {
-      align-items: baseline;
       gap: 0.25rem;
     }
   }
