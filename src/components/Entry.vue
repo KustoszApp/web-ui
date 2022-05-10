@@ -76,6 +76,7 @@
         </div>
       </div>
     </div>
+    <div class="entry__sentinel" />
     <div class="entry__content" v-show="isOpen" v-html="entryContent" />
   </div>
 </template>
@@ -287,6 +288,7 @@ export default {
     flex-basis: 100%;
     gap: 1ex;
     margin-top: 0.5rem;
+    margin-bottom: 0;
     @include for-tablet-landscape-up {
       flex-basis: unset;
       margin-top: unset;

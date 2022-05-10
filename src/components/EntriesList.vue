@@ -73,6 +73,9 @@ export default {
     },
   },
   methods: {
+    isAnyOpened() {
+      return this.openedIndex >= 0;
+    },
     isFocused(index) {
       return index === this.focusedIndex;
     },
@@ -104,11 +107,14 @@ export default {
       return this.entryRefs[key];
     },
     toggleOpened(index) {
+      const anyOpened = this.isAnyOpened();
       const currentlyOpened = this.isOpened(index);
+      // close previous entry - clean up observers and CSS classes
+      if (anyOpened) {
+        this.closeEntry(this.openedIndex, currentlyOpened);
+      }
       if (!currentlyOpened) {
         this.openEntry(index);
-      } else {
-        this.closeEntry(index);
       }
     },
     openEntry(index) {
@@ -127,27 +133,40 @@ export default {
         id: entry.id,
       });
       this.$nextTick(() => {
+        this.setupEntryHeaderObserver(index);
         this.openEntryScroll(entry, container);
         this.setupContentObserver(index);
       });
-      this.setupEntryHeaderObserver(index);
     },
-    closeEntry(index) {
+    closeEntry(index, ensureElementInViewport = false) {
       this.initialEntryContent = "";
       this.openedIndex = -1;
-      this.openedEntryObserver.disconnect();
+      this.clearObserver(this.openedEntryObserver);
+      this.clearObserver(this.entryHeaderObserver);
       this.openedEntryObserver = null;
+      this.entryHeaderObserver = null;
       const elem = this.getEntryRef(index);
+      elem.querySelector(".entry__meta").classList.remove("on-top");
 
-      this.$nextTick(() => {
-        this.ensureElementInViewport(elem);
-      });
+      // make sure header is visible, so user doesn't end up looking at random
+      // part of list
+      // unless this closing is part of process of opening another entry,
+      // in which case we can leave it up to openEntryScroll
+      if (ensureElementInViewport) {
+        this.$nextTick(() => {
+          this.ensureElementInViewport(elem);
+        });
+      }
     },
     openEntryScroll(entry, ref) {
       const clientHeight = window.innerHeight;
-      const refDomRect = ref.getBoundingClientRect();
+      const refDomRectTop = ref.getBoundingClientRect().top;
 
-      if (refDomRect.top > clientHeight / 2) {
+      // scroll entry to top of page if:
+      // 1. header is at the bottom half of screen
+      // 2. we just closed another entry, and header ended up way above
+      //    top of viewport
+      if (refDomRectTop > clientHeight / 2 || 0 > refDomRectTop) {
         ref.scrollIntoView(true);
       }
 
@@ -183,26 +202,24 @@ export default {
       this.clearObserver(this.entryHeaderObserver);
       const rootElem = document.getElementById("router-view");
       const elem = this.getEntryRef(index);
-      const entryHeaderElem = elem.querySelector(".entry__header");
+      const entrySentinelElem = elem.querySelector(".entry__sentinel");
+      const entryMetaElem = elem.querySelector(".entry__meta");
+      const observerRootMarginT = entryMetaElem.getBoundingClientRect().height;
       const observerOptions = {
         root: rootElem,
         threshold: [1],
-        rootMargin: "-1px 0px 0px 0px",
+        rootMargin: `-${observerRootMarginT}px 0px 0px 0px`,
       };
-      let lastTimestamp = 0;
       this.entryHeaderObserver = new IntersectionObserver((observerEntries) => {
         const entry = observerEntries[0];
-        const entryTime = entry.time;
-        // when element is exactly at top, our styling may cause it
-        // to flicker, which results in a flurry of events
-        if (50 > entryTime - lastTimestamp) {
-          return;
-        }
-        lastTimestamp = entryTime;
-        const elem = entry.target.parentNode;
-        elem.classList.toggle("on-top", entry.intersectionRatio < 1);
+        // if element is intersecting (~ is visible), then we are NOT
+        // at the top of the screen anymore
+        // if it's not intersecting, then it is above top of viewport,
+        // meaning we should add `on-top` class
+        const force = entry.isIntersecting === false;
+        entryMetaElem.classList.toggle("on-top", force);
       }, observerOptions);
-      this.entryHeaderObserver.observe(entryHeaderElem);
+      this.entryHeaderObserver.observe(entrySentinelElem);
     },
     setupContentObserver(index) {
       this.clearObserver(this.openedEntryObserver);
