@@ -136,14 +136,27 @@ export default {
 <style lang="scss">
 @import "../scss/mixins";
 
+.sidebar-display-button {
+  display: grid;
+  flex: 0;
+  margin: 0.5rem;
+
+  button {
+    width: 100%;
+  }
+}
+
 .nav {
   background-color: var(--nav-bg-color);
   padding: 0.5rem 1rem;
   flex-direction: column;
-  height: 100vh;
   display: none;
   overflow-y: auto;
   scrollbar-width: thin;
+
+  @include for-tablet-landscape-up {
+    display: flex;
+  }
 
   a {
     text-decoration: none;
@@ -158,7 +171,11 @@ export default {
 
 .nav--open {
   display: flex;
-  padding-bottom: 3rem; /* offsets button on top of sidebar */
+
+  /* hide main view to not mess up expected grid layout */
+  & ~ * {
+    display: none;
+  }
 }
 
 .nav__section:not(.add-channel) {
@@ -184,16 +201,6 @@ export default {
 
 .nav__sources {
   flex: 1;
-}
-
-.sidebar-display-button {
-  display: grid;
-  flex: 0;
-  margin: 0.5rem;
-
-  button {
-    width: 100%;
-  }
 }
 
 .nav__menu {

@@ -1,8 +1,8 @@
 <template>
-  <div class="login-wrapper" v-if="!isAuthenticated">
+  <div class="wrapper wrapper--login" v-if="!isAuthenticated">
     <router-view class="view" />
   </div>
-  <div class="reader-wrapper" v-else>
+  <div class="wrapper wrapper--app" v-else>
     <Sidebar />
     <router-view id="router-view" class="view" />
   </div>
@@ -345,30 +345,44 @@ input[type="checkbox"] + label {
 
 // 4. Specific to this view
 
-#kustosz {
+/* cf. https://developer.chrome.com/blog/url-bar-resizing/ */
+#kustosz,
+.wrapper {
   height: 100%;
+
+  @include for-tablet-landscape-up {
+    height: 100vh;
+  }
+}
+
+#kustosz {
   overflow: hidden;
 }
 
-@include for-tablet-landscape-up {
-  .reader-wrapper {
-    display: grid;
-    grid-template-columns: 280px auto;
-    height: 100%;
-    overflow: hidden;
-  }
-
-  #nav {
-    display: flex;
-  }
-}
-
-.login-wrapper {
+.wrapper--login {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
   background-color: var(--main-bg-color);
+}
+
+.wrapper--app {
+  display: grid;
+  overflow: hidden;
+  /* By manipulating elements visibility in components/Sidebar, we create
+     one-column two-row layout. Top row has "show menu" button, bottom row
+     takes most of viewport and has menu or main content.
+   */
+  grid-template-columns: auto;
+  grid-template-rows: max-content auto;
+
+  @include for-tablet-landscape-up {
+    /* On larger screens, use two-column one-row layout. "Show menu" button
+       disappears and all elements are always visible.
+     */
+    grid-template-columns: 320px auto;
+    grid-template-rows: 100vh;
+  }
 }
 
 .view {
@@ -376,11 +390,6 @@ input[type="checkbox"] + label {
   overflow-y: auto;
   padding-left: 1rem;
   padding-right: 1rem;
-  height: 100vh;
-  padding-bottom: 3rem; /* offsets button on top of sidebar */
-  @include for-tablet-landscape-up {
-    padding-bottom: 0;
-  }
 }
 
 .view.login {
