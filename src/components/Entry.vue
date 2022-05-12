@@ -340,8 +340,12 @@ export default {
 }
 
 .entry__content {
-  max-width: 50rem;
+  max-width: 100%;
   padding: 0.5rem 1rem;
+
+  @include for-tablet-landscape-up {
+    max-width: 50rem;
+  }
 }
 
 .entry__content::after {

@@ -251,6 +251,7 @@ span.vm {
   color: inherit;
   line-height: 1.5;
   padding: 0.25rem 0.75rem;
+  overflow-x: hidden;
 }
 
 // 3.3. Input fields
