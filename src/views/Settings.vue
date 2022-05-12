@@ -1,6 +1,6 @@
 <template>
   <div class="settings">
-    <h2 class="view__title">
+    <h2 class="view__title topmost-elem">
       <BIconGearFill />
       Settings
     </h2>

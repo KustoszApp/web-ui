@@ -298,14 +298,13 @@ input[type="checkbox"] + label {
 
 // 3.5. Common elements
 
-.view__title-icon {
-  height: 20px;
-  width: 20px;
-  color: var(--main-text-color);
+.topmost-elem {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
 }
 
-.section {
-  padding: 0.5rem 2rem;
+.view__title {
+  border-bottom: 1px solid var(--main-text-color);
 }
 
 .row {
@@ -337,6 +336,10 @@ input[type="checkbox"] + label {
     display: block;
     width: 100%;
   }
+}
+
+.panel-content {
+  margin-bottom: 1rem;
 }
 
 // 3.6. Utility classes
@@ -409,11 +412,5 @@ input[type="checkbox"] + label {
 
 .view.login {
   height: auto;
-}
-
-.view__title {
-  border-bottom: 1px solid var(--main-text-color);
-  margin: 0;
-  padding: 0.5rem 1.5rem 0;
 }
 </style>

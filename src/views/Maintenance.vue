@@ -1,6 +1,6 @@
 <template>
   <div class="maintenance">
-    <h2 class="view__title">
+    <h2 class="view__title topmost-elem">
       <BIconTools />
       {{ sectionTitle }} - Maintenance
     </h2>

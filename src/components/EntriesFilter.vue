@@ -1,5 +1,8 @@
 <template>
-  <div class="search-bar" :class="{ 'has-more-options': moreOptionsDisplayed }">
+  <div
+    class="search-bar topmost-elem"
+    :class="{ 'has-more-options': moreOptionsDisplayed }"
+  >
     <div class="column">
       <form
         class="advanced"
@@ -308,8 +311,6 @@ export default {
 }
 
 .search-bar {
-  margin-top: 0.5rem;
-  margin-bottom: 1rem;
   @include for-tablet-landscape-up {
     display: flex;
   }

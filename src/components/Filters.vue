@@ -12,7 +12,7 @@
         <input
           :id="`filter-${filter.id}`"
           type="checkbox"
-          class="form-switch__input"
+          class="col--icon__input"
           :checked="filter.enabled"
           @change="enableChanged(filter)"
         />
@@ -330,12 +330,11 @@ export default {
 </script>
 
 <style lang="scss">
-.form-switch {
-  padding: 0.25rem 0;
-  margin-right: 4rem;
+.filters > .btn--main-action {
+  margin-bottom: 0.5rem;
 }
 
-.form-switch__input {
+.col--icon__input {
   /* BIconToggleOff */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='currentColor' viewBox='0 0 16 16'%3E%3Cpath d='M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
@@ -345,17 +344,9 @@ export default {
   border: none;
 }
 
-.form-switch__input:checked {
+.col--icon__input:checked {
   /* BIconToggleOn */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='currentColor' viewBox='0 0 16 16'%3E%3Cpath d='M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z'/%3E%3C/svg%3E");
-}
-
-.panel-title {
-  border-bottom: 1px solid var(--main-text-color);
-}
-
-.panel-content {
-  margin-bottom: 1rem;
 }
 
 .h4 {
