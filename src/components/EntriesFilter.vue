@@ -86,7 +86,7 @@
         </div>
       </form>
     </div>
-    <div class="column row btn-row ml-auto">
+    <div class="column row btn-row">
       <button
         type="button"
         class="btn"
@@ -350,6 +350,7 @@ export default {
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 1ex;
+    margin-left: auto;
 
     .btn {
       width: calc(50% - 1ex);

@@ -10,34 +10,46 @@
       days
     </p>
   </div>
-  <div class="list">
-    <ul class="list__content">
-      <li
-        class="list__item"
-        v-for="channel in maintenance_channels"
-        :key="channel.id"
-      >
+  <div class="maintenance">
+    <div
+      class="row list-item"
+      v-for="channel in maintenance_channels"
+      :key="channel.id"
+    >
+      <div class="col col--icon">
         <input
-          :id="channel.id"
+          :id="`channel-${channel.id}`"
           :value="channel.id"
           class="input-check"
           type="checkbox"
           v-model="checkedChannels"
         />
-        <label :for="channel.id">{{ channel.displayed_title }}</label>
-        <a @click="showChannelEditModal(channel)">Details</a>
-        (<router-link
-          class="list__item-link"
+      </div>
+      <div class="col col--label">
+        <label :for="`channel-${channel.id}`">
+          {{ channel.displayed_title }}
+        </label>
+      </div>
+      <div class="col btn-row">
+        <button class="btn" @click="showChannelEditModal(channel)">
+          <BIconPencilFill />
+        </button>
+
+        <router-link
           :to="{
             name: this.ROUTE_ENTRIES,
             query: { channel: channel.id, channel_tags: null },
           }"
+          title="See channel content"
         >
-          see content </router-link
-        >)
-      </li>
-    </ul>
+          <button class="btn btn--main-action">
+            <BIconBinocularsFill />
+          </button>
+        </router-link>
+      </div>
+    </div>
   </div>
+
   <div class="btn-row">
     <button
       v-if="displayInactivateButton"
@@ -105,6 +117,7 @@
 </template>
 
 <script>
+import { BIconPencilFill, BIconBinocularsFill } from "bootstrap-icons-vue";
 import { mapGetters } from "vuex";
 import ChannelEditModal from "@/components/ChannelEditModal.vue";
 import VueModal from "@kouts/vue-modal";
@@ -122,6 +135,8 @@ import {
 export default {
   name: "ChannelsMaintenance",
   components: {
+    BIconPencilFill,
+    BIconBinocularsFill,
     ChannelEditModal,
     Modal: VueModal,
   },

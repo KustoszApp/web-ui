@@ -313,25 +313,35 @@ input[type="checkbox"] + label {
   margin-bottom: 0.5rem;
 }
 
-.direction-column {
-  flex-direction: column;
+.row.list-item {
+  gap: 1rem;
+  align-items: center;
+  max-width: 100%;
+
+  /* FIXME: turn into mixin? */
+  @include for-tablet-landscape-up {
+    max-width: 50rem;
+  }
+}
+
+.col--icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+}
+
+.col--label {
+  flex-grow: 1;
+
+  label {
+    display: block;
+    width: 100%;
+  }
 }
 
 // 3.6. Utility classes
-.ml-auto {
-  margin-left: auto;
-}
-
-.text-left {
-  text-align: left;
-}
-
 .text-right {
   text-align: right;
-}
-
-.text-center {
-  text-align: center;
 }
 
 .mobile-only {
@@ -342,6 +352,10 @@ input[type="checkbox"] + label {
 
 .hidden {
   visibility: hidden;
+}
+
+.direction-column {
+  flex-direction: column;
 }
 
 // 4. Specific to this view

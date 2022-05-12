@@ -7,25 +7,26 @@
     >
       Add filter
     </button>
-    <div class="row" v-for="filter in filters" :key="filter.id">
-      <div class="col">
-        <label class="form-switch">
-          <input
-            type="checkbox"
-            class="form-switch__input"
-            :checked="filter.enabled"
-            @change="enableChanged(filter)"
-          />
+    <div class="row list-item" v-for="filter in filters" :key="filter.id">
+      <div class="col col--icon">
+        <input
+          :id="`filter-${filter.id}`"
+          type="checkbox"
+          class="form-switch__input"
+          :checked="filter.enabled"
+          @change="enableChanged(filter)"
+        />
+      </div>
+      <div class="col col--label">
+        <label :for="`filter-${filter.id}`">
           {{ filter.name }}
         </label>
       </div>
-      <div class="col">
+      <div class="col btn-row">
         <button class="btn" @click="editFilter(filter)">
           <BIconPencilFill />
         </button>
-      </div>
-      <div class="col">
-        <button class="btn btn--danger" @click="deleteFilter(filter)">
+        <button class="btn btn--danger" @click="showDeleteFilterModal(filter)">
           <BIconTrash />
         </button>
       </div>
@@ -131,6 +132,24 @@
       </div>
     </div>
   </Modal>
+  <Modal v-model="deleteFilterModalDisplayed" title="Delete filter">
+    <div class="modal-body">
+      <p>
+        You are about to delete filter <strong>{{ deletedFilterName }}</strong
+        >.
+      </p>
+      <p>This can't be undone.</p>
+    </div>
+
+    <div class="modal-footer">
+      <div class="btn-row">
+        <button class="btn" @click="hideDeleteFilterModal()">
+          Close this window
+        </button>
+        <button class="btn btn--danger" @click="deleteFilter()">Delete</button>
+      </div>
+    </div>
+  </Modal>
 </template>
 
 <script>
@@ -178,6 +197,9 @@ export default {
           has_argument: true,
         },
       ],
+      deleteFilterModalDisplayed: false,
+      deletedFilterId: undefined,
+      deletedFilterName: "",
     };
   },
   computed: {
@@ -278,15 +300,27 @@ export default {
         })
         .then(() => this.cancelEditing());
     },
-    deleteFilter(filter) {
-      this.$store.dispatch({
-        type: ACTION_FILTER_DELETE_REQUEST,
-        id: filter.id,
-      });
+    deleteFilter() {
+      this.$store
+        .dispatch({
+          type: ACTION_FILTER_DELETE_REQUEST,
+          id: this.deletedFilterId,
+        })
+        .then(() => this.hideDeleteFilterModal());
     },
     cancelEditing() {
       this.editFilterModalDisplayed = false;
       this.clearForm();
+    },
+    showDeleteFilterModal(filter) {
+      this.deletedFilterId = filter.id;
+      this.deletedFilterName = filter.name;
+      this.deleteFilterModalDisplayed = true;
+    },
+    hideDeleteFilterModal() {
+      this.deleteFilterModalDisplayed = false;
+      this.deletedFilterName = "";
+      this.deletedFilterId = undefined;
     },
   },
   created() {
@@ -302,22 +336,18 @@ export default {
 }
 
 .form-switch__input {
-  border: 2px solid var(--main-text-color);
-  border-radius: 1rem;
-  margin-top: 0.25rem;
-  width: 2rem;
-  height: 1rem;
-  appearance: none;
-  background-position: left center;
+  /* BIconToggleOff */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='currentColor' viewBox='0 0 16 16'%3E%3Cpath d='M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%280, 0, 0, 0.25%29'/%3e%3c/svg%3e");
-  transition: background-position 0.15s ease-in-out;
+  width: 100%;
+  height: 100%;
+  appearance: none;
+  border: none;
 }
 
 .form-switch__input:checked {
-  background-color: var(--secondary-text-color);
-  background-position: right center;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
+  /* BIconToggleOn */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='currentColor' viewBox='0 0 16 16'%3E%3Cpath d='M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z'/%3E%3C/svg%3E");
 }
 
 .panel-title {
