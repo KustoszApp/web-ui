@@ -91,7 +91,7 @@ html[data-theme="light"] {
   --nav-bg-color: #dfe5e1;
   /* buttons */
   --btn-bg-color: #e0dbcc;
-  --btn-active-text-color: #020304;
+  --btn-active-text-color: var(--main-bg-color);
   --btn-active-bg-color: #948c78;
   --main-action-bg-color: #b5cab2;
   --main-action-active-text-color: var(--btn-active-text-color);
