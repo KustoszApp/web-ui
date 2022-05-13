@@ -66,6 +66,20 @@
         ></Multiselect>
       </p>
       <div class="row label-left">
+        <p><label class="text-right">Number of entries:</label></p>
+        <p class="row entries-count">
+          <span>
+            <strong>{{ editedChannelUnarchivedEntriesCount }}</strong> unread
+          </span>
+          <span>
+            <strong>{{ editedChannelTaggedEntriesCount }}</strong> tagged
+          </span>
+          <span>
+            <strong>{{ editedChannelTotalEntriesCount }}</strong> total
+          </span>
+        </p>
+      </div>
+      <div class="row label-left">
         <p><label class="text-right">Date of last entry publication:</label></p>
         <p>
           {{ formatDate(editedChannelLastEntryPublishedTime, dateFormat) }}
@@ -166,6 +180,10 @@ export default {
       editedChannelLink: "",
       editedChannelUrl: "",
       editedChannelUrlEditingEnabled: false,
+      editedChannelUnarchivedEntriesCount: 0,
+      editedChannelTaggedEntriesCount: 0,
+      editedChannelTotalEntriesCount: 0,
+
       dateFormat: {
         year: "numeric",
         month: "long",
@@ -216,6 +234,9 @@ export default {
       this.editedChannelLink = channel.link;
       this.editedChannelUrl = channel.url;
       this.editedChannelUrlEditingEnabled = false;
+      this.editedChannelUnarchivedEntriesCount = channel.unarchived_entries;
+      this.editedChannelTaggedEntriesCount = channel.tagged_entries;
+      this.editedChannelTotalEntriesCount = channel.total_entries;
     },
     submitNewChannelData() {
       const payloadMap = [
@@ -292,6 +313,10 @@ export default {
 
     &.row {
       gap: 0.25rem;
+
+      &.entries-count {
+        gap: 1rem;
+      }
     }
   }
 }
