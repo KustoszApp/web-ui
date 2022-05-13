@@ -3,20 +3,22 @@
     class="search-bar topmost-elem"
     :class="{ 'has-more-options': moreOptionsDisplayed }"
   >
-    <div class="column">
+    <div class="column row">
       <form
         class="advanced"
         v-if="advancedFormDisplayed"
         @submit.prevent="advancedQueryStringChanged"
       >
-        <input
-          type="text"
-          class="input-field advanced"
-          placeholder="Advanced query string"
-          v-model="advancedQueryString"
-          @keydown.stop
-        />
-        <button class="btn btn--main-action" type="submit">Go!</button>
+        <div class="row">
+          <input
+            type="text"
+            class="input-field advanced"
+            placeholder="Advanced query string"
+            v-model="advancedQueryString"
+            @keydown.stop
+          />
+          <button class="btn btn--main-action" type="submit">Go!</button>
+        </div>
       </form>
       <form class="simple" v-else>
         <div class="row">
@@ -69,10 +71,9 @@
             </option>
           </select>
         </div>
-        <div class="row">
+        <div class="row multiselect-wrapper">
           tagged:
           <Multiselect
-            class="search-bar__multiselect"
             v-model="tags"
             placeholder="start typing"
             mode="tags"
@@ -310,14 +311,27 @@ export default {
   }
 }
 
+.row {
+  margin-bottom: 0;
+}
+
 .search-bar {
   @include for-tablet-landscape-up {
     display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  @include for-desktop-up {
+    flex-direction: row;
+    gap: 5rem;
   }
 
   form {
     display: flex;
     gap: 1rem;
+    flex-grow: 1;
     margin-bottom: 1rem;
     @include for-tablet-landscape-up {
       margin-bottom: unset;
@@ -337,34 +351,48 @@ export default {
 
       &:first-child {
         display: flex;
+        flex-shrink: 0;
+      }
+
+      &.multiselect-wrapper {
+        flex-grow: 1;
+      }
+
+      @include for-desktop-up {
+        .multiselect {
+          max-width: 50ex;
+          margin: 0;
+        }
       }
     }
   }
 
-  input.advanced {
-    width: 50rem;
-    max-width: 100%;
+  form.advanced {
+    .row {
+      flex-grow: 1;
+      gap: 1ex;
+    }
+
+    input.advanced {
+      flex-grow: 1;
+      max-width: 100%;
+    }
+  }
+
+  .column.row:not(.btn-row) {
+    flex-grow: 1;
   }
 
   .column.btn-row {
     display: none;
-    justify-content: space-between;
     flex-wrap: wrap;
     gap: 1ex;
-    margin-left: auto;
 
     .btn {
-      width: calc(50% - 1ex);
-      /* uncomment once third button is added
-      &:first-of-type {
-        width: 100%;
-      }*/
+      flex-grow: 1;
 
       @include for-tablet-landscape-up {
-        width: unset;
-        /*&:first-of-type {
-          width: unset;
-        }*/
+        flex-grow: unset;
       }
     }
   }
@@ -376,9 +404,5 @@ export default {
   @include for-tablet-landscape-up {
     @include full-form-visible;
   }
-}
-
-.search-bar__multiselect {
-  width: 50ex;
 }
 </style>
