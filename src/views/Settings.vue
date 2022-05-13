@@ -4,10 +4,12 @@
       <BIconGearFill />
       Settings
     </h2>
+    <!--  FIXME: hide until dark theme is usable
     <div class="section">
       <h3 class="section-title">Theme</h3>
       <ThemeSwitcher />
     </div>
+    -->
     <div class="section">
       <h3 class="section-title">Account</h3>
       <button
@@ -18,16 +20,12 @@
         Logout
       </button>
     </div>
-    <div class="section">
-      <h3 class="section-title">About Us</h3>
-      <p>Self-hosted RSS Reader</p>
-    </div>
   </div>
 </template>
 
 <script>
 import { BIconGearFill } from "bootstrap-icons-vue";
-import ThemeSwitcher from "@/components/ThemeSwitcher";
+/*import ThemeSwitcher from "@/components/ThemeSwitcher";*/
 
 import { ACTION_AUTH_LOGOUT } from "../types";
 
@@ -35,7 +33,7 @@ export default {
   name: "Settings",
   components: {
     BIconGearFill,
-    ThemeSwitcher,
+    /*ThemeSwitcher,*/
   },
   methods: {
     logout() {
@@ -44,3 +42,10 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.section .section-title {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+</style>

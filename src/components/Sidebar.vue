@@ -59,7 +59,7 @@
       <router-link :to="{ name: this.ROUTE_FILTERS }">Filters</router-link>
     </div>
     <div class="nav__section options">
-      <router-link :to="{ name: this.ROUTE_SETTINGS }">Options</router-link>
+      <router-link :to="{ name: this.ROUTE_SETTINGS }">Settings</router-link>
     </div>
   </div>
 </template>

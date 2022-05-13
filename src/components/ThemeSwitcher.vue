@@ -5,6 +5,7 @@
       :key="key"
       type="button"
       class="btn"
+      :class="{ 'btn--active': isCurrentThemeColor(key) }"
       @click="switchTheme(key)"
     >
       {{ value }}
@@ -17,6 +18,8 @@ import { mapGetters } from "vuex";
 
 import {
   GET_ALL_COLOR_THEMES,
+  GET_USER_THEME_COLOR,
+  GET_DEFAULT_THEME_COLOR,
   ACTION_SET_USER_THEME_COLOR,
   ACTION_USER_DATA_EDIT_REQUEST,
 } from "../types";
@@ -26,6 +29,8 @@ export default {
   computed: {
     ...mapGetters({
       colorThemes: GET_ALL_COLOR_THEMES,
+      userThemeColor: GET_USER_THEME_COLOR,
+      defaultThemeColor: GET_DEFAULT_THEME_COLOR,
     }),
   },
   methods: {
@@ -36,6 +41,13 @@ export default {
           theme_color: value,
         });
       });
+    },
+    isCurrentThemeColor(themeKey) {
+      let currentThemeName = this.defaultThemeColor;
+      if (this.userThemeColor !== "") {
+        currentThemeName = this.userThemeColor;
+      }
+      return themeKey === currentThemeName;
     },
   },
 };
