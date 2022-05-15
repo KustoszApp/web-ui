@@ -2,9 +2,19 @@
   "name": "kustosz-web-ui",
   "version": "22.03.1",
   "engines": {
-      "node": ">=12.0"
+      "node": ">=14.0"
   },
   "description": "Focus on the worthwhile content with Kustosz, open source self-hosted web application. This package contains frontend code.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KustoszApp/web-ui.git"
+  },
+  "author": "Mirek Długosz <mirek@mirekdlugosz.com> (https://mirekdlugosz.com)",
+  "license": "EUPL-1.2",
+  "bugs": {
+    "url": "https://github.com/KustoszApp/web-ui/issues"
+  },
+  "homepage": "https://www.kustosz.org/",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "cp ./vue-modal-postcss.config.js ./node_modules/@kouts/vue-modal/postcss.config.js && vue-cli-service build",
