@@ -14,7 +14,7 @@
     <div class="modal-body">
       <form>
         <div class="panel-content">
-          <label for="url">URL</label>
+          <label for="url">Full URL of RSS / Atom XML file</label>
           <div class="form-control">
             <input id="url" class="input-field" type="url" v-model="url" />
           </div>
