@@ -19,7 +19,7 @@
           class="entry__link"
           ref="entryLink"
           :href="entry.link"
-          v-html="entry.title"
+          v-html="entryTitle"
         />
         <span
           class="entry__source"
@@ -132,6 +132,13 @@ export default {
         return "unread";
       }
       return "read";
+    },
+    entryTitle() {
+      if (this.entry.title.length > 0) {
+        return this.entry.title;
+      }
+      const url = new URL(this.entry.link);
+      return `${url.host}/…`;
     },
     entryChannelTitle() {
       if (this.channels.length === 0) {
