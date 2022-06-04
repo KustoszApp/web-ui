@@ -1,6 +1,6 @@
 {
   "name": "kustosz-web-ui",
-  "version": "22.05.0",
+  "version": "22.06.0",
   "engines": {
       "node": ">=14.0"
   },
