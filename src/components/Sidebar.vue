@@ -5,9 +5,9 @@
     </button>
   </div>
   <div id="nav" class="nav" :class="{ 'nav--open': this.sidebarDisplayed }">
-    <div class="nav__section add-channel">
+    <div class="nav__section add-content">
       <div class="nav__add">
-        <AddChannel />
+        <AddContent />
       </div>
     </div>
     <div class="nav__section channels-list">
@@ -66,7 +66,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import AddChannel from "@/components/AddChannel";
+import AddContent from "@/components/AddContent";
 import NavList from "@/components/NavList.vue";
 import Collapse from "@/components/Collapse.vue";
 
@@ -86,7 +86,7 @@ import {
 export default {
   name: "Sidebar",
   components: {
-    AddChannel,
+    AddContent,
     Collapse,
     NavList,
   },
@@ -178,7 +178,7 @@ export default {
   }
 }
 
-.nav__section:not(.add-channel) {
+.nav__section:not(.add-content) {
   margin: 0.25rem 0;
 }
 

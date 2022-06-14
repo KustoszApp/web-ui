@@ -18,6 +18,9 @@ import {
     MUTATION_ENTRY_ERROR,
     MUTATION_ENTRY_TAGS_REQUEST,
     MUTATION_ENTRY_TAGS_SUCCESS,
+    MUTATION_ENTRY_ADD_MANUAL_REQUEST,
+    MUTATION_ENTRY_ADD_MANUAL_SUCCESS,
+    MUTATION_ENTRY_ADD_MANUAL_ERROR,
     ACTION_ENTRIES_REQUEST,
     ACTION_ENTRIES_NEXT_PAGE_REQUEST,
     ACTION_ENTRIES_MARK_AS_READ,
@@ -25,6 +28,7 @@ import {
     ACTION_ENTRY_EDIT_REQUEST,
     ACTION_ENTRY_TAGS_REQUEST,
     ACTION_CHANNELS_REQUEST,
+    ACTION_ENTRY_ADD_MANUAL_REQUEST,
 } from "../../types";
 
 const state = {
@@ -112,6 +116,9 @@ const mutations = {
         state.status = "success";
         state.entryTags = data.results;
     },
+    [MUTATION_ENTRY_ADD_MANUAL_REQUEST]: (state) => (state.status = "loading"),
+    [MUTATION_ENTRY_ADD_MANUAL_SUCCESS]: (state) => (state.status = "success"),
+    [MUTATION_ENTRY_ADD_MANUAL_ERROR]: (state) => (state.status = "error"),
 };
 
 const actions = {
@@ -207,6 +214,25 @@ const actions = {
             })
             .catch(() => {
                 commit(MUTATION_ENTRY_ERROR);
+            });
+    },
+    [ACTION_ENTRY_ADD_MANUAL_REQUEST]: ({ commit }, param) => {
+        commit(MUTATION_ENTRY_ADD_MANUAL_REQUEST);
+        const url = "entries/manual_add";
+        const data = omit(param, ["type"]);
+        const options = {
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+        };
+        return axios
+            .post(url, data, options)
+            .then(() => {
+                commit(MUTATION_ENTRY_ADD_MANUAL_SUCCESS);
+            })
+            .catch(() => {
+                commit(MUTATION_ENTRY_ADD_MANUAL_ERROR);
             });
     },
 };

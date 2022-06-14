@@ -1,5 +1,37 @@
 import axios from "axios";
 
+function repeatAsyncRequestWhileInProgress(response) {
+    const asyncTasksUrls = ["autodetect_add"];
+    const currentUrl = response.config.url;
+    if (!asyncTasksUrls.includes(currentUrl)) {
+        return response;
+    }
+
+    // async task result must include state.
+    // there must have been some mistake here
+    if (!("state" in response.data)) {
+        return response;
+    }
+
+    // background task finished
+    if (response.data.state !== "in_progress") {
+        return response;
+    }
+
+    let retryCount = 0;
+    if ("_retryCount" in response.config) {
+        retryCount = response.config._retryCount;
+    }
+    retryCount += 1;
+    response.config._retryCount = retryCount;
+
+    const delay = Math.min(retryCount, 5) * 1000;
+
+    return new Promise((resolve) =>
+        setTimeout(() => resolve(axios(response.config)), delay)
+    );
+}
+
 function calculateReferenceDate(daysAgo, sliceNum = -5) {
     const date = new Date();
     date.setDate(date.getDate() - daysAgo);
@@ -34,4 +66,10 @@ function omit(obj, omitKeys) {
     }, {});
 }
 
-export { calculateReferenceDate, formatDate, getPagedResults, omit };
+export {
+    repeatAsyncRequestWhileInProgress,
+    calculateReferenceDate,
+    formatDate,
+    getPagedResults,
+    omit,
+};

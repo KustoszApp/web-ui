@@ -98,6 +98,7 @@ const actions = {
             });
     },
     [ACTION_CHANNEL_CREATE_REQUEST]: ({ dispatch, commit }, param) => {
+        commit(MUTATION_CHANNEL_CREATE_REQUEST);
         const url = "channels/";
         const data = {
             url: param.url,

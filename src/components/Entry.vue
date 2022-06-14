@@ -327,7 +327,8 @@ export default {
 }
 
 .entry__author,
-.entry__published {
+.entry__published,
+.entry__count {
   color: var(--secondary-text-color);
 }
 
