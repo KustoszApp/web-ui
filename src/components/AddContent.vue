@@ -20,7 +20,7 @@
       <a @click="openAddChannelModal">Add channel</a>
     </li>
     <li class="dropdown__item list__item">
-      <a @click="openAddEntryModal">Add entry</a>
+      <a @click="openAddEntryModal">Add article</a>
     </li>
   </ul>
   <Modal
@@ -56,7 +56,7 @@
       <div v-else-if="autodetectState === 'failed'">
         <p>
           Content could not be detected. This is probably a permanent problem.
-          If you want to add this URL as a bookmark, use "Add entry" button in
+          If you want to add this URL as a bookmark, use "Add article" button in
           navigation bar. You can also try again in about an hour.
         </p>
       </div>
@@ -213,7 +213,7 @@
 
   <Modal
     v-model="addEntryModalDisplayed"
-    title="Add new entry"
+    title="Add new article"
     modal-class="modal modal-lg"
   >
     <div class="modal-body">
