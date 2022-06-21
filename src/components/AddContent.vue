@@ -37,7 +37,11 @@
           </div>
         </div>
         <div class="col btn-row">
-          <button class="btn btn--main-action" @click="detectContentClicked">
+          <button
+            class="btn btn--main-action"
+            @click="detectContentClicked"
+            :disabled="url.length === 0"
+          >
             Detect
           </button>
         </div>
