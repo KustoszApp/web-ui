@@ -20,7 +20,6 @@ import {
   GET_ALL_COLOR_THEMES,
   GET_USER_THEME_COLOR,
   GET_DEFAULT_THEME_COLOR,
-  ACTION_SET_USER_THEME_COLOR,
   ACTION_USER_DATA_EDIT_REQUEST,
 } from "../types";
 
@@ -35,11 +34,9 @@ export default {
   },
   methods: {
     switchTheme(value) {
-      this.$store.dispatch(ACTION_SET_USER_THEME_COLOR, value).then(() => {
-        this.$store.dispatch({
-          type: ACTION_USER_DATA_EDIT_REQUEST,
-          theme_color: value,
-        });
+      this.$store.dispatch({
+        type: ACTION_USER_DATA_EDIT_REQUEST,
+        theme_color: value,
       });
     },
     isCurrentThemeColor(themeKey) {
