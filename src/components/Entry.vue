@@ -78,6 +78,7 @@
     </div>
     <div class="entry__sentinel" />
     <div class="entry__content" v-show="isOpen" v-html="entryContent" />
+    <div class="entry__end__sentinel" />
   </div>
 </template>
 

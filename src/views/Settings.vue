@@ -11,6 +11,10 @@
     </div>
     -->
     <div class="section">
+      <h3 class="section-title">Automatically mark article as read</h3>
+      <MarkAsReadStrategySwitcher />
+    </div>
+    <div class="section">
       <h3 class="section-title">Account</h3>
       <button
         type="button"
@@ -25,6 +29,7 @@
 
 <script>
 import { BIconGearFill } from "bootstrap-icons-vue";
+import MarkAsReadStrategySwitcher from "@/components/MarkAsReadStrategySwitcher";
 /*import ThemeSwitcher from "@/components/ThemeSwitcher";*/
 
 import { ACTION_AUTH_LOGOUT } from "../types";
@@ -33,6 +38,7 @@ export default {
   name: "Settings",
   components: {
     BIconGearFill,
+    MarkAsReadStrategySwitcher,
     /*ThemeSwitcher,*/
   },
   methods: {

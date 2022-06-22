@@ -41,6 +41,7 @@ import {
   GET_STATUS,
   GET_ENTRIES_REQUEST_PARAMS,
   GET_ENTRIES_NEXT_PAGE,
+  GET_USER,
 } from "../types";
 
 export default {
@@ -53,9 +54,11 @@ export default {
       entryRefs: {},
       scrollEventDebounce: {},
       scrollRequestDebounce: {},
+      markAsReadTimeout: {},
       entriesListEndObserver: null,
       openedEntryObserver: null,
       entryHeaderObserver: null,
+      entryMarkAsReadObserver: null,
       previousTop: 0,
       previousHeight: 0,
     };
@@ -67,9 +70,19 @@ export default {
       entriesNextPage: GET_ENTRIES_NEXT_PAGE,
       entriesRequestParams: GET_ENTRIES_REQUEST_PARAMS,
       channels: GET_CHANNELS,
+      user: GET_USER,
     }),
     hasMoreEntries() {
       return this.entriesNextPage !== null && this.entriesNextPage !== "";
+    },
+    markAsReadStrategy() {
+      return this.user.entry_mark_as_read_strategy;
+    },
+    markAsReadOpenTime() {
+      return this.user.entry_mark_as_read_open_time;
+    },
+    markAsReadRatio() {
+      return this.user.entry_mark_as_read_ratio;
     },
   },
   methods: {
@@ -128,10 +141,26 @@ export default {
       if (initialEntryContentObj) {
         this.initialEntryContent = initialEntryContentObj.content;
       }
-      this.$store.dispatch({
-        type: ACTION_ENTRY_REQUEST,
-        id: entry.id,
-      });
+      this.$store
+        .dispatch({
+          type: ACTION_ENTRY_REQUEST,
+          id: entry.id,
+        })
+        .then(() => {
+          // This needs to be here to prevent race condition mostly visible
+          // when using 'opened' strategy.
+          // Marking as read modifies store and then sends request.
+          // If we call setupMarkAsRead with other setups below, following
+          // could happen:
+          // 1. We send ACTION_ENTRY_REQUEST
+          // 2. We mark entry as read in store and send request
+          // 3. We get response from ACTION_ENTRY_REQUEST, which was generated
+          //    when entry was still unread - and it will cancel our marking
+          //    as read
+          this.$nextTick(() => {
+            this.setupMarkAsRead(index);
+          });
+        });
       this.$nextTick(() => {
         this.setupEntryHeaderObserver(index);
         this.openEntryScroll(entry, container);
@@ -143,8 +172,11 @@ export default {
       this.openedIndex = -1;
       this.clearObserver(this.openedEntryObserver);
       this.clearObserver(this.entryHeaderObserver);
+      this.clearObserver(this.entryMarkAsReadObserver);
+      clearTimeout(this.markAsReadTimeout);
       this.openedEntryObserver = null;
       this.entryHeaderObserver = null;
+      this.entryMarkAsReadObserver = null;
       const elem = this.getEntryRef(index);
       elem.querySelector(".entry__meta").classList.remove("on-top");
 
@@ -235,6 +267,56 @@ export default {
         }
       });
     },
+    setupMarkAsRead(index) {
+      if (this.markAsReadStrategy === "opened") {
+        const entry = this.entries[this.openedIndex];
+        if (!entry.archived) {
+          this.changeArchivedState(this.openedIndex);
+        }
+        return;
+      }
+
+      if (this.markAsReadStrategy === "open_for_time") {
+        const timeout = this.markAsReadOpenTime * 1000;
+        clearTimeout(this.markAsReadTimeout);
+        this.markAsReadTimeout = setTimeout(() => {
+          const entry = this.entries[this.openedIndex];
+          if (!entry.archived) {
+            this.changeArchivedState(this.openedIndex);
+          }
+        }, timeout);
+        return;
+      }
+
+      if (
+        this.markAsReadStrategy === "percent_read" &&
+        this.markAsReadRatio >= 1
+      ) {
+        this.clearObserver(this.entryMarkAsReadObserver);
+        const rootElem = document.getElementById("router-view");
+        const elem = this.getEntryRef(index);
+        const entrySentinelElem = elem.querySelector(".entry__end__sentinel");
+        const observerOptions = {
+          root: rootElem,
+          threshold: [1],
+        };
+        this.entryMarkAsReadObserver = new IntersectionObserver(
+          (observerEntries) => {
+            const observerEntry = observerEntries[0];
+            if (observerEntry.isIntersecting === false) {
+              return;
+            }
+            const entry = this.entries[this.openedIndex];
+            if (!entry.archived) {
+              this.changeArchivedState(this.openedIndex);
+            }
+          },
+          observerOptions
+        );
+        this.entryMarkAsReadObserver.observe(entrySentinelElem);
+        return;
+      }
+    },
     openedEntryScrolled(observerEntries) {
       const contentNode = observerEntries[0].target.closest(".entry__content");
       if (contentNode === null) {
@@ -288,7 +370,11 @@ export default {
       const readerPositionRatio = readerPosition / contentNode.clientHeight;
       const entry = this.entries[this.openedIndex];
 
-      if (!entry.archived && readerPositionRatio > 0.9) {
+      if (
+        !entry.archived &&
+        this.markAsReadStrategy === "percent_read" &&
+        readerPositionRatio > this.markAsReadRatio
+      ) {
         this.changeArchivedState(this.openedIndex);
       }
 
@@ -486,6 +572,8 @@ export default {
     this.clearObserver(this.entriesListEndObserver);
     this.clearObserver(this.openedEntryObserver);
     this.clearObserver(this.entryHeaderObserver);
+    this.clearObserver(this.entryMarkAsReadObserver);
+    clearTimeout(this.markAsReadTimeout);
   },
   components: {
     Entry,
