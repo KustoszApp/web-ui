@@ -26,6 +26,9 @@
         <button class="btn" @click="editFilter(filter)">
           <BIconPencilFill />
         </button>
+        <button class="btn" @click="copyFilter(filter)">
+          <BIconFileEarmarkPlus />
+        </button>
         <button class="btn btn--danger" @click="showDeleteFilterModal(filter)">
           <BIconTrash />
         </button>
@@ -95,6 +98,7 @@
               type="button"
               class="btn btn--main-action"
               @click="saveFilter"
+              :disabled="!filterFormIsValid()"
             >
               Save
             </button>
@@ -153,7 +157,11 @@
 </template>
 
 <script>
-import { BIconPencilFill, BIconTrash } from "bootstrap-icons-vue";
+import {
+  BIconFileEarmarkPlus,
+  BIconPencilFill,
+  BIconTrash,
+} from "bootstrap-icons-vue";
 import VueModal from "@kouts/vue-modal";
 import { mapGetters } from "vuex";
 import { formatDate } from "../utils";
@@ -175,6 +183,7 @@ import {
 export default {
   name: "Filters",
   components: {
+    BIconFileEarmarkPlus,
     BIconPencilFill,
     BIconTrash,
     Modal: VueModal,
@@ -189,6 +198,7 @@ export default {
       editedFilterActionName: "",
       editedFilterActionArgument: "",
       filterActions: [
+        { value: "", label: "Select action", has_argument: false },
         { value: "mark_as_read", label: "Mark as read", has_argument: false },
         { value: "assign_tag", label: "Assign tag", has_argument: true },
         {
@@ -272,11 +282,40 @@ export default {
       this.editedFilterActionArgument = filter.action_argument;
       this.editFilterModalDisplayed = true;
     },
+    copyFilter(filter) {
+      this.editedFilterName = `${filter.name} - Copy`;
+      this.editedFilterCondition = filter.condition;
+      this.editedFilterActionName = filter.action_name;
+      this.editedFilterActionArgument = filter.action_argument;
+      this.editFilterModalDisplayed = true;
+    },
     tryFilter() {
       this.$store.dispatch({
         type: ACTION_FILTER_TRY_REQUEST,
         condition: this.editedFilterCondition,
       });
+    },
+    filterFormIsValid() {
+      if (!this.editedFilterName.trim()) {
+        return false;
+      }
+      if (!this.editedFilterCondition.trim()) {
+        return false;
+      }
+      if (!this.editedFilterActionName) {
+        return false;
+      }
+      if (
+        this.editedFilterActionArgumentRequired &&
+        !this.editedFilterActionArgument
+      ) {
+        return false;
+      }
+      const filterNames = this.filters.map((filter) => filter.name);
+      if (this.isNewFilter && filterNames.includes(this.editedFilterName)) {
+        return false;
+      }
+      return true;
     },
     saveFilter() {
       let dispatch_type = ACTION_FILTER_EDIT_REQUEST;
