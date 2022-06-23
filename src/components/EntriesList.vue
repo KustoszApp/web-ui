@@ -269,10 +269,7 @@ export default {
     },
     setupMarkAsRead(index) {
       if (this.markAsReadStrategy === "opened") {
-        const entry = this.entries[this.openedIndex];
-        if (!entry.archived) {
-          this.changeArchivedState(this.openedIndex);
-        }
+        this.changeArchivedState(this.openedIndex, true);
         return;
       }
 
@@ -280,10 +277,7 @@ export default {
         const timeout = this.markAsReadOpenTime * 1000;
         clearTimeout(this.markAsReadTimeout);
         this.markAsReadTimeout = setTimeout(() => {
-          const entry = this.entries[this.openedIndex];
-          if (!entry.archived) {
-            this.changeArchivedState(this.openedIndex);
-          }
+          this.changeArchivedState(this.openedIndex, true);
         }, timeout);
         return;
       }
@@ -306,10 +300,7 @@ export default {
             if (observerEntry.isIntersecting === false) {
               return;
             }
-            const entry = this.entries[this.openedIndex];
-            if (!entry.archived) {
-              this.changeArchivedState(this.openedIndex);
-            }
+            this.changeArchivedState(this.openedIndex, true);
           },
           observerOptions
         );
@@ -371,11 +362,10 @@ export default {
       const entry = this.entries[this.openedIndex];
 
       if (
-        !entry.archived &&
         this.markAsReadStrategy === "ratio_read" &&
         readerPositionRatio > this.markAsReadRatio
       ) {
-        this.changeArchivedState(this.openedIndex);
+        this.changeArchivedState(this.openedIndex, true);
       }
 
       clearTimeout(this.scrollRequestDebounce);
@@ -383,8 +373,11 @@ export default {
         this.sendEntryReadPositionRequest(entry.id, readerPositionRatio);
       }, 1000);
     },
-    changeArchivedState(index) {
+    changeArchivedState(index, desiredState) {
       const entry = this.entries[index];
+      if (entry.archived === desiredState) {
+        return;
+      }
       const archivedStateNew = !entry.archived;
       let unarchivedEntriesCountChange = "decrease";
       if (!archivedStateNew) {
