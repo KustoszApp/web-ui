@@ -30,22 +30,30 @@
           {{ channel.displayed_title }}
         </label>
       </div>
-      <div class="col btn-row">
-        <button class="btn" @click="showChannelEditModal(channel)">
-          <BIconPencilFill />
-        </button>
-
-        <router-link
-          :to="{
-            name: this.ROUTE_ENTRIES,
-            query: { channel: channel.id, channel_tags: null },
-          }"
-          title="See channel content"
-        >
-          <button class="btn btn--main-action">
-            <BIconBinocularsFill />
+      <div class="col">
+        <ActionsList>
+          <button
+            class="btn"
+            title="Edit"
+            @click="showChannelEditModal(channel)"
+          >
+            <BIconPencilFill />
+            <span>Edit</span>
           </button>
-        </router-link>
+
+          <router-link
+            :to="{
+              name: this.ROUTE_ENTRIES,
+              query: { channel: channel.id, channel_tags: null },
+            }"
+            title="See channel content"
+          >
+            <button class="btn btn--main-action">
+              <BIconBinocularsFill />
+              <span>See channel content</span>
+            </button>
+          </router-link>
+        </ActionsList>
       </div>
     </div>
   </div>
@@ -119,6 +127,7 @@
 <script>
 import { BIconPencilFill, BIconBinocularsFill } from "bootstrap-icons-vue";
 import { mapGetters } from "vuex";
+import ActionsList from "@/components/ActionsList.vue";
 import ChannelEditModal from "@/components/ChannelEditModal.vue";
 import VueModal from "@kouts/vue-modal";
 import { calculateReferenceDate } from "../utils";
@@ -135,6 +144,7 @@ import {
 export default {
   name: "ChannelsMaintenance",
   components: {
+    ActionsList,
     BIconPencilFill,
     BIconBinocularsFill,
     ChannelEditModal,

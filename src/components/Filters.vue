@@ -22,16 +22,25 @@
           {{ filter.name }}
         </label>
       </div>
-      <div class="col btn-row">
-        <button class="btn" @click="editFilter(filter)">
-          <BIconPencilFill />
-        </button>
-        <button class="btn" @click="copyFilter(filter)">
-          <BIconFileEarmarkPlus />
-        </button>
-        <button class="btn btn--danger" @click="showDeleteFilterModal(filter)">
-          <BIconTrash />
-        </button>
+      <div class="col">
+        <ActionsList>
+          <button class="btn" title="Edit" @click="editFilter(filter)">
+            <BIconPencilFill />
+            <span>Edit</span>
+          </button>
+          <button class="btn" title="Copy" @click="copyFilter(filter)">
+            <BIconFileEarmarkPlus />
+            <span>Copy</span>
+          </button>
+          <button
+            class="btn btn--danger"
+            title="Delete"
+            @click="showDeleteFilterModal(filter)"
+          >
+            <BIconTrash />
+            <span>Delete</span>
+          </button>
+        </ActionsList>
       </div>
     </div>
   </div>
@@ -164,6 +173,7 @@ import {
 } from "bootstrap-icons-vue";
 import VueModal from "@kouts/vue-modal";
 import { mapGetters } from "vuex";
+import ActionsList from "@/components/ActionsList.vue";
 import { formatDate } from "../utils";
 
 import {
@@ -183,6 +193,7 @@ import {
 export default {
   name: "Filters",
   components: {
+    ActionsList,
     BIconFileEarmarkPlus,
     BIconPencilFill,
     BIconTrash,
