@@ -15,6 +15,18 @@
       <MarkAsReadStrategySwitcher />
     </div>
     <div class="section">
+      <h3 class="section-title">Behavior</h3>
+      <input
+        class="input-check"
+        type="checkbox"
+        id="entryOpenScrollToTop"
+        v-model="entryOpenScrollToTop"
+      />
+      <label for="entryOpenScrollToTop">
+        Always keep opened entry on top of list
+      </label>
+    </div>
+    <div class="section">
       <h3 class="section-title">Account</h3>
       <button
         type="button"
@@ -28,11 +40,16 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import { BIconGearFill } from "bootstrap-icons-vue";
 import MarkAsReadStrategySwitcher from "@/components/MarkAsReadStrategySwitcher";
 /*import ThemeSwitcher from "@/components/ThemeSwitcher";*/
 
-import { ACTION_AUTH_LOGOUT } from "../types";
+import {
+  GET_USER,
+  ACTION_AUTH_LOGOUT,
+  ACTION_USER_DATA_EDIT_REQUEST,
+} from "../types";
 
 export default {
   name: "Settings",
@@ -40,6 +57,22 @@ export default {
     BIconGearFill,
     MarkAsReadStrategySwitcher,
     /*ThemeSwitcher,*/
+  },
+  computed: {
+    ...mapGetters({
+      user: GET_USER,
+    }),
+    entryOpenScrollToTop: {
+      get() {
+        return this.user.entry_open_scroll_to_top;
+      },
+      set(newValue) {
+        this.$store.dispatch({
+          type: ACTION_USER_DATA_EDIT_REQUEST,
+          entry_open_scroll_to_top: newValue,
+        });
+      },
+    },
   },
   methods: {
     logout() {

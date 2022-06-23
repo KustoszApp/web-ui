@@ -84,6 +84,9 @@ export default {
     markAsReadRatio() {
       return this.user.entry_mark_as_read_ratio;
     },
+    entryScrollToTopOnOpening() {
+      return this.user.entry_open_scroll_to_top;
+    },
   },
   methods: {
     isAnyOpened() {
@@ -195,10 +198,15 @@ export default {
       const refDomRectTop = ref.getBoundingClientRect().top;
 
       // scroll entry to top of page if:
-      // 1. header is at the bottom half of screen
-      // 2. we just closed another entry, and header ended up way above
+      // 1. user prefers to always do that
+      // 2. header is at the bottom half of screen
+      // 3. we just closed another entry, and header ended up way above
       //    top of viewport
-      if (refDomRectTop > clientHeight / 2 || 0 > refDomRectTop) {
+      if (
+        this.entryScrollToTopOnOpening ||
+        refDomRectTop > clientHeight / 2 ||
+        0 > refDomRectTop
+      ) {
         ref.scrollIntoView(true);
       }
 
