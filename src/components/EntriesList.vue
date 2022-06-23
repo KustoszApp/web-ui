@@ -289,7 +289,7 @@ export default {
       }
 
       if (
-        this.markAsReadStrategy === "percent_read" &&
+        this.markAsReadStrategy === "ratio_read" &&
         this.markAsReadRatio >= 1
       ) {
         this.clearObserver(this.entryMarkAsReadObserver);
@@ -372,7 +372,7 @@ export default {
 
       if (
         !entry.archived &&
-        this.markAsReadStrategy === "percent_read" &&
+        this.markAsReadStrategy === "ratio_read" &&
         readerPositionRatio > this.markAsReadRatio
       ) {
         this.changeArchivedState(this.openedIndex);

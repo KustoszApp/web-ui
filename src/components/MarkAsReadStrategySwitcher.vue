@@ -40,18 +40,18 @@
     <div class="row">
       <input
         type="radio"
-        id="mark-as-read-percent_read"
-        :value="'percent_read'"
+        id="mark-as-read-ratio_read"
+        :value="'ratio_read'"
         v-model="markAsReadStrategy"
       />
-      <label for="mark-as-read-percent_read">
+      <label for="mark-as-read-ratio_read">
         When
         <input
           type="number"
           min="0"
           max="100"
           step="1"
-          :disabled="markAsReadStrategy !== 'percent_read'"
+          :disabled="markAsReadStrategy !== 'ratio_read'"
           v-model="markAsReadRatio"
         />
         % has been read
