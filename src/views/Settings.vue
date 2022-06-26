@@ -4,12 +4,10 @@
       <BIconGearFill />
       Settings
     </h2>
-    <!--  FIXME: hide until dark theme is usable
     <div class="section">
       <h3 class="section-title">Theme</h3>
       <ThemeSwitcher />
     </div>
-    -->
     <div class="section">
       <h3 class="section-title">Automatically mark article as read</h3>
       <MarkAsReadStrategySwitcher />
@@ -43,7 +41,7 @@
 import { mapGetters } from "vuex";
 import { BIconGearFill } from "bootstrap-icons-vue";
 import MarkAsReadStrategySwitcher from "@/components/MarkAsReadStrategySwitcher";
-/*import ThemeSwitcher from "@/components/ThemeSwitcher";*/
+import ThemeSwitcher from "@/components/ThemeSwitcher";
 
 import {
   GET_USER,
@@ -56,7 +54,7 @@ export default {
   components: {
     BIconGearFill,
     MarkAsReadStrategySwitcher,
-    /*ThemeSwitcher,*/
+    ThemeSwitcher,
   },
   computed: {
     ...mapGetters({

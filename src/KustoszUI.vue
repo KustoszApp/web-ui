@@ -48,7 +48,11 @@ export default {
     },
   },
   created() {
-    document.documentElement.dataset.theme = this.defaultThemeColor;
+    let defaultThemeColor = this.userThemeColor;
+    if (defaultThemeColor === undefined || defaultThemeColor === "") {
+      defaultThemeColor = this.defaultThemeColor;
+    }
+    document.documentElement.dataset.theme = defaultThemeColor;
     this.$watch(
       () => this.userThemeColor,
       (newVal) => {
@@ -87,7 +91,6 @@ html[data-theme="light"] {
   --main-bg-color: #f1eddf;
   --secondary-text-color: #505050;
   --main-link-color: #1e67aa;
-  --focus-outline-color: #1d9bf3;
   --nav-bg-color: #dfe5e1;
   /* buttons */
   --btn-bg-color: #e0dbcc;
@@ -107,6 +110,7 @@ html[data-theme="light"] {
   --entry-archived-focused-header-bg-color: var(--btn-bg-color);
   --entry-focused-header-link-color: #06457c;
 
+  --vm-bg-color: #ffffff;
   /* used by multiselect */
   --ms-bg: transparent;
   --ms-placeholder-color: #8f8f8f;
@@ -117,35 +121,38 @@ html[data-theme="light"] {
 
 html[data-theme="dark"] {
   --main-text-color: #dfdfdf;
-  --main-bg-color: #2d2d2d;
-  --secondary-text-color: #707070;
-  --main-link-color: #00fec5;
-  --focus-outline-color: #00fec5;
-  --nav-bg-color: #323232;
+  --main-bg-color: #242b31;
+  --secondary-text-color: #9e9e9e;
+  --main-link-color: #6da3d6;
+  --nav-bg-color: #283541;
   /* buttons */
-  --btn-bg-color: #e0dbcc;
+  --btn-bg-color: #424f59;
   --btn-active-text-color: var(--main-action-active-text-color);
-  --btn-active-bg-color: #948c78;
-  --main-action-bg-color: #ffae00;
+  --btn-active-bg-color: #6a7f8e;
+  --main-action-bg-color: #3a4839;
   --main-action-active-text-color: #020304;
-  --main-action-active-bg-color: #657d61;
+  --main-action-active-bg-color: #6b8469;
   --danger-bg-color: #ff5130;
   --danger-text-color: #323232;
-  --danger-active-bg-color: #ff5130;
-  --danger-active-text-color: #ff5130;
+  --danger-active-bg-color: #fe8974;
+  --danger-active-text-color: #323232;
   /* entry */
-  --entry-header-bg-color: #ffffff;
+  --entry-header-bg-color: #000000;
   --entry-archived-header-bg-color: var(--main-bg-color);
   --entry-focused-header-bg-color: var(--main-action-bg-color);
-  --entry-archived-focused-header-bg-color: #cfd6b2;
-  --entry-focused-header-link-color: #06457c;
+  --entry-archived-focused-header-bg-color: #2d353d;
+  --entry-focused-header-link-color: #8ab0d4;
 
+  --vm-bg-color: var(--main-bg-color);
   /* used by multiselect */
   --ms-bg: transparent;
   --ms-placeholder-color: #8f8f8f;
   --ms-tag-bg: var(--main-action-bg-color);
   --ms-tag-color: var(--main-text-color);
   --ms-border-color: var(--main-text-color);
+  --ms-dropdown-bg: #000000;
+  --ms-option-color-pointed: var(--main-text-color);
+  --ms-option-bg-pointed: #242b31;
 }
 
 // 2. default styles and resets
@@ -271,6 +278,10 @@ input[type="checkbox"] + label {
 }
 
 // 3.4. Modals
+
+.vm-wrapper .vm {
+  background-color: var(--vm-bg-color);
+}
 
 @media (min-width: 992px) {
   .modal.modal-lg {
