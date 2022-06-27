@@ -25,6 +25,25 @@
       </label>
     </div>
     <div class="section">
+      <h3 class="section-title">“Add a page” bookmarklet</h3>
+      <p>
+        The link below is a
+        <a href="https://en.wikipedia.org/wiki/Bookmarklet">bookmarklet</a> - a
+        special bookmark that executes JavaScript in the context of currently
+        opened page. Add it to your browser bookmarks and click the bookmark
+        next time you visit a page you would like to add to Kustosz.
+        <a
+          href="https://docs.kustosz.org/en/stable/basic-usage.html#adding-web-page-manually"
+          >Read more</a
+        >.
+      </p>
+      <p>
+        <a :href="getBookmarkletHref" title="Add to Kustosz">
+          Add to Kustosz
+        </a>
+      </p>
+    </div>
+    <div class="section">
       <h3 class="section-title">Account</h3>
       <button
         type="button"
@@ -38,6 +57,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import { mapGetters } from "vuex";
 import { BIconGearFill } from "bootstrap-icons-vue";
 import MarkAsReadStrategySwitcher from "@/components/MarkAsReadStrategySwitcher";
@@ -47,6 +67,7 @@ import {
   GET_USER,
   ACTION_AUTH_LOGOUT,
   ACTION_USER_DATA_EDIT_REQUEST,
+  TOKEN_STORAGE_KEY,
 } from "../types";
 
 export default {
@@ -71,6 +92,18 @@ export default {
         });
       },
     },
+    getBookmarkletHref() {
+      const token = localStorage.getItem(TOKEN_STORAGE_KEY);
+      const href = `javascript:(function(){
+          fetch('${axios.defaults.baseURL}/entries/manual_add',
+          {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Authorization': 'Token ${token}'},
+            body: JSON.stringify({link: window.location.href.split("#")[0]})
+          })
+        })()`;
+      return href;
+    },
   },
   methods: {
     logout() {
@@ -81,8 +114,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.section .section-title {
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
+@import "../scss/mixins";
+
+.section {
+  max-width: 100%;
+  @include for-tablet-landscape-up {
+    max-width: 50rem;
+  }
+
+  .section-title {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
 }
 </style>

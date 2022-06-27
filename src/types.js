@@ -154,3 +154,9 @@ export const ROUTE_MAINTENANCE_INACTIVE_CHANNELS = "maintenance_inactive_channel
 //
 
 export const REF_SIDEBAR = "REF_SIDEBAR";
+
+//
+// Misc
+//
+
+export const TOKEN_STORAGE_KEY = "token";

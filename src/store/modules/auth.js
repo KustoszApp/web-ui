@@ -12,9 +12,8 @@ import {
     ACTION_AUTH_LOGIN,
     ACTION_AUTH_LOGOUT,
     ACTION_CHECK_TOKEN,
+    TOKEN_STORAGE_KEY,
 } from "../../types";
-
-const TOKEN_STORAGE_KEY = "token";
 
 const state = {
     status: "",
