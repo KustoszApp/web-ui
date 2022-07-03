@@ -24,8 +24,8 @@
     "@fullhuman/postcss-purgecss": "^3.0.0",
     "@kouts/vue-modal": "^3.0.2",
     "@vueform/multiselect": "^2.2.0",
-    "axios": "^0.24.0",
-    "bootstrap-icons-vue": "^0.8.0",
+    "axios": "^0.27.2",
+    "bootstrap-icons-vue": "^1.8.1",
     "register-service-worker": "^1.7.1",
     "sanitize.css": "^13.0.0",
     "vue": "^3.0.0",
@@ -42,10 +42,10 @@
     "@vue/eslint-config-prettier": "^7.0.0",
     "eslint": "^8.0.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-vue": "^8.0.0",
+    "eslint-plugin-vue": "^9.0.0",
     "prettier": "^2.0.0",
     "sass": "^1.26.5",
-    "sass-loader": "^12.0.0"
+    "sass-loader": "^13.0.0"
   },
   "eslintConfig": {
     "root": true,
