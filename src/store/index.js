@@ -3,6 +3,7 @@ import { createStore } from "vuex";
 import auth from "./modules/auth";
 import autodetect from "./modules/autodetect";
 import channels from "./modules/channels";
+import data_export from "./modules/data_export";
 import entries from "./modules/entries";
 import filters from "./modules/filters";
 import maintenance from "./modules/maintenance";
@@ -14,6 +15,7 @@ export default createStore({
         auth,
         autodetect,
         channels,
+        data_export,
         entries,
         filters,
         maintenance,

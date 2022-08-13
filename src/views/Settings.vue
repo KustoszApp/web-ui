@@ -46,31 +46,12 @@
     <div class="section">
       <h3 class="section-title">Export data</h3>
       <button
-        v-if="isServerSameOrigin"
         type="button"
         class="btn btn--main-action btn--big"
         @click="exportOPML"
       >
         Export channels as OPML
       </button>
-      <div v-if="!isServerSameOrigin">
-        <p>
-          Data export requires server and frontend to share an
-          <a
-            href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Origin"
-          >
-            HTTP Origin</a
-          >.
-        </p>
-        <p>
-          You can still export data using
-          <a
-            href="https://docs.kustosz.org/en/stable/basic-usage.html#exporting-channels-to-opml-file"
-          >
-            command line tool</a
-          >.
-        </p>
-      </div>
     </div>
     <div class="section">
       <h3 class="section-title">Account</h3>
@@ -95,6 +76,7 @@ import ThemeSwitcher from "@/components/ThemeSwitcher";
 import {
   GET_USER,
   ACTION_AUTH_LOGOUT,
+  ACTION_EXPORT_GET_OTT_REQUEST,
   ACTION_USER_DATA_EDIT_REQUEST,
   TOKEN_STORAGE_KEY,
 } from "../types";
@@ -133,17 +115,13 @@ export default {
         })()`;
       return href;
     },
-    isServerSameOrigin() {
-      const axios_url = new URL(axios.defaults.baseURL);
-      const client_url = new URL(window.location.href);
-
-      return axios_url.origin === client_url.origin;
-    },
   },
   methods: {
     exportOPML() {
-      const url = `${axios.defaults.baseURL}/export/channels`;
-      document.location.href = url;
+      this.$store.dispatch(ACTION_EXPORT_GET_OTT_REQUEST).then((token) => {
+        const url = `${axios.defaults.baseURL}/export/channels?token=${token}`;
+        document.location.href = url;
+      });
     },
     logout() {
       this.$store.dispatch(ACTION_AUTH_LOGOUT);
