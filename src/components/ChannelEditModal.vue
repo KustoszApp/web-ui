@@ -281,6 +281,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@vueform/multiselect/themes/default.css";
 @import "../scss/mixins";
 
 .row {

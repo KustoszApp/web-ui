@@ -301,6 +301,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@vueform/multiselect/themes/default.css";
 @import "../scss/mixins";
 @mixin full-form-visible {
   form.simple .row {
@@ -356,6 +357,7 @@ export default {
 
       &.multiselect-wrapper {
         flex-grow: 1;
+        justify-content: normal;
       }
 
       @include for-desktop-up {

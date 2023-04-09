@@ -379,6 +379,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@vueform/multiselect/themes/default.css";
 @import "../scss/mixins";
 div.btn--dropdown {
   display: flex;

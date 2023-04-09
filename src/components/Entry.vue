@@ -224,6 +224,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@vueform/multiselect/themes/default.css";
 @import "../scss/mixins";
 .entry {
   --current-entry-header-bg-color: var(--entry-header-bg-color);
