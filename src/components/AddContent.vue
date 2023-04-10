@@ -344,10 +344,16 @@ export default {
       });
     },
     addEntryClicked(link) {
+      const payload = {
+        link: link,
+      };
+      if (this.tags.length > 0) {
+        payload.tags = this.tags;
+      }
       this.$store
         .dispatch({
           type: ACTION_ENTRY_ADD_MANUAL_REQUEST,
-          link: link,
+          ...payload,
         })
         .then(() => {
           this.hideAddContentModal();
