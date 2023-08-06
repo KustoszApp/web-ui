@@ -36,7 +36,10 @@ const mutations = {
         state.autodetectedChannels = data.channels;
         state.autodetectedEntries = data.entries;
     },
-    [MUTATION_AUTODETECT_ERROR]: (state) => (state.status = "error"),
+    [MUTATION_AUTODETECT_ERROR]: (state) => {
+        state.status = "error";
+        state.autodetectState = "failed";
+    },
     [MUTATION_AUTODETECT_RESET]: (state) => {
         state.autodetectState = "";
         state.autodetectedChannels = [];
