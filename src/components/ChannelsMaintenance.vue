@@ -129,7 +129,7 @@ import { BIconPencilFill, BIconBinocularsFill } from "bootstrap-icons-vue";
 import { mapGetters } from "vuex";
 import ActionsList from "@/components/ActionsList.vue";
 import ChannelEditModal from "@/components/ChannelEditModal.vue";
-import VueModal from "@kouts/vue-modal";
+import { Modal } from "@kouts/vue-modal";
 import { calculateReferenceDate } from "../utils";
 
 import {
@@ -148,7 +148,7 @@ export default {
     BIconPencilFill,
     BIconBinocularsFill,
     ChannelEditModal,
-    Modal: VueModal,
+    Modal,
   },
   props: {
     initialQuery: Object,

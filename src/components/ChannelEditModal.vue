@@ -142,7 +142,7 @@
 <script>
 import { BIconPencilFill } from "bootstrap-icons-vue";
 import Multiselect from "@vueform/multiselect";
-import VueModal from "@kouts/vue-modal";
+import { Modal } from "@kouts/vue-modal";
 import { mapGetters } from "vuex";
 import { formatDate } from "../utils";
 
@@ -156,7 +156,7 @@ export default {
   name: "ChannelEditModal",
   components: {
     BIconPencilFill,
-    Modal: VueModal,
+    Modal,
     Multiselect,
   },
   props: {

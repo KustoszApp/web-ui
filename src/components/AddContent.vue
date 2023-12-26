@@ -259,7 +259,7 @@
 
 <script>
 import Multiselect from "@vueform/multiselect";
-import VueModal from "@kouts/vue-modal";
+import { Modal } from "@kouts/vue-modal";
 import { BIconCaretDownFill } from "bootstrap-icons-vue";
 import { mapGetters } from "vuex";
 import Collapse from "@/components/Collapse.vue";
@@ -282,7 +282,7 @@ export default {
   components: {
     BIconCaretDownFill,
     Collapse,
-    Modal: VueModal,
+    Modal,
     Multiselect,
   },
   computed: {

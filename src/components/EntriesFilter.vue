@@ -134,7 +134,7 @@
 
 <script>
 import Multiselect from "@vueform/multiselect";
-import VueModal from "@kouts/vue-modal";
+import { Modal } from "@kouts/vue-modal";
 import qs from "qs";
 import { mapGetters } from "vuex";
 import { calculateReferenceDate } from "../utils";
@@ -150,7 +150,7 @@ import {
 export default {
   name: "EntriesFilter",
   components: {
-    Modal: VueModal,
+    Modal,
     Multiselect,
   },
   data() {

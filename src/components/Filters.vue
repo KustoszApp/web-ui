@@ -48,7 +48,7 @@
     v-model="editFilterModalDisplayed"
     :title="editFilterModalTitle"
     modal-class="modal modal-lg"
-    @after-close="afterModalClose"
+    @closed="afterModalClose"
   >
     <div class="modal-body">
       <form>
@@ -171,7 +171,7 @@ import {
   BIconPencilFill,
   BIconTrash,
 } from "bootstrap-icons-vue";
-import VueModal from "@kouts/vue-modal";
+import { Modal } from "@kouts/vue-modal";
 import { mapGetters } from "vuex";
 import ActionsList from "@/components/ActionsList.vue";
 import { formatDate } from "../utils";
@@ -197,7 +197,7 @@ export default {
     BIconFileEarmarkPlus,
     BIconPencilFill,
     BIconTrash,
-    Modal: VueModal,
+    Modal,
   },
   data() {
     return {
