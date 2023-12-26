@@ -60,7 +60,7 @@ export default {
           newVal = this.defaultThemeColor;
         }
         document.documentElement.dataset.theme = newVal;
-      }
+      },
     );
   },
 };
@@ -202,7 +202,9 @@ span.vm {
   display: inline-block;
   padding: 0.25rem 0.75rem;
   border: var(--main-border-width) solid transparent;
-  transition: all 0.3s ease-out, visibility 0s;
+  transition:
+    all 0.3s ease-out,
+    visibility 0s;
   line-height: 1.5;
   background-color: var(--btn-bg-color);
 

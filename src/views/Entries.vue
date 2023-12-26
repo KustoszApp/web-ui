@@ -62,7 +62,7 @@ export default {
     this.$watch(
       () => this.$route,
       ($route /* eslint-disable-line no-unused-vars*/) =>
-        this.queryParamsChanged()
+        this.queryParamsChanged(),
     );
   },
   mounted() {

@@ -274,7 +274,7 @@ export default {
   created() {
     this.$watch(
       () => this.channel,
-      (newChannel) => this.setupChannelEditModal(newChannel)
+      (newChannel) => this.setupChannelEditModal(newChannel),
     );
   },
 };

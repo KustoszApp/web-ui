@@ -146,7 +146,7 @@ export default {
         return;
       }
       const channel = this.channels.find(
-        (item) => item.id === this.entry.channel
+        (item) => item.id === this.entry.channel,
       );
       return channel?.displayed_title;
     },
@@ -197,7 +197,7 @@ export default {
     },
     newContentSelected() {
       const newContent = this.entry.contents.find(
-        (x) => x.id === this.entrySelectedContent
+        (x) => x.id === this.entrySelectedContent,
       );
       this.entryContent = newContent.content;
       this.$emit("entry-content-changed", this.index);

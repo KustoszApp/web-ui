@@ -291,7 +291,7 @@ export default {
         } else {
           this.setSimpleFormValues();
         }
-      }
+      },
     );
   },
   mounted() {

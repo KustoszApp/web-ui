@@ -28,7 +28,7 @@ function repeatAsyncRequestWhileInProgress(response) {
     const delay = Math.min(retryCount, 5) * 1000;
 
     return new Promise((resolve) =>
-        setTimeout(() => resolve(axios(response.config)), delay)
+        setTimeout(() => resolve(axios(response.config)), delay),
     );
 }
 

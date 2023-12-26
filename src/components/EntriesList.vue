@@ -225,7 +225,7 @@ export default {
         const elemDomRect = curElem.getBoundingClientRect();
         let elemMarginBottom = parseInt(
           window.getComputedStyle(curElem).marginBottom,
-          10
+          10,
         );
         if (isNaN(elemMarginBottom)) {
           elemMarginBottom = 0;
@@ -268,7 +268,7 @@ export default {
         const entryContentElem = elem.querySelector(".entry__content");
         this.openedEntryObserver = new IntersectionObserver(
           this.openedEntryScrolled,
-          { threshold: [0] }
+          { threshold: [0] },
         );
         for (let child of entryContentElem.getElementsByTagName("*")) {
           this.openedEntryObserver.observe(child);
@@ -310,7 +310,7 @@ export default {
             }
             this.changeArchivedState(this.openedIndex, true);
           },
-          observerOptions
+          observerOptions,
         );
         this.entryMarkAsReadObserver.observe(entrySentinelElem);
         return;
@@ -561,7 +561,7 @@ export default {
     rootElem.addEventListener("scroll", this.onScroll);
     this.entriesListEndObserver = new IntersectionObserver(
       this.fetchMoreEntries,
-      { root: rootElem }
+      { root: rootElem },
     );
     this.entriesListEndObserver.observe(this.$refs.entriesListEnd);
   },

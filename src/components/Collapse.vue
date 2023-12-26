@@ -33,7 +33,7 @@ export default {
   created() {
     this.$watch(
       () => this.show,
-      (newVal) => (this.containerDisplayed = newVal)
+      (newVal) => (this.containerDisplayed = newVal),
     );
   },
 };

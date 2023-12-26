@@ -279,7 +279,7 @@ export default {
       () => this.initialQuery,
       (newVal /* eslint-disable-line no-unused-vars*/) => {
         this.resetComponentState();
-      }
+      },
     );
   },
 };

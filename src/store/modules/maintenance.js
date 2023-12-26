@@ -118,7 +118,7 @@ const actions = {
             .then((response) => {
                 commit(
                     MUTATION_MAINTENANCE_CHANNELS_DELETE_SUCCESS,
-                    response.data
+                    response.data,
                 );
                 commit(MUTATION_MAINTENANCE_CHANNELS_CHANGE_SUCCESS);
             })

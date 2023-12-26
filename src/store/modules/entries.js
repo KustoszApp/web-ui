@@ -100,11 +100,11 @@ const mutations = {
     [MUTATION_ENTRY_SUCCESS]: (state, data) => {
         state.status = "success";
         const entryIndex = state.entries.findIndex(
-            (entry) => entry.id === data.id
+            (entry) => entry.id === data.id,
         );
         if (0 > entryIndex) {
             console.error(
-                `Got response for entry ${data.id} that is not on list of entries`
+                `Got response for entry ${data.id} that is not on list of entries`,
             );
             return;
         }
@@ -188,7 +188,7 @@ const actions = {
     [ACTION_ENTRY_EDIT_REQUEST]: ({ commit }, param) => {
         const url = `entries/${param.id}/`;
         let data = Object.entries(param).filter(
-            ([key]) => !["id", "type"].includes(key)
+            ([key]) => !["id", "type"].includes(key),
         );
         data = Object.fromEntries(data);
         const options = {

@@ -99,7 +99,7 @@ export default {
       () => this.$route.name,
       (newRouteName /* eslint-disable-line no-unused-vars*/) => {
         this.setupViewBasedOnRouteName();
-      }
+      },
     );
   },
   mounted() {

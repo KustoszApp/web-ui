@@ -239,7 +239,7 @@ export default {
     },
     editedFilterActionArgumentRequired() {
       const selectedAction = this.filterActions.find(
-        (action) => action.value === this.editedFilterActionName
+        (action) => action.value === this.editedFilterActionName,
       );
       if (selectedAction === undefined) {
         return false;

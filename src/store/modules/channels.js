@@ -62,7 +62,7 @@ const mutations = {
     [MUTATION_MAINTENANCE_CHANNELS_DELETE_SUCCESS]: (state, data) => {
         state.status = "success";
         state.channels = state.channels.filter(
-            (channel) => !data.deleted_channels.includes(channel.id)
+            (channel) => !data.deleted_channels.includes(channel.id),
         );
     },
     [MUTATION_CHANNEL_TAGS_REQUEST]: (state) => (state.status = "loading"),
