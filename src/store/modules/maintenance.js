@@ -57,7 +57,13 @@ const actions = {
         }
         getPagedResults(url, [])
             .then((channels) => {
-                commit(MUTATION_MAINTENANCE_CHANNELS_SUCCESS, channels);
+                const filtered_channels = channels.filter(
+                    (channel) => channel.channel_type !== "manual",
+                );
+                commit(
+                    MUTATION_MAINTENANCE_CHANNELS_SUCCESS,
+                    filtered_channels,
+                );
             })
             .catch(() => {
                 commit(MUTATION_MAINTENANCE_CHANNELS_ERROR);

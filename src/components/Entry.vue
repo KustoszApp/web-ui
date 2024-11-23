@@ -148,6 +148,9 @@ export default {
       const channel = this.channels.find(
         (item) => item.id === this.entry.channel,
       );
+      if (channel?.channel_type === "manual") {
+        return;
+      }
       return channel?.displayed_title;
     },
     entrySelectedContentComputed: {

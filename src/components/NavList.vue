@@ -23,6 +23,14 @@
         </div>
       </li>
       <li
+        class="list__item"
+        v-for="channel in splitChannelsWithTags.channelsManual"
+        :key="channel.id"
+        :class="{ 'has--unarchived': channel.unarchived_entries > 0 }"
+      >
+        <ChannelItem :channel="channel" />
+      </li>
+      <li
         class="list__item list__item--group"
         v-for="group in groupedChannels"
         :key="group.tag.slug"
@@ -132,10 +140,15 @@ export default {
       return isEntries && hasNoQueryParams;
     },
     splitChannelsWithTags() {
+      const channelsManual = [];
       const channelsWithTags = [];
       const channelsWithoutTags = [];
       this.channels.forEach((channel) => {
         const tags = channel.tags;
+        if (channel.channel_type === "manual") {
+          channelsManual.push({ ...channel, displayed_title: "Manual" });
+          return;
+        }
         if (!tags.length) {
           channelsWithoutTags.push(channel);
         } else {
@@ -143,6 +156,7 @@ export default {
         }
       });
       return {
+        channelsManual: channelsManual,
         channelsWithTags: channelsWithTags,
         channelsWithoutTags: channelsWithoutTags,
       };

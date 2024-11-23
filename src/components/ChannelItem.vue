@@ -1,6 +1,10 @@
 <template>
   <div class="channel">
-    <BIconRssFill class="channel__item-icon" />
+    <BIconRssFill
+      v-if="channel.channel_type !== 'manual'"
+      class="channel__item-icon"
+    />
+    <BIconBookmarksFill v-else class="channel__item-icon" />
     <router-link
       class="channel__item-link"
       :class="{
@@ -16,18 +20,27 @@
       {{ channel.displayed_title }}
     </router-link>
     <span class="unread-count">{{ channel.unarchived_entries }}</span>
-    <BIconPencilFill class="channel__item-edit-icon" @click="$emit('edit')" />
+    <BIconPencilFill
+      v-if="channel.channel_type !== 'manual'"
+      class="channel__item-edit-icon"
+      @click="$emit('edit')"
+    />
   </div>
 </template>
 
 <script>
-import { BIconPencilFill, BIconRssFill } from "bootstrap-icons-vue";
+import {
+  BIconBookmarksFill,
+  BIconPencilFill,
+  BIconRssFill,
+} from "bootstrap-icons-vue";
 
 import { ROUTE_ENTRIES } from "../types";
 
 export default {
   name: "ChannelItem",
   components: {
+    BIconBookmarksFill,
     BIconPencilFill,
     BIconRssFill,
   },
