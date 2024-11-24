@@ -306,8 +306,12 @@ export default {
       margin-top: unset;
 
       .multiselect {
-        width: 50ex;
+        width: 30ex;
         max-width: 100%;
+
+        @include for-desktop-up {
+          width: 50ex;
+        }
       }
     }
   }
