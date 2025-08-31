@@ -168,6 +168,7 @@ export default {
         this.setupEntryHeaderObserver(index);
         this.openEntryScroll(entry, container);
         this.setupContentObserver(index);
+        this.focusEntryContent(index);
       });
     },
     closeEntry(index, ensureElementInViewport = false) {
@@ -273,6 +274,13 @@ export default {
         for (let child of entryContentElem.getElementsByTagName("*")) {
           this.openedEntryObserver.observe(child);
         }
+      });
+    },
+    focusEntryContent(index) {
+      this.$nextTick(() => {
+        const elem = this.getEntryRef(index);
+        const entryContentElem = elem.querySelector(".entry__content");
+        entryContentElem.focus();
       });
     },
     setupMarkAsRead(index) {

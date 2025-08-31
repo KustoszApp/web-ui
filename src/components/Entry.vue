@@ -77,7 +77,12 @@
       </div>
     </div>
     <div class="entry__sentinel" />
-    <div class="entry__content" v-show="isOpen" v-html="entryContent" />
+    <div
+      class="entry__content"
+      v-show="isOpen"
+      v-html="entryContent"
+      tabindex="0"
+    />
     <div class="entry__end__sentinel" />
   </div>
 </template>
@@ -359,6 +364,10 @@ export default {
 .entry__content {
   max-width: 100%;
   padding: 0.5rem 1rem;
+
+  &:focus {
+    outline: none;
+  }
 
   @include for-tablet-landscape-up {
     max-width: 50rem;
