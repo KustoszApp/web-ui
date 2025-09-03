@@ -278,9 +278,12 @@ export default {
     },
     focusEntryContent(index) {
       this.$nextTick(() => {
-        const elem = this.getEntryRef(index);
-        const entryContentElem = elem.querySelector(".entry__content");
-        entryContentElem.focus();
+        // focus only on desktop, where we have keyboard
+        if (window.matchMedia("(min-width: 1200px)").matches) {
+          const elem = this.getEntryRef(index);
+          const entryContentElem = elem.querySelector(".entry__content");
+          entryContentElem.focus();
+        }
       });
     },
     setupMarkAsRead(index) {
